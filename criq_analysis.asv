@@ -7,8 +7,9 @@ if ~strcmp(C,'M:\Thesis Work\CRIq_Analysis')
 end
 
 %% Load in worksheet & parse columns %%
-worksheet = xlsread('CRIq_dataworksheet.xlsx');
+[worksheet,txt,raw] = xlsread('CRIq_dataworksheet.xlsx');
 
+col_names = txt(1,:);
 sub_nums = worksheet(:,1);
 ages = worksheet(:,2);
 educations = worksheet(:,3:4);
@@ -121,5 +122,7 @@ CIR_ft_record = worksheet(current_sub,35);
     if ft == 1
         CRI_ft_vals(current_sub) = round(CRI_ft_curr_val*15+100);
     end
-    CRI_total_vals(current_sub) = mean([CRI_edu_vals(current_sub) CRI_work_vals(current_sub) CRI_ft_vals(current_sub)] - 100)/11.32277
+    CRI_total_vals(current_sub) = round(mean([CRI_edu_vals(current_sub) CRI_work_vals(current_sub) CRI_ft_vals(current_sub)] - 100)/11.32277*15+100);
 end
+
+%% Create new X
