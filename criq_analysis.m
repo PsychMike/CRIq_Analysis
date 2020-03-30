@@ -7,7 +7,7 @@ if ~strcmp(C,'M:\Thesis Work\CRIq_Analysis')
 end
 
 %% Load in worksheet & parse columns %%
-[worksheet,txt,raw] = xlsread('CRIq_dataworksheet.xlsx');
+[worksheet,txt,raw] = xlsread('CRIq_dataworksheet_m.xlsx');
 
 col_names = txt(1,:);
 sub_nums = worksheet(:,1);
@@ -40,8 +40,8 @@ for current_sub = 1:sum(~isnan(worksheet(:,1)))
     edu_tier_order = [];
     w_tier_order = [];
     CRI_e_record = worksheet(current_sub,33);
-CRI_w_record = worksheet(current_sub,34);
-CIR_ft_record = worksheet(current_sub,35);
+    CRI_w_record = worksheet(current_sub,34);
+    CIR_ft_record = worksheet(current_sub,35);
     for col = 1:length(worksheet(1,:))
         current_col = worksheet(current_sub,col);
     end
@@ -69,13 +69,13 @@ CIR_ft_record = worksheet(current_sub,35);
     %     edu_total = sum(edu_curr(~isnan(edu_curr)));
     
     try
-    edu_total = sum(current_edu);
-    exp_edu_CRI = ages(current_sub) * edu_coeff + edu_intrcpt;
-    CRI_edu_curr_val = (edu_total-exp_edu_CRI)/edu_sd;
-    e = 1;
+        edu_total = sum(current_edu);
+        exp_edu_CRI = ages(current_sub) * edu_coeff + edu_intrcpt;
+        CRI_edu_curr_val = (edu_total-exp_edu_CRI)/edu_sd;
+        e = 1;
     catch
-       CRI_edu_vals(current_sub) = CRI_e_record;
-       e = 0;
+        CRI_edu_vals(current_sub) = CRI_e_record;
+        e = 0;
     end
     
     for i = 1:length(current_work)
@@ -91,30 +91,30 @@ CIR_ft_record = worksheet(current_sub,35);
     end
     
     try
-    work_vals(current_sub,1) = max(w_tier_order);
-    work_vals(current_sub,2) = (sum(w_tier_order)-max(w_tier_order))/(length(w_tier_order)-1);
-    work_curr = work_vals(current_sub,:);
-    work_total = sum(work_curr(~isnan(work_curr)));
-    exp_work_CRI = ages(current_sub) * work_coeff + work_intrcpt;
-    CRI_work_curr_val = (work_total-exp_work_CRI)/work_sd;
-    w = 1;
+        work_vals(current_sub,1) = max(w_tier_order);
+        work_vals(current_sub,2) = (sum(w_tier_order)-max(w_tier_order))/(length(w_tier_order)-1);
+        work_curr = work_vals(current_sub,:);
+        work_total = sum(work_curr(~isnan(work_curr)));
+        exp_work_CRI = ages(current_sub) * work_coeff + work_intrcpt;
+        CRI_work_curr_val = (work_total-exp_work_CRI)/work_sd;
+        w = 1;
     catch
         CRI_work_vals(current_sub) = CRI_w_record;
         w = 0;
     end
     
     try
-    ft_total = sum(free_time(current_sub,:));
-    exp_ft_CRI = ages(current_sub) * ft_coeff + ft_intrcpt;
-    CRI_ft_curr_val = (ft_total-exp_ft_CRI)/ft_sd;
-    ft = 1;
+        ft_total = sum(free_time(current_sub,:));
+        exp_ft_CRI = ages(current_sub) * ft_coeff + ft_intrcpt;
+        CRI_ft_curr_val = (ft_total-exp_ft_CRI)/ft_sd;
+        ft = 1;
     catch
         CRI_ft_vals(current_sub) = CRI_ft_record;
         ft = 0;
     end
     
     if e == 1
-    CRI_edu_vals(current_sub) = round(CRI_edu_curr_val*15+100);
+        CRI_edu_vals(current_sub) = round(CRI_edu_curr_val*15+100);
     end
     if w == 1
         CRI_work_vals(current_sub) = round(CRI_work_curr_val*15+100);
@@ -125,10 +125,47 @@ CIR_ft_record = worksheet(current_sub,35);
     CRI_total_vals(current_sub) = round(mean([CRI_edu_vals(current_sub) CRI_work_vals(current_sub) CRI_ft_vals(current_sub)] - 100)/11.32277*15+100);
 end
 
+%Make list of CRIq scores, computed or recorded
+consolidate_criq_scores;
+
+%% Correlatory Analyses
+corr(CRI_all_vals(~isnan(CRI_all_vals)&~isnan(CRI_ft_vals))',CRI_ft_vals(~isnan(CRI_all_vals)&~isnan(CRI_ft_vals))');
+
+col_thirtysix = worksheet(:,36);
+col_thirtyfive = worksheet(:,35);
+corr(col_thirtysix(~isnan(col_thirtysix)&~isnan(col_thirtyfive)),col_thirtyfive(~isnan(col_thirtysix)&~isnan(col_thirtyfive)));
+
+story_recall_vals = worksheet(:,38) + worksheet(:,39);
+TMT_vals = worksheet(:,40) + worksheet(:,41);
+fix_wms;
+WMS_vals = wms_tot_nVals;
+stroop_vals = worksheet(:,44) + worksheet(:,45) + worksheet(:,46);
+mem_vals = worksheet(:,47);
+srp_vals = worksheet(:,50);
+moca_vals = worksheet(:,51);
+
+ruwe_vals = worksheet(:,52);
+std_ruwe = std(ruwe_vals(~isnan(ruwe_vals)));
+med_ruwe = median(ruwe_vals(~isnan(ruwe_vals)));
+
+top_ruwe_vals = fix_ruwe_vals(fix_ruwe_vals>=med_ruwe);
+bot_ruwe_vals = fix_ruwe_vals(fix_ruwe_vals<med_ruwe);
+
+n_med_ruwe(1:length(ruwe_vals(~isnan(ruwe_vals)))) = med_ruwe;
+
+% figure
+% fix_ruwe_vals = ruwe_vals(~isnan(ruwe_vals));
+% plot(fix_ruwe_vals);
+% hold on
+% plot(n_med_ruwe);
+
+
+%n_CRI = CRI_all_vals(CRI_all_vals(~isnan(CRI_all_vals)));
+
 %% Create Excel sheet w/calculated values
 
 new_worksheet = raw(1:length(sub_nums),1:36);
 for insert_vals = 1:length(CRI_total_vals)
-new_worksheet{insert_vals+1,32} = CRI_total_vals(insert_vals);
+    new_worksheet{insert_vals+1,32} = CRI_total_vals(insert_vals);
 end
 xlswrite('CRIq_new_dataworksheet.xlsx',new_worksheet);
