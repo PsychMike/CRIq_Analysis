@@ -34,14 +34,14 @@ ft_intrcpt = 2.68;
 ft_coeff = 3.754;
 
 %% Calculate CRI %%
-for current_sub = 1:sum(~isnan(worksheet(:,1)))
+for current_sub = 1:sum(~isnan(worksheet(:,1)))+1
     e_tier_count = 0;
     w_tier_count = 0;
     edu_tier_order = [];
     w_tier_order = [];
     CRI_e_record = worksheet(current_sub,33);
     CRI_w_record = worksheet(current_sub,34);
-    CIR_ft_record = worksheet(current_sub,35);
+    CRI_ft_record = worksheet(current_sub,35);
     for col = 1:length(worksheet(1,:))
         current_col = worksheet(current_sub,col);
     end
@@ -122,6 +122,17 @@ for current_sub = 1:sum(~isnan(worksheet(:,1)))
     if ft == 1
         CRI_ft_vals(current_sub) = round(CRI_ft_curr_val*15+100);
     end
+    
+    if isnan(CRI_edu_vals(current_sub))
+        CRI_edu_vals(current_sub) = CRI_e_record;
+    end
+    if isnan(CRI_work_vals(current_sub))
+        CRI_work_vals(current_sub) = CRI_w_record;
+    end
+    if isnan(CRI_ft_vals(current_sub))
+        CRI_ft_vals(current_sub) = CRI_ft_record;
+    end
+    
     CRI_total_vals(current_sub) = round(mean([CRI_edu_vals(current_sub) CRI_work_vals(current_sub) CRI_ft_vals(current_sub)] - 100)/11.32277*15+100);
 end
 
@@ -129,20 +140,48 @@ end
 consolidate_criq_scores;
 
 %% Correlatory Analyses
+corr(CRI_all_vals(~isnan(CRI_all_vals)&~isnan(CRI_ft_vals))',CRI_ft_vals(~isnan(CRI_all_vals)&~isnan(CRI_ft_vals))');
+
+col_thirtysix = worksheet(:,36);
+col_thirtyfive = worksheet(:,35);
+corr(col_thirtysix(~isnan(col_thirtysix)&~isnan(col_thirtyfive)),col_thirtyfive(~isnan(col_thirtysix)&~isnan(col_thirtyfive)));
+
 story_recall_vals = worksheet(:,38) + worksheet(:,39);
+story_recall_vals = story_recall_vals(1:current_sub);
+fix_storyrecall;
+
 TMT_vals = worksheet(:,40) + worksheet(:,41);
+TMT_vals = TMT_vals(1:current_sub);
+fix_tmt;
+
 fix_wms;
 WMS_vals = wms_tot_nVals;
-stroop_vals = worksheet(:,44) + worksheet(:,45);
-mem_vals = worksheet(:,46);
+
+stroop_vals = worksheet(:,44) + worksheet(:,45) + worksheet(:,46);
+stroop_vals = stroop_vals(1:current_sub);
+fix_stroop;
+
+mem_vals = worksheet(:,47);
+mem_vals = mem_vals(1:current_sub);
+
 srp_vals = worksheet(:,50);
+srp_vals = srp_vals(1:current_sub);
+
 moca_vals = worksheet(:,51);
+moca_vals = moca_vals(1:current_sub);
 
 ruwe_vals = worksheet(:,52);
+ruwe_vals = ruwe_vals(1:current_sub);
+
+analysis_matrix = ([ages
+
 std_ruwe = std(ruwe_vals(~isnan(ruwe_vals)));
 med_ruwe = median(ruwe_vals(~isnan(ruwe_vals)));
 
-n_med_ruwe(1:length(ruwe_vals(~isnan(ruwe_vals)))) = med_ruwe;
+% top_ruwe_vals = fix_ruwe_vals(fix_ruwe_vals>=med_ruwe);
+% bot_ruwe_vals = fix_ruwe_vals(fix_ruwe_vals<med_ruwe);
+% 
+% n_med_ruwe(1:length(ruwe_vals(~isnan(ruwe_vals)))) = med_ruwe;
 
 % figure
 % fix_ruwe_vals = ruwe_vals(~isnan(ruwe_vals));
