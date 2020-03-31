@@ -175,13 +175,14 @@ ruwe_vals = ruwe_vals(1:current_sub);
 
 analysis_matrix = ([ages(1:current_sub) CRI_edu_vals' CRI_work_vals' ... 
     CRI_ft_vals' CRI_all_vals' story_recall_vals TMT_vals ...
-    stroop_vals mem_vals srp_vals moca_vals ruwe_vals]);
+    WMS_vals' stroop_vals mem_vals srp_vals moca_vals ruwe_vals]);
 
 count_complete_subs;
 
-corrcoef(complete_subs)
+[r,p,rlo,rup]=corrcoef(complete_subs);
+p
 
-%WMS_vals'
+var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'Story Recall'},{'TMT'},{'WMS'},{'Stroop'},{'Memory'},{'SRP'},{'MOCA'},{'RUWE'}];
 
 std_ruwe = std(ruwe_vals(~isnan(ruwe_vals)));
 med_ruwe = median(ruwe_vals(~isnan(ruwe_vals)));
