@@ -1,0 +1,3 @@
+med_ft = median(CRI_ft_vals(~isnan(CRI_ft_vals)));
+mean_ft = mean(CRI_ft_vals(~isnan(CRI_ft_vals)));
+% avg_ft = avg(CRI_ft_vals(~isnan(CRI_ft_vals)))

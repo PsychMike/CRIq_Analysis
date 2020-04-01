@@ -1,10 +1,10 @@
 %% Change to the correct directory %%
 clear all
-D = dir;
-C = D.folder;
-if ~strcmp(C,'M:\Thesis Work\CRIq_Analysis')
-    cd ('M:\Thesis Work\CRIq_Analysis')
-end
+% D = dir;
+% C = D.folder;
+% if ~strcmp(C,'M:\Thesis Work\CRIq_Analysis')
+%     cd ('M:\Thesis Work\CRIq_Analysis')
+% end
 
 %% Load in worksheet & parse columns %%
 [worksheet,txt,raw] = xlsread('CRIq_dataworksheet_m.xlsx');
@@ -33,8 +33,14 @@ ft_sd = 80.24101;
 ft_intrcpt = 2.68;
 ft_coeff = 3.754;
 
+record_CRIq = worksheet(:,36);
+record_CRIq = record_CRIq(1:length(ages));
+record_CRIq = record_CRIq';
+
 %% Calculate CRI %%
-for current_sub = 1:sum(~isnan(worksheet(:,1)))+1
+for current_sub = 1:sum(~isnan(worksheet(:,1)))
+    %+1
+    minus_space = current_sub - 1;
     e_tier_count = 0;
     w_tier_count = 0;
     edu_tier_order = [];
@@ -51,6 +57,7 @@ for current_sub = 1:sum(~isnan(worksheet(:,1)))+1
     current_edu = educations(current_sub,:);
     current_work = works(current_sub,:);
     
+    for fold_code = 1
     %     for i = 1:length(current_edu)
     %         edu_tier_vals(i) = current_edu(i) * i;
     %     end
@@ -67,6 +74,7 @@ for current_sub = 1:sum(~isnan(worksheet(:,1)))+1
     %     edu_vals(current_sub,2) = (sum(edu_tier_order)-max(edu_tier_order))/(length(edu_tier_order)-1);
     %     edu_curr = edu_vals(current_sub,:);
     %     edu_total = sum(edu_curr(~isnan(edu_curr)));
+    end
     
     try
         edu_total = sum(current_edu);
@@ -104,8 +112,13 @@ for current_sub = 1:sum(~isnan(worksheet(:,1)))+1
     end
     
     try
-        ft_total = sum(free_time(current_sub,:));
+        children_val = free_time(current_sub,end-2);
+        ft_total = sum(free_time(current_sub,:)) - children_val;
         exp_ft_CRI = ages(current_sub) * ft_coeff + ft_intrcpt;
+        if children_val > 0
+            children_val = 5*children_val+10;
+        end
+        ft_total = ft_total + children_val;
         CRI_ft_curr_val = (ft_total-exp_ft_CRI)/ft_sd;
         ft = 1;
     catch
@@ -135,6 +148,10 @@ for current_sub = 1:sum(~isnan(worksheet(:,1)))+1
     
     CRI_total_vals(current_sub) = round(mean([CRI_edu_vals(current_sub) CRI_work_vals(current_sub) CRI_ft_vals(current_sub)] - 100)/11.32277*15+100);
 end
+
+record_CRIq = worksheet(:,36);
+record_CRIq = record_CRIq(1:current_sub);
+record_CRIq = record_CRIq';
 
 %Make list of CRIq scores, computed or recorded
 consolidate_criq_scores;
@@ -175,14 +192,27 @@ ruwe_vals = ruwe_vals(1:current_sub);
 
 analysis_matrix = ([ages(1:current_sub) CRI_edu_vals' CRI_work_vals' ... 
     CRI_ft_vals' CRI_all_vals' story_recall_vals TMT_vals ...
-    WMS_vals' stroop_vals mem_vals srp_vals moca_vals ruwe_vals]);
+     WMS_vals' stroop_vals mem_vals  moca_vals ruwe_vals]);
+
+%  
+%srp_vals
+
+skip_point = 7;
+start_point = 8;
+
+% analysis_matrix = [analysis_matrix(1:skip_point) analysis_matrix(start_point:end)];
 
 count_complete_subs;
 
 [r,p,rlo,rup]=corrcoef(complete_subs);
 p
+var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'Story Recall'},{'TMT'},{'WMS'},{'Stroop'},{'Memory'},{'MOCA'},{'RUWE'}];
+%{'SRP'},
 
-var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'Story Recall'},{'TMT'},{'WMS'},{'Stroop'},{'Memory'},{'SRP'},{'MOCA'},{'RUWE'}];
+var_names = [var_names(1:skip_point) var_names(start_point:end)];
+
+% close all
+% corrplot(complete_subs,'varNames',var_names)
 
 std_ruwe = std(ruwe_vals(~isnan(ruwe_vals)));
 med_ruwe = median(ruwe_vals(~isnan(ruwe_vals)));
@@ -197,7 +227,6 @@ med_ruwe = median(ruwe_vals(~isnan(ruwe_vals)));
 % plot(fix_ruwe_vals);
 % hold on
 % plot(n_med_ruwe);
-
 
 %n_CRI = CRI_all_vals(CRI_all_vals(~isnan(CRI_all_vals)));
 
