@@ -205,7 +205,7 @@ start_point = 8;
 count_complete_subs;
 
 [r,p,rlo,rup]=corrcoef(complete_subs);
-p
+% p
 var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'Story Recall'},{'TMT'},{'WMS'},{'Stroop'},{'Memory'},{'MOCA'},{'RUWE'}];
 %{'SRP'},
 
