@@ -235,5 +235,8 @@ med_ruwe = median(ruwe_vals(~isnan(ruwe_vals)));
 new_worksheet = raw(1:length(sub_nums),1:36);
 for insert_vals = 1:length(CRI_total_vals)
     new_worksheet{insert_vals+1,32} = CRI_total_vals(insert_vals);
+    new_worksheet{insert_vals+1,34} = CRI_edu_vals(insert_vals);
+    new_worksheet{insert_vals+1,35} = CRI_ft_vals(insert_vals);
+    new_worksheet{insert_vals+1,36} = CRI_work_vals(insert_vals);
 end
 xlswrite('CRIq_new_dataworksheet.xlsx',new_worksheet);
