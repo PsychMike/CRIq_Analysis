@@ -19,11 +19,13 @@ for i = 1:length(CRI_ft_vals)
             best_fts(best_count) = CRI_ft_vals(i);
             best_is(best_count) = i;
             best_ft_data(best_count,:) = analysis_matrix(best_is(best_count),:);
+            best_ft_subs(best_count) = sub_nums(i);
         else
             worst_count = worst_count + 1;
             worst_fts(worst_count) = CRI_ft_vals(i);
             worst_is(worst_count) = i;
             worst_ft_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
+            worst_ft_subs(worst_count) = sub_nums(i);
         end
     end
 end
@@ -104,4 +106,9 @@ for i = 1:length(nonan_worst_fts)
     end
 end
 
+run_anova = 0;
+if run_anova
 BWAOV2(anova_matrix)
+end
+
+read_studysheet
