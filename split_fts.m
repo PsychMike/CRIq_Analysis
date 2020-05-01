@@ -1,5 +1,5 @@
-clear all
-criq_analysis;
+% clear all
+% criq_analysis;
 
 med_ft = median(CRI_ft_vals(~isnan(CRI_ft_vals)));
 mean_ft = mean(CRI_ft_vals(~isnan(CRI_ft_vals)));
@@ -106,7 +106,7 @@ for i = 1:length(nonan_worst_fts)
     end
 end
 
-run_anova = 0;
+run_anova = 1;
 if run_anova
 BWAOV2(anova_matrix)
 end

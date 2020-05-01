@@ -1,5 +1,9 @@
-%% Change to the correct directory %%
 clear all
+
+%% Add stats folder %%
+addpath('StatsFunctions');
+
+%% Change to the correct directory %%
 % D = dir;
 % C = D.folder;
 % if ~strcmp(C,'M:\Thesis Work\CRIq_Analysis')
@@ -39,7 +43,7 @@ record_CRIq = record_CRIq';
 
 %% Calculate CRI %%
 for current_sub = 1:sum(~isnan(worksheet(:,1)))
-    %+1
+
     minus_space = current_sub - 1;
     e_tier_count = 0;
     w_tier_count = 0;
@@ -57,23 +61,23 @@ for current_sub = 1:sum(~isnan(worksheet(:,1)))
     current_edu = educations(current_sub,:);
     current_work = works(current_sub,:);
     
-    for fold_code = 1
-    %     for i = 1:length(current_edu)
-    %         edu_tier_vals(i) = current_edu(i) * i;
-    %     end
-    %
-    %     for i = 1:length(edu_tier_vals)
-    %         j = length(edu_tier_vals) + 1 - i;
-    %         if edu_tier_vals(j) ~= 0 && length(edu_tier_order) < 3
-    %             e_tier_count = e_tier_count + 1;
-    %             edu_tier_order(e_tier_count) = edu_tier_vals(j);
-    %         end
-    %     end
-    %
-    %     edu_vals(current_sub,1) = max(edu_tier_order);
-    %     edu_vals(current_sub,2) = (sum(edu_tier_order)-max(edu_tier_order))/(length(edu_tier_order)-1);
-    %     edu_curr = edu_vals(current_sub,:);
-    %     edu_total = sum(edu_curr(~isnan(edu_curr)));
+    for fold_old_code = 1
+        %     for i = 1:length(current_edu)
+        %         edu_tier_vals(i) = current_edu(i) * i;
+        %     end
+        %
+        %     for i = 1:length(edu_tier_vals)
+        %         j = length(edu_tier_vals) + 1 - i;
+        %         if edu_tier_vals(j) ~= 0 && length(edu_tier_order) < 3
+        %             e_tier_count = e_tier_count + 1;
+        %             edu_tier_order(e_tier_count) = edu_tier_vals(j);
+        %         end
+        %     end
+        %
+        %     edu_vals(current_sub,1) = max(edu_tier_order);
+        %     edu_vals(current_sub,2) = (sum(edu_tier_order)-max(edu_tier_order))/(length(edu_tier_order)-1);
+        %     edu_curr = edu_vals(current_sub,:);
+        %     edu_total = sum(edu_curr(~isnan(edu_curr)));
     end
     
     try
@@ -190,11 +194,10 @@ moca_vals = moca_vals(1:current_sub);
 ruwe_vals = worksheet(:,52);
 ruwe_vals = ruwe_vals(1:current_sub);
 
-analysis_matrix = ([ages(1:current_sub) CRI_edu_vals' CRI_work_vals' ... 
+analysis_matrix = ([ages(1:current_sub) CRI_edu_vals' CRI_work_vals' ...
     CRI_ft_vals' CRI_all_vals' story_recall_vals TMT_vals ...
-     WMS_vals' stroop_vals mem_vals  moca_vals ruwe_vals]);
+    WMS_vals' stroop_vals mem_vals  moca_vals ruwe_vals]);
 
-%  
 %srp_vals
 
 skip_point = 7;
@@ -211,32 +214,64 @@ var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'Story Recall'
 
 var_names = [var_names(1:skip_point) var_names(start_point:end)];
 
-% close all
-% corrplot(complete_subs,'varNames',var_names)
+%% Create correlation matrix
+R = corrplot(complete_subs,'varNames',var_names);
 
-std_ruwe = std(ruwe_vals(~isnan(ruwe_vals)));
-med_ruwe = median(ruwe_vals(~isnan(ruwe_vals)));
+% Regress out age
+age_corrs = R(:,1);
+R_one = age_corrs * age_corrs';
+R_one2 = R - R_one;
 
-% top_ruwe_vals = fix_ruwe_vals(fix_ruwe_vals>=med_ruwe);
-% bot_ruwe_vals = fix_ruwe_vals(fix_ruwe_vals<med_ruwe);
-% 
-% n_med_ruwe(1:length(ruwe_vals(~isnan(ruwe_vals)))) = med_ruwe;
+x = complete_subs(:,1); %ages
+y = complete_subs(:,4); %leisure scores
+format long
+b1 = x\y;
+yCalc1 = b1*x;
+scatter(x,y)
+hold on
+plot(x,yCalc1)
+xlabel('Ages')
+ylabel('Leisure Scores')
+title('Linear Regression Relation Between Ages & Leisure Score')
+grid on
 
-% figure
-% fix_ruwe_vals = ruwe_vals(~isnan(ruwe_vals));
-% plot(fix_ruwe_vals);
-% hold on
-% plot(n_med_ruwe);
+X = [ones(length(x),1) x];
+b = X\y;
+yCalc2 = X*b;
+plot(x,yCalc2,'--')
+legend('Data','Slope','Slope & Intercept','Location','best');
 
-%n_CRI = CRI_all_vals(CRI_all_vals(~isnan(CRI_all_vals)));
 
 %% Create Excel sheet w/calculated values
 
 new_worksheet = raw(1:length(sub_nums),1:36);
+criq_scores = raw(2:length(sub_nums),2:26);
+
+for i = 1:length(criq_scores)
+    for j = 1:size(criq_scores,2)
+        try
+            extract_scores(i,j) = criq_scores{i,j};
+        catch
+            try
+            extract_scores(i,j) = str2num(criq_scores{i,j});
+            catch
+                extract_scores(i,j) = NaN;
+            end
+        end
+    end
+end
+
+xlswrite('extract_scores.xlsx',extract_scores);
+
 for insert_vals = 1:length(CRI_total_vals)
     new_worksheet{insert_vals+1,32} = CRI_total_vals(insert_vals);
-    new_worksheet{insert_vals+1,34} = CRI_edu_vals(insert_vals);
+    new_worksheet{insert_vals+1,33} = CRI_edu_vals(insert_vals);
     new_worksheet{insert_vals+1,35} = CRI_ft_vals(insert_vals);
-    new_worksheet{insert_vals+1,36} = CRI_work_vals(insert_vals);
+    new_worksheet{insert_vals+1,34} = CRI_work_vals(insert_vals);
 end
 xlswrite('CRIq_new_dataworksheet.xlsx',new_worksheet);
+
+%% Other functions
+split_fts;
+read_studysheet;
+find_bestworst_mri;

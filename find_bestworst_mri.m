@@ -11,7 +11,7 @@ for i = 1:length(best_ft_subs)
         best_mri_nums(b_mri_count) = mri_nums(index);
         best_behav_nums(b_mri_count) = behav_nums(index);
         [file_num] = create_file_num(best_mri_nums,b_mri_count);
-        best_mri_names{b_mri_count} = sprintf('P:/3015046.06/bids/derivatives/fmriprep/sub-%s/anat/sub-%s_desc-preproc_T1w.nii.gz',file_num,file_num);
+        best_mri_names{b_mri_count} = sprintf('/project/3015046.06/bids/sub-%s/anat/sub-%s_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz',file_num,file_num);
     end
 end
 
@@ -26,7 +26,7 @@ for i = 1:length(worst_ft_subs)
         worst_mri_nums(w_mri_count) = mri_nums(index);
         worst_behav_nums(w_mri_count) = behav_nums(index);
         [file_num] = create_file_num(worst_mri_nums,w_mri_count);
-        worst_mri_names{w_mri_count} = sprintf('P:/3015046.06/bids/derivatives/fmriprep/sub-%d/anat/sub-%d_desc-preproc_T1w.nii.gz',file_num,file_num);
+        worst_mri_names{w_mri_count} = sprintf('/project/3015046.06/bids/sub-%s/anat/sub-%s_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz',file_num,file_num);
     end
 end
 
