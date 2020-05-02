@@ -1,59 +1,17 @@
-CRI_ft_vals = CRI_ft_vals';
+
+med_ft = median(CRI_ft_vals(~isnan(CRI_ft_vals)));
 ages = extract_scores(:,1);
 
-add_row = 0;
-for row = 1:length(CRI_ft_vals)
-    if ~isnan(CRI_ft_vals(row)) && ~isnan(ages(row)) 
-%         && CRI_ft_vals(row) < 200
-        add_row = add_row + 1;
-        new_ft_vals(add_row) = CRI_ft_vals(row);
-        new_ages(add_row) = ages(row);
-    end
-end
-
-CRI_ft_vals = new_ft_vals;
-ages = new_ages;
-
-mean_ft = mean(CRI_ft_vals);
-std_ft = std(CRI_ft_vals);
-stand_fts = (CRI_ft_vals-mean_ft)/std_ft;
-scaled_fts = stand_fts*15+100;
-
-med_ft = median(scaled_fts);
-% med_ft = median(CRI_ft_vals(~isnan(CRI_ft_vals)));
-
 x = ages;
-y = CRI_ft_vals;
-x = x';
-y = y';
+y = CRI_ft_vals';
 format long
 b1 = x\y;
 
-close all
-figure
-yCalc1 = b1*x;
-scatter(x,y)
-hold on
-plot(x,yCalc1)
-xlabel('Age')
-ylabel('Leisure Scores')
-title('Linear Regression Relation Between Age & Leisure Scores')
-grid on
-X = [ones(length(x),1) x];
-b = X\y
-yCalc2 = X*b;
-plot(x,yCalc2,'--')
-legend('Data','Slope','Slope & Intercept','Location','best');
-Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2)
-Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2)
 
-% keyboard
 % med_ft = med_ft./(extract_scores(:,1)*0.73);
 % mean_ft = mean(CRI_ft_vals(~isnan(CRI_ft_vals)));
 best_count = 0;
 worst_count = 0;
-
-CRI_ft_vals = scaled_fts;
 
 for i = 1:length(CRI_ft_vals)
     if ~isnan(CRI_ft_vals(i))
@@ -84,7 +42,7 @@ mean_fBest_ft = nanmedian(best_ft_data);
 mean_fWorst_ft = nanmedian(worst_ft_data);
 % mean(fWorst_ft_data);
 
-plot_ft = 1;
+plot_ft = 0;
 if plot_ft
     close all
     figure
@@ -97,6 +55,7 @@ if plot_ft
     legend(sprintf('n = %d',length(best_ft_data)),sprintf('n = %d',length(worst_ft_data)))
     % avg_ft = avg(CRI_ft_vals(~isnan(CRI_ft_vals)))
 end
+
 
 m_best_ft_data = best_ft_data(:,6:end);
 m_worst_ft_data = worst_ft_data(:,6:end);

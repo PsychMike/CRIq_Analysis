@@ -11,7 +11,7 @@ addpath('StatsFunctions');
 % end
 
 %% Load in worksheet & parse columns %%
-[worksheet,txt,raw] = xlsread('CRIq_dataworksheet_m.xlsx');
+[worksheet,txt,raw] = xlsread('CRIq_dataworksheet_m_2.xlsx');
 
 col_names = txt(1,:);
 sub_nums = worksheet(:,1);
@@ -215,6 +215,8 @@ var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'Story Recall'
 var_names = [var_names(1:skip_point) var_names(start_point:end)];
 
 %% Create correlation matrix
+eco_toolbox = 0;
+if eco_toolbox
 R = corrplot(complete_subs,'varNames',var_names);
 
 % Regress out age
@@ -240,12 +242,12 @@ b = X\y;
 yCalc2 = X*b;
 plot(x,yCalc2,'--')
 legend('Data','Slope','Slope & Intercept','Location','best');
-
+end
 
 %% Create Excel sheet w/calculated values
 
 new_worksheet = raw(1:length(sub_nums),1:36);
-criq_scores = raw(2:length(sub_nums),2:26);
+criq_scores = raw(2:length(sub_nums)+1,2:26);
 
 for i = 1:length(criq_scores)
     for j = 1:size(criq_scores,2)

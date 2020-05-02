@@ -1,7 +1,7 @@
 %% Set parameters %%
 num_clusters = 3;
 
-criq_l_scores = extract_scores(:,2:end);
+criq_l_scores = extract_scores(:,9:end);
 
 for fold_code = 1
     % criq_l_nanmean = nanmean(criq_l_scores,1);
