@@ -22,7 +22,6 @@ if plot_corr == 1
     R2 = R;
 end
 
-
 %% Find best item-to-item matches
 clust_length = floor((length(R2)-1)/num_clusters);
 clust_matrix = zeros(length(R2),(size(R2,2)-1));

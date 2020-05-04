@@ -1,29 +1,28 @@
-CRI_ft_vals = CRI_ft_vals';
+flipped_CRIs = CRI_ft_vals';
 ages = extract_scores(:,1);
 
 add_row = 0;
-for row = 1:length(CRI_ft_vals)
-    if ~isnan(CRI_ft_vals(row)) && ~isnan(ages(row)) 
+for row = 1:length(flipped_CRIs)
+    if ~isnan(flipped_CRIs(row)) && ~isnan(ages(row)) 
 %         && CRI_ft_vals(row) < 200
         add_row = add_row + 1;
-        new_ft_vals(add_row) = CRI_ft_vals(row);
+        new_ft_vals(add_row) = flipped_CRIs(row);
         new_ages(add_row) = ages(row);
     end
 end
 
-CRI_ft_vals = new_ft_vals;
 ages = new_ages;
 
-mean_ft = mean(CRI_ft_vals);
-std_ft = std(CRI_ft_vals);
-stand_fts = (CRI_ft_vals-mean_ft)/std_ft;
+mean_ft = mean(new_ft_vals);
+std_ft = std(new_ft_vals);
+stand_fts = (new_ft_vals-mean_ft)/std_ft;
 scaled_fts = stand_fts*15+100;
 
 med_ft = median(scaled_fts);
 % med_ft = median(CRI_ft_vals(~isnan(CRI_ft_vals)));
 
 x = ages;
-y = CRI_ft_vals;
+y = new_ft_vals;
 x = x';
 y = y';
 format long
@@ -47,25 +46,22 @@ legend('Data','Slope','Slope & Intercept','Location','best');
 Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2)
 Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2)
 
-% keyboard
-% med_ft = med_ft./(extract_scores(:,1)*0.73);
 % mean_ft = mean(CRI_ft_vals(~isnan(CRI_ft_vals)));
 best_count = 0;
 worst_count = 0;
 
-CRI_ft_vals = scaled_fts;
 
-for i = 1:length(CRI_ft_vals)
-    if ~isnan(CRI_ft_vals(i))
-        if CRI_ft_vals(i) >= med_ft
+for i = 1:length(scaled_fts)
+    if ~isnan(scaled_fts(i))
+        if scaled_fts(i) >= med_ft
             best_count = best_count + 1;
-            best_fts(best_count) = CRI_ft_vals(i);
+            best_fts(best_count) = scaled_fts(i);
             best_is(best_count) = i;
             best_ft_data(best_count,:) = analysis_matrix(best_is(best_count),:);
             best_ft_subs(best_count) = sub_nums(i);
         else
             worst_count = worst_count + 1;
-            worst_fts(worst_count) = CRI_ft_vals(i);
+            worst_fts(worst_count) = scaled_fts(i);
             worst_is(worst_count) = i;
             worst_ft_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
             worst_ft_subs(worst_count) = sub_nums(i);

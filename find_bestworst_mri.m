@@ -40,4 +40,4 @@ T = table(best_mri_names',worst_mri_names','VariableNames',{'Best_FTs','Worst_FT
 % for i = 1:length(best_mri_names)
 %     T.best_mri_names(i) = best_mri_names(i);
 % end
-writetable(T,'best_worst_fts.xls')
+writetable(T,'best_worst_fts.xls');
