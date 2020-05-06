@@ -1,10 +1,11 @@
 flipped_CRIs = CRI_ft_vals';
-ages = extract_scores(:,1);
+ages = extract_scores(:,2);
+analysis_matrix = analysis_matrix(:,7:end);
 
 add_row = 0;
 for row = 1:length(flipped_CRIs)
-    if ~isnan(flipped_CRIs(row)) && ~isnan(ages(row)) 
-%         && CRI_ft_vals(row) < 200
+    if ~isnan(flipped_CRIs(row)) && ~isnan(ages(row))
+        %         && CRI_ft_vals(row) < 200
         add_row = add_row + 1;
         new_ft_vals(add_row) = flipped_CRIs(row);
         new_ages(add_row) = ages(row);
@@ -87,9 +88,9 @@ if plot_ft
     plot(mean_fBest_ft);
     hold on
     plot(mean_fWorst_ft);
-    xticks(1:12);
-    xticklabels(var_names);
-    xlim([0 13]);
+    xticks(1:size(best_ft_data,2)+1);
+    xticklabels(var_names(end-size(best_ft_data,2)+1:end));
+    xlim([0 size(best_ft_data,2)+1]);
     legend(sprintf('n = %d',length(best_ft_data)),sprintf('n = %d',length(worst_ft_data)))
     % avg_ft = avg(CRI_ft_vals(~isnan(CRI_ft_vals)))
 end
@@ -128,25 +129,29 @@ count = 0; sub_count = 0;
 anova_matrix = zeros((length(nonan_best_fts)+length(nonan_worst_fts)),4);
 for i = 1:length(nonan_best_fts)
     sub_count = sub_count + 1;
+    origin(sub_count) = 1;
     for j = 1:size(nonan_best_fts,2)
         count = count + 1;
         anova_matrix(count,:) = [nonan_best_fts(i,j) 1 j sub_count];
+        manova_matrix(sub_count,j) = nonan_best_fts(i,j);
     end
 end
 for i = 1:length(nonan_worst_fts)
     sub_count = sub_count + 1;
+    origin(sub_count) = 2;
     for j = 1:size(nonan_worst_fts,2)
         count = count + 1;
         anova_matrix(count,:) = [nonan_worst_fts(i,j) 2 j sub_count];
-        %         anova_matrix(count,:) = [randi(100) 2 j sub_count];
-        %         anova_matrix(count,:) = [nonan_best_fts(i,j)-2 2 j sub_count];
-        
+%         manova_matrix(sub_count,j) = nonan_worst_fts(i,j);
     end
 end
 
 run_anova = 1;
 if run_anova
-BWAOV2(anova_matrix)
+    BWAOV2(anova_matrix)
 end
+
+% [d,p] = manova1([manova_matrix(:,1) manova_matrix(:,2) manova_matrix(:,3) ...
+%     manova_matrix(:,4) manova_matrix(:,5) manova_matrix(:,6)],origin)
 
 read_studysheet

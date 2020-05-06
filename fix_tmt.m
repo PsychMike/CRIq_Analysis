@@ -16,7 +16,7 @@ for i = 1:length(TMT_vals)
     end
     
     try
-        TMT_vals(i) =  TMT_vals_1 + TMT_vals_2;
+        TMT_vals(i) =  1000 - (TMT_vals_1 + TMT_vals_2);
     catch
         TMT_vals(i) = NaN;
     end

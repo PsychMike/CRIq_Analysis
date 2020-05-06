@@ -182,13 +182,27 @@ for i = 1:length(sub_nums)
     end
 end
 
-for i = 1:length(sub_bin_mat)
-    
+% Remove duplicate binned subs
+remove_dupes
 
-for i = 1:length(nonan_best_fts)
-    sub_count = sub_count + 1;
-    for j = 1:size(nonan_best_fts,2)
-        count = count + 1;
-        anova_matrix(count,:) = [nonan_best_fts(i,j) 1 j sub_count];
-    end
+% Include only complete datasets
+try clear top1_c_scores top2_c_scores top3_c_scores top4_c_scores; end
+for top_num = 1:4
+eval(sprintf('count=0;for i = 1:length(uniq%d_scores);if ~sum(sum(isnan(uniq%d_scores(i,:))));count=count+1;top%d_c_scores(count,:) = top%d_scores(i,:);end;end',top_num,top_num,top_num,top_num));
 end
+
+% Find subs' behavioral data & bin it
+try clear anova_matrix; end
+for top_num = 1:4
+eval(sprintf('count=0;sub_count=0;for i = 1:length(top%d_c_scores);sub_count = sub_count + 1;for j = 1:size(top%d_c_scores,2);count = count + 1;anova_matrix(count,:) = [top%d_c_scores(i,j) %d j sub_count];end;end',top_num,top_num,top_num,top_num));
+end
+
+BWAOV2(anova_matrix)
+
+% for i = 1:length(nonan_best_fts)
+%     sub_count = sub_count + 1;
+%     for j = 1:size(nonan_best_fts,2)
+%         count = count + 1;
+%         anova_matrix(count,:) = [nonan_best_fts(i,j) 1 j sub_count];
+%     end
+% end
