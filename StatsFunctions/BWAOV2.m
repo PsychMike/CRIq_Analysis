@@ -1,4 +1,4 @@
-function [BWAOV2] = BWAOV2(X,alpha)
+function [P1] = BWAOV2(X,alpha)
 % BWAOV1 Between- and Within- Subject Variables Analysis of Variance Test.
 %   ANOVA with between- and within- subject variables (mixed) is used to analyze the relationship 
 %   for designs that have a combination of between and within-subject variables.

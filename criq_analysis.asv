@@ -1,5 +1,10 @@
 clear all
 
+global norm_score_vals
+
+% Normalize scores?
+norm_score_vals = 1;
+
 %% Add stats folder %%
 addpath('StatsFunctions');
 
@@ -170,11 +175,12 @@ corr(col_thirtysix(~isnan(col_thirtysix)&~isnan(col_thirtyfive)),col_thirtyfive(
 story_recall_vals = worksheet(:,38) + worksheet(:,39);
 story_recall_vals = story_recall_vals(1:current_sub);
 fix_storyrecall;
+story_recall_vals = normalize_values(story_recall_vals);
 
 TMT_vals = worksheet(:,40) + worksheet(:,41);
 TMT_vals = TMT_vals(1:current_sub);
 fix_tmt;
-WMS_vals = normalize_values(WMS_vals);
+TMT_vals = normalize_values(TMT_vals);
 
 fix_wms;
 WMS_vals = wms_tot_nVals;
@@ -187,7 +193,7 @@ stroop_vals = normalize_values(stroop_vals);
 
 mem_vals = worksheet(:,47);
 mem_vals = mem_vals(1:current_sub);
-mem_vals = normalize_values(mem_vals);
+mem_vals = normalize_values(mem_vals); %remembering to do things
 
 srp_vals = worksheet(:,50);
 srp_vals = srp_vals(1:current_sub);
@@ -202,8 +208,8 @@ ruwe_vals = ruwe_vals(1:current_sub);
 ruwe_vals = normalize_values(ruwe_vals);
 
 analysis_matrix = ([sub_nums ages(1:current_sub) CRI_edu_vals' CRI_work_vals' ...
-    CRI_ft_vals' CRI_all_vals' story_recall_vals TMT_vals ...
-    WMS_vals' stroop_vals mem_vals  moca_vals ruwe_vals]);
+    CRI_ft_vals' CRI_all_vals' story_recall_vals' TMT_vals' ...
+    WMS_vals' stroop_vals' mem_vals'  moca_vals' ruwe_vals']);
 
 %srp_vals
 
@@ -284,3 +290,4 @@ xlswrite('CRIq_new_dataworksheet.xlsx',new_worksheet);
 split_fts;
 read_studysheet;
 find_bestworst_mri;
+% bin_cluster_subs;

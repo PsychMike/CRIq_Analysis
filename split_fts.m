@@ -51,7 +51,6 @@ Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2)
 best_count = 0;
 worst_count = 0;
 
-
 for i = 1:length(scaled_fts)
     if ~isnan(scaled_fts(i))
         if scaled_fts(i) >= med_ft
@@ -95,34 +94,46 @@ if plot_ft
     % avg_ft = avg(CRI_ft_vals(~isnan(CRI_ft_vals)))
 end
 
-m_best_ft_data = best_ft_data(:,6:end);
-m_worst_ft_data = worst_ft_data(:,6:end);
+Ps = zeros(1,size(best_ft_data,2));
+for start_point = 1:size(best_ft_data,2)
+% start_point = 1;
+end_point = start_point;
+m_best_ft_data = best_ft_data(:,start_point:end_point);
+m_worst_ft_data = worst_ft_data(:,start_point:end_point);
 
 for a = 1:2
-    %     b = [m_best_ft_data;m_worst_ft_data];
-    %     mod_wrksht = b(a);
+
     if a == 1
         mod_wrksht = m_best_ft_data;
     else
         mod_wrksht = m_worst_ft_data;
     end
+    
     count = 0;
     for i = 1:length(mod_wrksht)
+        
         skip_row = 0;
         for j = 1:size(mod_wrksht,2)
             if isnan(mod_wrksht(i,j))
                 skip_row = 1;
             end
         end
+        
         if ~skip_row
             count = count + 1;
             if a == 1
+                try
                 nonan_best_fts(count,:) = mod_wrksht(i,:);
+                catch
+                    keyboard
+                end
             else
                 nonan_worst_fts(count,:) = mod_wrksht(i,:);
             end
         end
+        
     end
+    
 end
 
 count = 0; sub_count = 0;
@@ -148,9 +159,14 @@ end
 
 run_anova = 1;
 if run_anova
-    BWAOV2(anova_matrix)
+    P1 = BWAOV2(anova_matrix)
+    Ps(start_point) = P1;
 end
 
+% keyboard
+end
+Ps = round(Ps,2,'decimal');
+table(Ps(1),Ps(2),Ps(3),Ps(4),Ps(5),Ps(6),Ps(7),'VariableNames',{'SR','TMT','WMS','Stroop','Mem','MOCA','RUWE'})
 % [d,p] = manova1([manova_matrix(:,1) manova_matrix(:,2) manova_matrix(:,3) ...
 %     manova_matrix(:,4) manova_matrix(:,5) manova_matrix(:,6)],origin)
 

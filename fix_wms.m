@@ -27,6 +27,6 @@ for i = 1:length(CRI_all_vals)
         wms_twee_nVals(i) = NaN;
     end
     try
-        wms_tot_nVals(i) = wms_een_nVals(i) + wms_twee_nVals(i);
+        wms_tot_nVals(i) = round(wms_een_nVals(i)) + round(wms_twee_nVals(i));
     end
 end

@@ -166,6 +166,7 @@ record_CRIq = record_CRIq';
 consolidate_criq_scores;
 
 %% Correlatory Analyses
+normalize = 1;
 corr(CRI_all_vals(~isnan(CRI_all_vals)&~isnan(CRI_ft_vals))',CRI_ft_vals(~isnan(CRI_all_vals)&~isnan(CRI_ft_vals))');
 
 col_thirtysix = worksheet(:,36);
@@ -175,46 +176,51 @@ corr(col_thirtysix(~isnan(col_thirtysix)&~isnan(col_thirtyfive)),col_thirtyfive(
 story_recall_vals = worksheet(:,38) + worksheet(:,39);
 story_recall_vals = story_recall_vals(1:current_sub);
 fix_storyrecall;
-story_recall_vals = normalize_values(story_recall_vals);
+if normalize; story_recall_vals = normalize_values(story_recall_vals); end
 
 TMT_vals = worksheet(:,40) + worksheet(:,41);
 TMT_vals = TMT_vals(1:current_sub);
 fix_tmt;
-TMT_vals = normalize_values(TMT_vals);
+if normalize; TMT_vals = normalize_values(TMT_vals); end
 
 fix_wms;
 WMS_vals = wms_tot_nVals;
-WMS_vals = normalize_values(WMS_vals);
+if normalize; WMS_vals = normalize_values(WMS_vals); end
 
 stroop_vals = worksheet(:,44) + worksheet(:,45) + worksheet(:,46);
 stroop_vals = stroop_vals(1:current_sub);
 fix_stroop;
-stroop_vals = normalize_values(stroop_vals);
+if normalize; stroop_vals = normalize_values(stroop_vals); end
 
 mem_vals = worksheet(:,47);
 mem_vals = mem_vals(1:current_sub);
-mem_vals = normalize_values(mem_vals);
+if normalize; mem_vals = normalize_values(mem_vals); end %"remembering to do things"
 
 srp_vals = worksheet(:,50);
 srp_vals = srp_vals(1:current_sub);
-srp_vals = normalize_values(srp_vals);
+if normalize; srp_vals = normalize_values(srp_vals); end
 
 moca_vals = worksheet(:,51);
 moca_vals = moca_vals(1:current_sub);
-moca_vals = normalize_values(moca_vals);
+if normalize; moca_vals = normalize_values(moca_vals); end
 
 ruwe_vals = worksheet(:,52);
 ruwe_vals = ruwe_vals(1:current_sub);
-ruwe_vals = normalize_values(ruwe_vals);
+if normalize; ruwe_vals = normalize_values(ruwe_vals); end
 
+if normalize
 analysis_matrix = ([sub_nums ages(1:current_sub) CRI_edu_vals' CRI_work_vals' ...
     CRI_ft_vals' CRI_all_vals' story_recall_vals' TMT_vals' ...
     WMS_vals' stroop_vals' mem_vals'  moca_vals' ruwe_vals']);
-
+else
+    analysis_matrix = ([sub_nums ages(1:current_sub) CRI_edu_vals' CRI_work_vals' ...
+    CRI_ft_vals' CRI_all_vals' story_recall_vals TMT_vals ...
+    WMS_vals' stroop_vals mem_vals  moca_vals ruwe_vals]);
+end
 %srp_vals
 
-skip_point = 7;
-start_point = 8;
+skip_point = 5;
+start_point = 6;
 
 % analysis_matrix = [analysis_matrix(1:skip_point) analysis_matrix(start_point:end)];
 
@@ -290,3 +296,4 @@ xlswrite('CRIq_new_dataworksheet.xlsx',new_worksheet);
 split_fts;
 read_studysheet;
 find_bestworst_mri;
+% bin_cluster_subs;
