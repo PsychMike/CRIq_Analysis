@@ -23,7 +23,7 @@ for i = 1:length(stroop_vals)
     end
     
     try
-        stroop_vals(i) =  1000 - (stroop_vals_1 + stroop_vals_2 + stroop_vals_3);
+        stroop_vals(i) =  200 - (stroop_vals_1 + stroop_vals_2 + stroop_vals_3);
     catch
         stroop_vals(i) = NaN;
     end

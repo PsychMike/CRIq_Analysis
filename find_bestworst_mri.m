@@ -36,6 +36,9 @@ worst_mri_nums = worst_mri_nums(worst_mri_nums>0);
 for i = 1:(length(best_mri_names)-length(worst_mri_names))
     worst_mri_names{end+1} = 'NaN';
 end
+for i = 1:(length(worst_mri_names)-length(best_mri_names))
+    best_mri_names{end+1} = 'NaN';
+end
 T = table(best_mri_names',worst_mri_names','VariableNames',{'Best_FTs','Worst_FTs'});
 % for i = 1:length(best_mri_names)
 %     T.best_mri_names(i) = best_mri_names(i);
