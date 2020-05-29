@@ -207,6 +207,7 @@ fix_stroop;
 if normalize; stroop_vals = normalize_values(stroop_vals); end
 
 mem_vals = worksheet(:,47);
+mem_vals = -mem_vals;
 % mem_vals = mem_vals(1:current_sub);
 if normalize; mem_vals = normalize_values(mem_vals); end %"remembering to do things"
 
@@ -249,14 +250,15 @@ count_complete_subs;
 
 [r,p,rlo,rup]=corrcoef(complete_subs);
 % p
-var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'Story Recall'},{'TMT'},{'WMS'},{'Stroop'},{'Memory'},{'MOCA'},{'Read'}];
+var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'Story Recall'},{'TMT'},{'WMS'},{'Stroop'},{'Memory'},{'MOCA'},{'Reading'}];
 %{'SRP'},
 
 var_names = [var_names(1:skip_point) var_names(start_point:end)];
 
 %% Create correlation matrix
-eco_toolbox = 1;
+eco_toolbox = 0;
 if eco_toolbox
+    complete_subs = complete_subs(:,2:end);
     R = corrplot(complete_subs,'varNames',var_names);
     
     % Regress out age
@@ -268,7 +270,7 @@ if eco_toolbox
     y = complete_subs(:,4); %leisure scores
     format long
     b1 = x\y;
-    yCalc1 = b1*x;
+    yCalc1 = b1*x;a
     scatter(x,y)
     hold on
     plot(x,yCalc1)
