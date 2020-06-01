@@ -6,8 +6,14 @@ elim_outliers = 0;
 % Run ANOVA on all variables?
 anova_all_data = 1;
 
+% Use binned data?
+binning = 1;
+one_col = 2;
+two_col = 3;
+
 % Use upper & lower quartile data?
 uplow_quart = 1;
+if binning == 1; uplow_quart = 0; end
 
 % Add more subs to quartiles? (top & bottom 37.5%)
 more_subs = 1;
@@ -26,7 +32,11 @@ for i = 1:size(analysis_matrix,1)
         catch
             keyboard
         end
+        try
         ages(count,:) = extract_scores(i,1);
+        catch
+            keyboard
+        end
         flipped_CRIs(count,:) = CRIs_to_use(i);
         good_indices(count) = 1;
     else
@@ -38,6 +48,7 @@ flipped_CRIs = flipped_CRIs(good_indices==1,:);
 flipped_CRIs = flipped_CRIs';
 new_analy_matrix = new_analy_matrix(good_indices==1,:);
 analysis_matrix = new_analy_matrix;
+sub_nums = sub_nums(good_indices==1);
 ages = ages(good_indices==1);
 
 add_row = 0;
@@ -60,7 +71,7 @@ ages = new_ages;
 %
 % med_ft = median(scaled_fts);
 
-% Plot linear regression of age & leisure scores
+%% Plot linear regression of age & leisure scores
 x = ages;
 y = new_ft_vals;
 % y = scaled_fts;
@@ -116,16 +127,33 @@ for i = 1:length(scaled_fts)
     end
 end
 
-% Find upper & lower quartile data
-if uplow_quart
+%% Find bin data, if binning
+if binning
+    one_count = 0; two_count = 0;
+    for i = 1:length(sub_nums)
+        for j = 1:length(top_subs(:,one_col))
+            if sub_nums(i) == top_subs(j,one_col)
+                one_count = one_count + 1;
+                one_col_data(one_count,:) = analysis_matrix(i,:);
+            end
+            if sub_nums(i) == top_subs(j,two_col)
+                two_count = two_count + 1;
+                two_col_data(two_count,:) = analysis_matrix(i,:);
+            end
+        end
+    end
+    best_ft_data = one_col_data;
+    worst_ft_data = two_col_data;
+end
+
+%% Find upper & lower quartile data
+if uplow_quart && ~binning
     b_med = median(best_fts);
     w_med = median(worst_fts);
     
     if more_subs
         load('b2_med');
         load('w2_med');
-        %         b_med = mean([b_med med_ft]);
-        %         w_med = mean([w_med med_ft]);
         b_med = b2_med;
         w_med = w2_med;
     end
@@ -155,8 +183,8 @@ if uplow_quart
             end
         end
     end
+    b2_med=median(best_fts2);w2_med=median(worst_fts2);
 end
-b2_med=median(best_fts2);w2_med=median(worst_fts2);
 
 % Eliminate outliers
 if elim_outliers
@@ -194,19 +222,15 @@ else
     for_end = size(best_ft_data,2);
 end
 for start_point = 1:for_end
-    
     if anova_all_data
         start_point = 1;
         end_point = size(best_ft_data,2);
     else
         end_point = start_point;
     end
-    
     m_best_ft_data = best_ft_data(:,start_point:end_point);
     m_worst_ft_data = worst_ft_data(:,start_point:end_point);
-    
     for a = 1:2
-        
         if a == 1
             mod_wrksht = m_best_ft_data;
         else
@@ -215,14 +239,12 @@ for start_point = 1:for_end
         
         count = 0;
         for i = 1:length(mod_wrksht)
-            
             skip_row = 0;
             for j = 1:size(mod_wrksht,2)
                 if isnan(mod_wrksht(i,j))
                     skip_row = 1;
                 end
             end
-            
             if ~skip_row
                 count = count + 1;
                 if a == 1
@@ -235,11 +257,8 @@ for start_point = 1:for_end
                     nonan_worst_fts(count,:) = mod_wrksht(i,:);
                 end
             end
-            
         end
-        
     end
-    
     count = 0; sub_count = 0;
     anova_matrix = zeros((length(nonan_best_fts)+length(nonan_worst_fts)),4);
     for i = 1:length(nonan_best_fts)
@@ -260,7 +279,6 @@ for start_point = 1:for_end
             %         manova_matrix(sub_count,j) = nonan_worst_fts(i,j);
         end
     end
-    
     run_anova = 1;
     if run_anova
         P1 = BWAOV2(anova_matrix);
@@ -268,7 +286,6 @@ for start_point = 1:for_end
             Ps(start_point) = P1;
         end
     end
-    
 end
 
 if ~anova_all_data
@@ -278,5 +295,3 @@ end
 
 % [d,p] = manova1([manova_matrix(:,1) manova_matrix(:,2) manova_matrix(:,3) ...
 %     manova_matrix(:,4) manova_matrix(:,5) manova_matrix(:,6)],origin)
-
-read_studysheet

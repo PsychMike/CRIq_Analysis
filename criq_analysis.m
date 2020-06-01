@@ -316,7 +316,7 @@ xlswrite('extract_scores.xlsx',extract_scores);
 % xlswrite('CRIq_new_dataworksheet.xlsx',new_worksheet);
 
 %% Other functions
+bin_cluster_subs;
 split_fts;
 read_studysheet;
 find_bestworst_mri;
-% bin_cluster_subs;

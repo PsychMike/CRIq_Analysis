@@ -52,7 +52,7 @@ for i = 1:length(item_labels)
 end
 
 %% Find CRIq bin scores
-ages = criq_scores(:,1);
+% ages = criq_scores(:,1);
 ageless_scores = criq_scores(:,2:end);
 numerize_scores
 
@@ -61,66 +61,65 @@ bin2_scores = num_scores(:,ibin2);
 bin3_scores = num_scores(:,ibin3);
 bin4_scores = num_scores(:,ibin4);
 
-bin1_scores_m = bin1_scores;
-bin2_scores_m = bin2_scores;
-bin3_scores_m = bin3_scores;
-bin4_scores_m = bin4_scores;
+stand_count = 0;
+[top1_scores,top1_subs,stand_bins,stand_count] = find_best_scores(bin1_scores,analysis_matrix,sub_nums,stand_count);
+[top2_scores,top2_subs,stand_bins,stand_count] = find_best_scores(bin2_scores,analysis_matrix,sub_nums,stand_count,stand_bins);
+[top3_scores,top3_subs,stand_bins,stand_count] = find_best_scores(bin3_scores,analysis_matrix,sub_nums,stand_count,stand_bins);
+[top4_scores,top4_subs,stand_bins,stand_count] = find_best_scores(bin4_scores,analysis_matrix,sub_nums,stand_count,stand_bins);
 
-[top1_scores,top1_subs] = find_best_scores(bin1_scores_m,analysis_matrix,sub_nums);
-[top2_scores,top2_subs] = find_best_scores(bin2_scores_m,analysis_matrix,sub_nums);
-[top3_scores,top3_subs] = find_best_scores(bin3_scores_m,analysis_matrix,sub_nums);
-[top4_scores,top4_subs] = find_best_scores(bin4_scores_m,analysis_matrix,sub_nums);
-
-top_subs = zeros(63,4);
-top_subs(1:length(top1_subs),1) = top1_subs;
-top_subs(1:length(top2_subs),2) = top2_subs;
-top_subs(1:length(top3_subs),3) = top3_subs;
-top_subs(1:length(top4_subs),4) = top4_subs;
+% top_subs = zeros(63,4);
+% top_subs(1:length(top1_subs),1) = top1_subs;
+% top_subs(1:length(top2_subs),2) = top2_subs;
+% top_subs(1:length(top3_subs),3) = top3_subs;
+% top_subs(1:length(top4_subs),4) = top4_subs;
 
 %% Bin subjects
-try
-    clear any_vals any_vals2 sub_score_mat sub_bin_mat
-end
 
-count = 0;
-for i = 1:length(sub_nums)
-    sub_num = sub_nums(i);
-    if sum(sum(top_subs==sub_num)) == 1
-        for col = 1:4
-            any_vals = any(top_subs==sub_num);
-            if any_vals(col)
-                eval(sprintf('any_vals2 = any(top%d_subs==sub_num,2);',col));
-                eval(sprintf('sub_score_mat(sub_num,%d) = top%d_scores(any_vals2);',col,col));
-            end
-        end
-        if max(sub_score_mat(sub_num,:)) > 0
-            count = count + 1;
-            bin = find(sub_score_mat(sub_num,:) == max(sub_score_mat(sub_num,:)));
-            sub_bin_mat(count,1) = sub_num;
-            try
-                sub_bin_mat(count,2) = bin;
-            catch
-                sub_bin_mat(count,2) = 0;
-            end
-        end
-    end
-end
+find_best_bin;
+
+% try
+%     clear any_vals any_vals2 sub_score_mat sub_bin_mat
+% end
+
+% count = 0;
+% for i = 1:length(sub_nums)
+%     sub_num = sub_nums(i);
+%     if sum(sum(top_subs==sub_num)) == 1
+%         for col = 1:4
+%             any_vals = any(top_subs==sub_num);
+%             if any_vals(col)
+%                 eval(sprintf('any_vals2 = any(top%d_subs==sub_num,2);',col));
+%                 eval(sprintf('sub_score_mat(sub_num,%d) = top%d_scores(any_vals2);',col,col));
+%             end
+%         end
+%         if max(sub_score_mat(sub_num,:)) > 0
+%             count = count + 1;
+%             bin = find(sub_score_mat(sub_num,:) == max(sub_score_mat(sub_num,:)));
+%             sub_bin_mat(count,1) = sub_num;
+%             try
+%                 sub_bin_mat(count,2) = bin;
+%             catch
+%                 sub_bin_mat(count,2) = 0;
+%             end
+%         end
+%     end
+% end
 
 % Remove duplicate binned subs
-find_uniq_subs
+% find_uniq_subs
 
 % Find unique subject scores
-comb_matrix = zeros(size(analysis_matrix,1),size(analysis_matrix,2)+1);
-comb_matrix(:,1) = sub_nums;
-comb_matrix(:,2:end) = analysis_matrix;
-uniq1_scores = find_scores(uniq1_subs,analysis_matrix,sub_nums,comb_matrix);
-uniq2_scores = find_scores(uniq2_subs,analysis_matrix,sub_nums,comb_matrix);
-uniq3_scores = find_scores(uniq3_subs,analysis_matrix,sub_nums,comb_matrix);
-uniq4_scores = find_scores(uniq4_subs,analysis_matrix,sub_nums,comb_matrix);
+% comb_matrix = zeros(size(analysis_matrix,1),size(analysis_matrix,2)+1);
+% comb_matrix(:,1) = sub_nums;
+% comb_matrix(:,2:end) = analysis_matrix;
+% uniq1_scores = find_scores(uniq1_subs,analysis_matrix,sub_nums,comb_matrix);
+% uniq2_scores = find_scores(uniq2_subs,analysis_matrix,sub_nums,comb_matrix);
+% uniq3_scores = find_scores(uniq3_subs,analysis_matrix,sub_nums,comb_matrix);
+% uniq4_scores = find_scores(uniq4_subs,analysis_matrix,sub_nums,comb_matrix);
 % remove_dupes
 
 % Include only complete datasets
-try clear top1_c_scores top2_c_scores top3_c_scores top4_c_scores; end
+% try clear top1_c_scores top2_c_scores top3_c_scores top4_c_scores; end
 % for top_num = 1:4
 %     eval(sprintf('count=0;for i = 1:size(uniq%d_scores,1);if ~sum(sum(isnan(uniq%d_scores(i,:))));count=count+1;top%d_c_scores(count,:) = top%d_scores(i,:);end;end',top_num,top_num,top_num,top_num));
 % end
@@ -137,21 +136,21 @@ try clear top1_c_scores top2_c_scores top3_c_scores top4_c_scores; end
 %     end
 % end
 
-top1_c_scores = uniq1_scores;
-top2_c_scores = uniq2_scores;
-top3_c_scores = uniq3_scores;
-top4_c_scores = uniq4_scores;
+% top1_c_scores = uniq1_scores;
+% top2_c_scores = uniq2_scores;
+% top3_c_scores = uniq3_scores;
+% top4_c_scores = uniq4_scores;
 
 % top1_c_scores = top1_c_scores(1:2,:);
 % top2_c_scores = top2_c_scores(1:2,:);
 % top3_c_scores = top3_c_scores(1:2,:);
 
 % Find subs' behavioral data & bin it
-try clear anova_matrix; end
-count=0;
-for top_num = 1:4
-    eval(sprintf('sub_count=0;for i = 1:size(top%d_c_scores,1);sub_count = sub_count + 1;for j = 1:size(top%d_c_scores,2);count = count + 1;anova_matrix(count,:) = [top%d_c_scores(i,j) %d j sub_count];end;end',top_num,top_num,top_num,top_num));
-end
+% try clear anova_matrix; end
+% count=0;
+% for top_num = 1:4
+%     eval(sprintf('sub_count=0;for i = 1:size(top%d_c_scores,1);sub_count = sub_count + 1;for j = 1:size(top%d_c_scores,2);count = count + 1;anova_matrix(count,:) = [top%d_c_scores(i,j) %d j sub_count];end;end',top_num,top_num,top_num,top_num));
+% end
 
 % count = 0;
 % sub_count = 0;
@@ -167,15 +166,15 @@ end
 %     end
 % end
 
-
-
 % keyboard
-BWAOV2(anova_matrix)
+% BWAOV2(anova_matrix)
 
-function [top_scores,top_subs] = find_best_scores(bin_scores_m,analysis_matrix,sub_nums)
+function [top_scores,top_subs,stand_bins,stand_count] = find_best_scores(bin_scores_m,analysis_matrix,sub_nums,stand_count,stand_bins)
 mean_bin = mean(bin_scores_m,2);
 std_bin1 = std(mean_bin);
 stand_bin1 = (mean_bin-mean(mean_bin))/std_bin1;
+stand_count = stand_count + 1;
+stand_bins(:,stand_count) = stand_bin1;
 
 med_sbin1 = median(stand_bin1);
 top_indices = stand_bin1>=med_sbin1;
