@@ -44,4 +44,7 @@ T = table(best_mri_names',worst_mri_names','VariableNames',{'Best_FTs','Worst_FT
 %     T.best_mri_names(i) = best_mri_names(i);
 % end
 rand_num = randi(99999999);
+write2table = 0;
+if write2table
 writetable(T,sprintf('output/%d_best_worst_fts.xls',rand_num));
+end

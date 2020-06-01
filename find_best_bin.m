@@ -1,3 +1,4 @@
+%% Find which bin to bin subject in
 stand_mat = zeros(size(stand_bins,1),size(stand_bins,2));
 for i = 1:size(stand_bins,1)
     max_bin = max(stand_bins(i,:));
@@ -24,10 +25,20 @@ stand_mat_col = stand_mat(:,i);
 stand_bin_col = stand_bins(:,i);
 stand_col = stand_bin_col(stand_mat_col==1);
 sub_num_col = sub_nums(stand_mat_col==1);
+
 med_bin = median(stand_col);
 top_indices = stand_col>=med_bin;
 top_sub_nums = sub_num_col(top_indices);
 top_bin_scores = stand_col(top_indices);
+
+uplow_quart = 0;
+if uplow_quart
+med_bin = median(top_bin_scores);
+top_indices = stand_col>=med_bin;
+top_sub_nums = sub_num_col(top_indices);
+top_bin_scores = stand_col(top_indices);
+end
+
 top_scores(1:length(top_bin_scores),i) = top_bin_scores;
 top_subs(1:length(top_sub_nums),i) = top_sub_nums;
 end
