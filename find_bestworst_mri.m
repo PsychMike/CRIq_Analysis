@@ -1,9 +1,12 @@
-b_mri_count = 0;
+%% Find the corresponding MRI filenames
+
+global write2table
 
 try
     clear best_mri_names worst_mri_names
 end
 
+b_mri_count = 0;
 for i = 1:length(best_ft_subs)
     if sum(find(behav_nums==best_ft_subs(i)))
         index = find(behav_nums==best_ft_subs(i));
@@ -33,18 +36,28 @@ end
 worst_mri_nums = worst_mri_nums(worst_mri_nums>0);
 
 %% Create Excel sheet of best/worst ft names
-for i = 1:(length(best_mri_names)-length(worst_mri_names))
-    worst_mri_names{end+1} = 'NaN';
+
+% Add NaN's to make columns equal length
+% for i = 1:(length(best_mri_names)-length(worst_mri_names))
+%     worst_mri_names{end+1} = 'NaN';
+% end
+% for i = 1:(length(worst_mri_names)-length(best_mri_names))
+%     best_mri_names{end+1} = 'NaN';
+% end
+
+% Trim group subj nums to be equal
+if length(best_mri_names) > length(worst_mri_names)
+    best_mri_names = best_mri_names(1:length(worst_mri_names));
+else
+    worst_mri_names = worst_mri_names(1:length(best_mri_names));
 end
-for i = 1:(length(worst_mri_names)-length(best_mri_names))
-    best_mri_names{end+1} = 'NaN';
-end
+
 T = table(best_mri_names',worst_mri_names','VariableNames',{'Best_FTs','Worst_FTs'});
 % for i = 1:length(best_mri_names)
 %     T.best_mri_names(i) = best_mri_names(i);
 % end
 rand_num = randi(99999999);
-write2table = 0;
+
 if write2table
-writetable(T,sprintf('output/%d_best_worst_fts.xls',rand_num));
+    writetable(T,sprintf('output/%d_best_worst_fts.xls',rand_num));
 end

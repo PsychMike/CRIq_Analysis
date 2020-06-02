@@ -1,4 +1,4 @@
-function [m_ft_data] = find_outliers(ft_data)
+function [m_ft_data,m_ft_subs] = find_outliers(ft_data,ft_subs)
 
 %% Find outliers
 for i = 1:size(ft_data,2)
@@ -38,13 +38,13 @@ for i = 1:size(ft_data,2)
             new_ft_data(j,i) = NaN;
         end
     end
-    
 end
 count = 0;
 for j = 1:size(new_ft_data,1)
     if ~sum(isnan(new_ft_data(j,:)))
         count = count + 1;
         m_ft_data(count,:) = new_ft_data(j,:);
+        m_ft_subs(count) = ft_subs(j);
     end
 end
 

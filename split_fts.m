@@ -1,25 +1,6 @@
 %% Split data into upper & lower tiers
 
-% Eliminate outliers?
-elim_outliers = 0;
-
-% Run ANOVA on all variables?
-anova_all_data = 0;
-
-% Use binned data?
-binning = 1;
-one_col = 1;
-two_col = 3;
-
-% Use subjects with high variance between bin scores?
-use_vars = 0;
-
-% Use upper & lower quartile data?
-uplow_quart = 1;
-if binning == 1; uplow_quart = 0; end
-
-% Add more subs to quartiles? (top & bottom 37.5%)
-more_subs = 1;
+global use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs
 
 % Fix & set variables
 CRIs_to_use = CRI_ft_vals;
@@ -33,6 +14,7 @@ for i = 1:size(analysis_matrix,1)
         flipped_CRIs(i,:) = CRIs_to_use(i);
         good_indices(i) = 1;
     else
+        keyboard
         good_indices(i) = 0;
     end
 end
@@ -48,8 +30,8 @@ if use_vars
     find_binvariances;
     flipped_gi = good_indices';
     stand_bins = stand_bins(flipped_gi==1,:);
-    stand_bins = stand_bins(var_indices==1,:);
-    find_best_bin;
+%     stand_bins = stand_bins(var_indices==1,:);
+    find_topvars;
 end
 
 add_row = 0;
@@ -130,21 +112,39 @@ end
 
 %% Find bin data, if binning
 if binning
+    clear best_ft_subs worst_ft_subs
     one_count = 0; two_count = 0;
     for i = 1:length(sub_nums)
         for j = 1:length(top_subs(:,one_col))
             if sub_nums(i) == top_subs(j,one_col)
                 one_count = one_count + 1;
                 one_col_data(one_count,:) = analysis_matrix(i,:);
+                best_ft_subs(one_count) = sub_nums(i);
             end
             if sub_nums(i) == top_subs(j,two_col)
                 two_count = two_count + 1;
                 two_col_data(two_count,:) = analysis_matrix(i,:);
+                worst_ft_subs(two_count) = sub_nums(i);
             end
         end
     end
     best_ft_data = one_col_data;
     worst_ft_data = two_col_data;
+end
+
+%% Eliminate outliers from the datasets
+if elim_outliers
+    [best_ft_data,best_ft_subs] = find_outliers(best_ft_data,best_ft_subs);
+    [worst_ft_data,worst_ft_subs] = find_outliers(worst_ft_data,worst_ft_subs);
+end
+
+%% Cut datasets to same size
+if cut_to_samesize
+    if length(best_ft_data) > length(worst_ft_data)
+        best_ft_data = best_ft_data(1:length(worst_ft_data),:);
+    else
+        worst_ft_data = worst_ft_data(1:length(best_ft_data),:);
+    end
 end
 
 %% Find upper & lower quartile data
@@ -185,12 +185,6 @@ if uplow_quart && ~binning
         end
     end
     b2_med=median(best_fts2);w2_med=median(worst_fts2);
-end
-
-% Eliminate outliers
-if elim_outliers
-    best_ft_data = find_outliers(best_ft_data);
-    worst_ft_data = find_outliers(worst_ft_data);
 end
 
 fBest_ft_data = best_ft_data(~isnan(best_ft_data));
@@ -285,6 +279,12 @@ for start_point = 1:for_end
         P1 = BWAOV2(anova_matrix);
         if ~anova_all_data
             Ps(start_point) = P1;
+            if Ps(start_point) < 0.05
+                signif = 1;
+                signif_points(start_point) = 1;
+            else
+                signif_points(start_point) = 0;
+            end
         end
     end
 end

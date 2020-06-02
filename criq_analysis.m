@@ -1,9 +1,39 @@
 clear all
 
-global norm_score_vals
+global norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table
+
+% Write MRI datafile names to file?
+write2table = 1;
+
+% Eliminate outliers?
+elim_outliers = 1;
+
+% Run ANOVA on all variables?
+anova_all_data = 0;
+
+% Use binned data?
+% if (~exist('binning') && ~exist('one_col') && ~exist('two_col')) || isempty(binning)
+binning = 1;
+one_col = 3;
+two_col = 4;
+% end
+
+% Use upper & lower quartile data?
+uplow_quart = 0;
+if binning == 1; uplow_quart = 0; end
+
+% Add more subs to quartiles? (top & bottom 37.5%)
+more_subs = 0;
 
 % Normalize scores?
 norm_score_vals = 1;
+
+% Ensure compared sub #'s are the same?
+cut_to_samesize = 1;
+
+% Use subjects with high variance between bin scores?
+use_vars = 1;
+
 
 %% Add stats folder %%
 addpath('StatsFunctions');
@@ -245,7 +275,7 @@ start_point = 6;
 % analysis_matrix = [analysis_matrix(1:skip_point) analysis_matrix(start_point:end)];
 
 count_complete_subs;
-% 
+%
 % complete_subs = analysis_matrix;
 
 [r,p,rlo,rup]=corrcoef(complete_subs);

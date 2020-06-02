@@ -1,5 +1,7 @@
 %% Bin subs by cluster
 
+global use_vars binning one_col two_col
+
 % Grab leisure item scores
 criq_l_scores = extract_scores(:,9:end);
 
@@ -69,7 +71,11 @@ stand_count = 0;
 
 %% Bin subjects
 
-find_best_bin;
+if use_vars
+    find_topvars;
+else
+    find_best_bin;
+end
 
 function [top_scores,top_subs,stand_bins,stand_count] = find_best_scores(bin_scores_m,analysis_matrix,sub_nums,stand_count,stand_bins)
 mean_bin = mean(bin_scores_m,2);
