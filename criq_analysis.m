@@ -3,7 +3,7 @@ clear all
 global norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table
 
 % Write MRI datafile names to file?
-write2table = 1;
+write2table = 0;
 
 % Eliminate outliers?
 elim_outliers = 1;
@@ -13,13 +13,13 @@ anova_all_data = 0;
 
 % Use binned data?
 % if (~exist('binning') && ~exist('one_col') && ~exist('two_col')) || isempty(binning)
-binning = 1;
+binning = 0;
 one_col = 3;
 two_col = 4;
 % end
 
 % Use upper & lower quartile data?
-uplow_quart = 0;
+uplow_quart = 1;
 if binning == 1; uplow_quart = 0; end
 
 % Add more subs to quartiles? (top & bottom 37.5%)

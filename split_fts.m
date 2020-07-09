@@ -205,8 +205,16 @@ if plot_ft
     xticklabels(var_names(end-size(best_ft_data,2)+1:end));
     xlim([0 size(best_ft_data,2)+1]);
     ylim([0.2 1.2]);
-    lgd = legend(sprintf('best n = %d',length(best_ft_data)),sprintf('worst n = %d',length(worst_ft_data)));
+    if binning
+        comp1 = sprintf('Bin %d',one_col);
+        comp2 = sprintf('Bin %d',two_col);
+    else
+        comp1 = 'Upper';
+        comp2 = 'Lower';
+    end
+    lgd = legend(sprintf('%s n = %d',comp1,length(best_ft_data)),sprintf('%s n = %d',comp2,length(worst_ft_data)));
     lgd.Location = 'northeast';
+    title(sprintf('%s - %s Comparison',comp1,comp2));
 end
 
 % Choose which variables to include in ANOVA
