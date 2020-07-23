@@ -4,6 +4,8 @@ global use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outlier
 
 % Fix & set variables
 CRIs_to_use = CRI_ft_vals;
+% edu_scores = analysis_matrix(:,3);
+am2 = analysis_matrix;
 analysis_matrix = analysis_matrix(:,7:end);
 
 % Only include complete datasets
@@ -11,6 +13,7 @@ for i = 1:size(analysis_matrix,1)
     if ~sum(isnan(analysis_matrix(i,:)))
         new_analy_matrix(i,:) = analysis_matrix(i,:);
         ages(i,:) = extract_scores(i,1);
+        edu_scores(i,:) = am2(i,3);
         flipped_CRIs(i,:) = CRIs_to_use(i);
         good_indices(i) = 1;
     else
@@ -25,6 +28,7 @@ new_analy_matrix = new_analy_matrix(good_indices==1,:);
 analysis_matrix = new_analy_matrix;
 sub_nums = sub_nums(good_indices==1);
 ages = ages(good_indices==1);
+edu_scores = edu_scores(good_indices==1);
 
 if use_vars
     find_binvariances;
@@ -36,16 +40,18 @@ end
 
 add_row = 0;
 for row = 1:length(flipped_CRIs)
-    if ~isnan(flipped_CRIs(row)) && ~isnan(ages(row))
+    if ~isnan(flipped_CRIs(row)) && ~isnan(ages(row)) && ~isnan(edu_scores(row))
         add_row = add_row + 1;
         new_ft_vals(add_row) = flipped_CRIs(row);
         new_ages(add_row) = ages(row);
+        new_edus(add_row) = edu_scores(row);
     else
         keyboard
     end
 end
 
 ages = new_ages;
+edu_scores = new_edus;
 
 % mean_ft = mean(new_ft_vals);
 % std_ft = std(new_ft_vals);
@@ -87,8 +93,44 @@ mean_ft = mean(new_ft_vals);
 std_ft = std(new_ft_vals);
 stand_fts = (new_ft_vals-mean_ft)/std_ft;
 scaled_fts = stand_fts*15+100;
-
 med_ft = median(scaled_fts);% Find best & worst subs and their data
+
+%% Plot linear regression of education & leisure scores
+x = edu_scores;
+y = new_ft_vals;
+% y = scaled_fts;
+x = x';
+y = y';
+format long
+b1 = x\y;
+
+close all
+figure
+yCalc1 = b1*x;
+scatter(x,y)
+hold on
+plot(x,yCalc1)
+xlabel('Age')
+ylabel('Leisure Scores')
+title('Linear Regression Relation Between Education & Leisure Scores')
+grid on
+X = [ones(length(x),1) x];
+b = X\y;
+yCalc2 = X*b;
+plot(x,yCalc2,'--')
+legend('Data','Slope','Slope & Intercept','Location','best');
+Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
+Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
+
+new_ft_vals = new_ft_vals - yCalc2';
+% new_ft_vals = yCalc2;
+mean_ft = mean(new_ft_vals);
+std_ft = std(new_ft_vals);
+stand_fts = (new_ft_vals-mean_ft)/std_ft;
+scaled_fts = stand_fts*15+100;
+med_ft = median(scaled_fts);% Find best & worst subs and their data
+%%
+
 best_count = 0;
 worst_count = 0;
 

@@ -6,7 +6,7 @@ global norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_sames
 addpath('StatsFunctions');
 
 % Write MRI datafile names to file?
-write2table = 1;
+write2table = 0;
 
 % Eliminate outliers?
 elim_outliers = 1;
@@ -16,9 +16,9 @@ anova_all_data = 0;
 
 % Use binned data?
 % if (~exist('binning') && ~exist('one_col') && ~exist('two_col')) || isempty(binning)
-binning = 1;
-one_col = 1;
-two_col = 2;
+binning = 0;
+one_col = 3;
+two_col = 4;
 % end
 
 % Use upper & lower quartile data?
