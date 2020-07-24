@@ -1,32 +1,47 @@
+% function criq_analysis(run_all,write2table,elim_outliers,binning,one_col,two_col,uplow_quart,more_subs,use_vars)
+%Runs all analyses using CRIq data
 clear all
-
-global norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table
+global norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all
 
 % Add stat functions to path
 addpath('StatsFunctions');
 
 % Write MRI datafile names to file?
-write2table = 0;
+% if nargin < 2
+write2table = 2;
+% end
 
 % Eliminate outliers?
+% if nargin < 3
 elim_outliers = 1;
+% end
 
 % Run ANOVA on all variables?
 anova_all_data = 0;
 
 % Use binned data?
 % if (~exist('binning') && ~exist('one_col') && ~exist('two_col')) || isempty(binning)
+% if nargin < 4
 binning = 0;
-one_col = 3;
+% end
+% if nargin < 5
+one_col = 2;
+% end
+% if nargin < 6
 two_col = 4;
+% end
 % end
 
 % Use upper & lower quartile data?
+% if nargin < 7
 uplow_quart = 1;
 if binning == 1; uplow_quart = 0; end
+% end
 
 % Add more subs to quartiles? (top & bottom 37.5%)
+% if nargin < 8
 more_subs = 0;
+% end
 
 % Normalize scores?
 norm_score_vals = 1;
@@ -35,7 +50,9 @@ norm_score_vals = 1;
 cut_to_samesize = 1;
 
 % Use subjects with high variance between bin scores?
+% if nargin < 9
 use_vars = 1;
+% end
 
 
 %% Add stats folder %%
@@ -353,3 +370,4 @@ bin_cluster_subs;
 split_fts;
 read_studysheet;
 find_bestworst_mri;
+% end

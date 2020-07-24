@@ -1,4 +1,4 @@
-clear all
+function criq_analysis(run_all,write2table,elim_outliers,uplow_quart,cut_to_samesize,one_col,two_col,more_subs)
 
 global norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table
 
@@ -6,33 +6,47 @@ global norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_sames
 addpath('StatsFunctions');
 
 % Write MRI datafile names to file?
-write2table = 0;
+if nargin < 2
+write2table = 2;
+end
 
 % Eliminate outliers?
-elim_outliers = 0;
+if nargin < 3
+elim_outliers = 1;
+end
 
 % Run ANOVA on all variables?
 anova_all_data = 0;
 
 % Use binned data?
 % if (~exist('binning') && ~exist('one_col') && ~exist('two_col')) || isempty(binning)
-binning = 1;
-one_col = 3;
+if nargin < 4
+binning = 0;
+end
+if nargin < 5
+one_col = 2;
+end
+if nargin < 6
 two_col = 4;
+end
 % end
 
 % Use upper & lower quartile data?
-uplow_quart = 0;
+if nargin < 7
+uplow_quart = 1;
 if binning == 1; uplow_quart = 0; end
+end
 
 % Add more subs to quartiles? (top & bottom 37.5%)
+if nargin < 8
 more_subs = 0;
+end
 
 % Normalize scores?
 norm_score_vals = 1;
 
 % Ensure compared sub #'s are the same?
-cut_to_samesize = 1;
+cut_to_samesize = 0;
 
 % Use subjects with high variance between bin scores?
 use_vars = 1;

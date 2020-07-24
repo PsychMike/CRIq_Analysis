@@ -63,15 +63,9 @@ rand_num = randi(99999999);
 if write2table
     best = 'B';
     table_name = sprintf('output/%sb%dc%d%du%de%dm%d.mat',best,binning,one_col,two_col,uplow_quart,elim_outliers,more_subs);
-    if exist(table_name,'file') 
-        delete(table_name);
-    end
     save(table_name,'Best_FTs');
-    best = 'W';
+    best = 'W;
     table_name = sprintf('output/%sb%dc%d%du%de%dm%d.mat',best,binning,one_col,two_col,uplow_quart,elim_outliers,more_subs);
-    if exist(table_name,'file') 
-        delete(table_name);
-    end
     save(table_name,'Worst_FTs');
 %     table_name = sprintf('output/b%dc%d%du%de%dm%d.xls',binning,one_col,two_col,uplow_quart,elim_outliers,more_subs);
 %     if exist(table_name,'file') 

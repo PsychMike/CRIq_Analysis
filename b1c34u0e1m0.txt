@@ -1,0 +1,6 @@
+Best_FTs,Worst_FTs
+/project/3015046.06/bids/sub-005/anat/sub-005_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz,/project/3015046.06/bids/sub-024/anat/sub-024_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz
+/project/3015046.06/bids/sub-011/anat/sub-011_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz,/project/3015046.06/bids/sub-019/anat/sub-019_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz
+/project/3015046.06/bids/sub-044/anat/sub-044_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz,/project/3015046.06/bids/sub-012/anat/sub-012_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz
+/project/3015046.06/bids/sub-041/anat/sub-041_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz,/project/3015046.06/bids/sub-040/anat/sub-040_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz
+/project/3015046.06/bids/sub-066/anat/sub-066_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz,/project/3015046.06/bids/sub-051/anat/sub-051_acq-MPRAGE_rec-norm_run-1_T1w.nii.gz
