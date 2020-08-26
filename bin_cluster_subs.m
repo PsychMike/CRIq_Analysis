@@ -1,6 +1,7 @@
 %% Bin subs by cluster
 
-global use_vars binning one_col two_col
+global use_vars 
+% binning one_col two_col
 
 % Grab leisure item scores
 criq_l_scores = extract_scores(:,9:end);

@@ -1,5 +1,5 @@
+global one_col two_col
 %% Find subjects with high variance between bins
-
 n = size(stand_bins,2);
 k = 2;
 num_comps = factorial(n)/(factorial(k)*factorial(n-k));
@@ -23,6 +23,7 @@ for i = 1:size(stand_bins,1) %every subject
 end
 
 % Find highest varying subs
+try clear top_sub_vars; end
 for i = 1:size(sub_var_scores,2)
     top_count = 0;
     med_var = median(sub_var_scores(:,i));
@@ -46,11 +47,17 @@ for i = 1:size(top_sub_vars,1)
         try
         if stand_bins(snum_index,one_comp) > stand_bins(snum_index,two_comp)
             sub_varbin(i,j) = one_comp;
+            if one_comp == wanted_one_comp
+                want_subs(i,j) = one_comp;
+            end
         else
             sub_varbin(i,j) = two_comp;
+            if two_comp == wanted_two_comp
+                want_subs(i,j) = two_comp;
+            end
         end
-        catch
-            keyboard
+%         catch
+%             keyboard
         end
     end
 end
@@ -58,6 +65,8 @@ end
 % Create comparison columns with wanted comparison
 try clear top_subs; end
 one_comp_count = 0; two_comp_count = 0;
+% wanted_col = 6;
+% sub_varbin = want_subs;
 for i = 1:length(sub_varbin(:,wanted_col))
     wanted_sub = top_sub_vars(i,wanted_col);
     right_col = sub_varbin(i,wanted_col);

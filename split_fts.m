@@ -365,6 +365,8 @@ for start_point = 1:for_end
 end
 
 if ~anova_all_data
+    one_col
+    two_col
     Ps = round(Ps,2,'decimal');
     table(Ps(1),Ps(2),Ps(3),Ps(4),Ps(5),Ps(6),Ps(7),'VariableNames',{'SR','TMT','WMS','Stroop','Mem','MOCA','Reading'})
 end

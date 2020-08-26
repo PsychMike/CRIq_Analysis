@@ -6,6 +6,9 @@ global norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_sames
 % Add stat functions to path
 addpath('StatsFunctions');
 
+%Run all bins + best/worst?
+run_all = 0;
+
 % Write MRI datafile names to file?
 % if nargin < 2
 write2table = 2;
@@ -25,7 +28,7 @@ anova_all_data = 0;
 binning = 0;
 % end
 % if nargin < 5
-one_col = 2;
+one_col = 3;
 % end
 % if nargin < 6
 two_col = 4;
@@ -366,8 +369,40 @@ xlswrite('extract_scores.xlsx',extract_scores);
 % xlswrite('CRIq_new_dataworksheet.xlsx',new_worksheet);
 
 %% Other functions
-bin_cluster_subs;
-split_fts;
-read_studysheet;
-find_bestworst_mri;
+if run_all
+    runs = 6;
+    for i = 1:runs
+        if i > 1
+            binning = 1;
+            use_vars = 1;
+        else
+            binning = 0;
+            use_vars = 0;
+        end
+        if i == 1; one_col = 0; two_col = 0;
+        elseif i == 2; one_col = 1; two_col = 2;
+        elseif i == 3; one_col = 1; two_col = 3;
+        elseif i == 4; one_col = 1; two_col = 4;
+        elseif i == 5; one_col = 2; two_col = 3;
+        elseif i == 6; one_col = 3; two_col = 4;
+        end
+        clearvars -except var_names CRI_ft_vals sub_nums criq_scores analysis_matrix extract_scores binning one_col two_col norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all
+        bin_cluster_subs;
+        split_fts;
+        read_studysheet;
+        find_bestworst_mri;
+    end
+else
+    runs = 1;
+    bin_cluster_subs;
+    split_fts;
+    read_studysheet;
+    find_bestworst_mri;
+end
+% for i = 1:runs
+% bin_cluster_subs;
+% split_fts;
+% read_studysheet;
+% find_bestworst_mri;
+% end
 % end

@@ -44,7 +44,11 @@ for j = 1:size(new_ft_data,1)
     if ~sum(isnan(new_ft_data(j,:)))
         count = count + 1;
         m_ft_data(count,:) = new_ft_data(j,:);
+        try
         m_ft_subs(count) = ft_subs(j);
+        catch
+            keyboard
+        end
     end
 end
 
