@@ -2,7 +2,7 @@
 %Runs all analyses using CRIq data
 clearvars -except comps1 comps2 signif_count binning one_col two_col c signif
 
-global use_ranks all_labels norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all
+global all_labels norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all
 
 % Add stat functions to path
 addpath('StatsFunctions');
@@ -11,7 +11,7 @@ addpath('StatsFunctions');
 run_all = 0;
 
 %Use normal binning or CA/SA binning?
-all_labels = 1;
+all_labels = 0;
 
 % Write MRI datafile names to file?
 % if nargin < 2
@@ -56,17 +56,13 @@ more_subs = 0;
 norm_score_vals = 1;
 
 % Ensure compared sub #'s are the same?
-cut_to_samesize = 0;
+cut_to_samesize = 1;
 
 % Use subjects with high variance between bin scores?
 % if nargin < 9
 use_vars = 1;
 % end
 
-% Use rankings of leisure items by subjective cognitive effort
-% if nargin < 10
-use_ranks = 1;
-% end
 
 %% Add stats folder %%
 addpath('StatsFunctions');

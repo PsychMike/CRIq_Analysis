@@ -4,6 +4,7 @@ n = size(stand_bins,2);
 k = 2;
 num_comps = factorial(n)/(factorial(k)*factorial(n-k));
 comparisons = [{'1,2'},{'1,3'},{'1,4'},{'2,3'},{'2,4'},{'3,4'}];
+num_comps = length(comparisons);
 wanted_comp = sprintf('%d,%d',one_col,two_col);
 
 % Find diff vals between bins
@@ -18,6 +19,11 @@ for i = 1:size(stand_bins,1) %every subject
             wanted_two_comp = two_comp;
             wanted_col = j;
         end
+        %         try
+        %             sub_var_scores(i,j) = abs(stand_bins(i,one_comp)-(stand_bins(i,two_comp)));
+        %         catch
+        %             keyboard
+        %         end
         sub_var_scores(i,j) = abs(stand_bins(i,one_comp)-(stand_bins(i,two_comp)));
     end
 end
@@ -45,19 +51,19 @@ for i = 1:size(top_sub_vars,1)
         one_comp = str2num(curr_comp(1));
         two_comp = str2num(curr_comp(end));
         try
-        if stand_bins(snum_index,one_comp) > stand_bins(snum_index,two_comp)
-            sub_varbin(i,j) = one_comp;
-            if one_comp == wanted_one_comp
-                want_subs(i,j) = one_comp;
+            if stand_bins(snum_index,one_comp) > stand_bins(snum_index,two_comp)
+                sub_varbin(i,j) = one_comp;
+                if one_comp == wanted_one_comp
+                    want_subs(i,j) = one_comp;
+                end
+            else
+                sub_varbin(i,j) = two_comp;
+                if two_comp == wanted_two_comp
+                    want_subs(i,j) = two_comp;
+                end
             end
-        else
-            sub_varbin(i,j) = two_comp;
-            if two_comp == wanted_two_comp
-                want_subs(i,j) = two_comp;
-            end
-        end
-%         catch
-%             keyboard
+            %         catch
+            %             keyboard
         end
     end
 end

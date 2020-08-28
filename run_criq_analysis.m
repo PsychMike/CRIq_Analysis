@@ -1,9 +1,12 @@
 clear all
-
+global one_col two_col
 binning = 1;
 
-comps1 = [1;1;1;2;2;3];
-comps2 = [2;3;4;3;4;4];
+% comps1 = [1;1;1;2;2;3];
+% comps2 = [2;3;4;3;4;4];
+
+comps1 = 3;
+comps2 = 4;
 
 signif_count = 0;
 for c = 1:length(comps1)
@@ -17,4 +20,4 @@ for c = 1:length(comps1)
         signifs(signif_count,2:length(signif_points)+1) = signif_points;
     end
 end
-keyboard
+% keyboard
