@@ -1,6 +1,6 @@
 %Orders leisure activities by cognitive rankings
 % clear all
-[worksheet,txt,raw] = xlsread('cogrankings.csv');
+[worksheet,txt,raw] = xlsread('rankleis2.csv');
 
 % labels = txt{1,:};
 % for i = 1:length(labels)

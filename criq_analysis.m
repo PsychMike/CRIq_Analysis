@@ -65,7 +65,7 @@ use_vars = 1;
 
 % Use rankings of leisure items by subjective cognitive effort
 % if nargin < 10
-use_ranks = 1;
+use_ranks = 0;
 % end
 
 %% Add stats folder %%
