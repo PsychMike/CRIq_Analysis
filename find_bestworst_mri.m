@@ -62,13 +62,13 @@ rand_num = randi(99999999);
 
 if write2table
     best = 'B';
-    table_name = sprintf('output/%sb%dc%d%du%de%dm%d.mat',best,binning,one_col,two_col,uplow_quart,elim_outliers,more_subs);
+    table_name = sprintf('output/%sb%dc%d%du%de%dm%di%d.mat',best,binning,one_col,two_col,uplow_quart,elim_outliers,more_subs,indiv);
     if exist(table_name,'file') 
         delete(table_name);
     end
     save(table_name,'Best_FTs');
     best = 'W';
-    table_name = sprintf('output/%sb%dc%d%du%de%dm%d.mat',best,binning,one_col,two_col,uplow_quart,elim_outliers,more_subs);
+    table_name = sprintf('output/%sb%dc%d%du%de%dm%di%d.mat',best,binning,one_col,two_col,uplow_quart,elim_outliers,more_subs,indiv);
     if exist(table_name,'file') 
         delete(table_name);
     end
@@ -79,3 +79,4 @@ if write2table
 %     end
 %     writetable(T,table_name);
 end
+clear best_ft_data best_ft_subs best_fts best_is worst_ft_data worst_ft_subs worst_fts worst_is

@@ -224,7 +224,7 @@ if uplow_quart && ~binning
         w_med = w2_med;
     end
     
-    clear best_fts bestis best_ft_data best_ft_subs worst_fts worst_is worst_ft_data worst_ft_subs
+%     clear best_fts bestis best_ft_data best_ft_subs worst_fts worst_is worst_ft_data worst_ft_subs
     best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
     for i = 1:length(scaled_fts)
         if ~isnan(scaled_fts(i))
@@ -286,11 +286,13 @@ end
 
 % Choose which variables to include in ANOVA
 Ps = zeros(1,size(best_ft_data,2));
+anova_all_data = 0;
 if anova_all_data
     for_end = 1;
 else
     for_end = size(best_ft_data,2);
 end
+for_end = 7;
 for start_point = 1:for_end
     if anova_all_data
         start_point = 1;
@@ -298,8 +300,12 @@ for start_point = 1:for_end
     else
         end_point = start_point;
     end
+    try
     m_best_ft_data = best_ft_data(:,start_point:end_point);
     m_worst_ft_data = worst_ft_data(:,start_point:end_point);
+    catch
+        keyboard
+    end
     for a = 1:2
         if a == 1
             mod_wrksht = m_best_ft_data;
@@ -370,6 +376,6 @@ if ~anova_all_data
     Ps = round(Ps,2,'decimal');
     table(Ps(1),Ps(2),Ps(3),Ps(4),Ps(5),Ps(6),Ps(7),'VariableNames',{'SR','TMT','WMS','Stroop','Mem','MOCA','Reading'})
 end
-
+start_point = 1;
 % [d,p] = manova1([manova_matrix(:,1) manova_matrix(:,2) manova_matrix(:,3) ...
 %     manova_matrix(:,4) manova_matrix(:,5) manova_matrix(:,6)],origin)

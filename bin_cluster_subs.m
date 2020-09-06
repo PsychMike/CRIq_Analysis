@@ -1,6 +1,6 @@
 %% Bin subs by cluster
 
-global use_vars all_labels use_ranks
+global use_vars all_labels use_ranks use_indivs
 % binning one_col two_col
 
 % Grab leisure item scores
@@ -37,9 +37,22 @@ item_labels = {'newspaper','chores','driving','leisure_acts','new_tech','social'
 %     bin1 = {'volunteer','pets'};
 %     bin2 = {'leisure_acts','cinema','volunteer','journeys','pets'};
 % end
+all_bins = item_labels;
+% all_bins = {'newspaper','account','new_tech','children','driving','chores','garden', ...
+%     'cinema','concerts','reading','journeys','art','social','volunteer','leisure_acts', ...
+%     'grandchildren','pets'};
 
+if use_indivs
+bin1 = all_bins(indiv);
+if indiv == 1
+bin2 = all_bins(2:end);
+else
+    bin2 = all_bins(1:length(all_bins)~=indiv);
+end
+else
 bin1 = {'newspaper','driving','garden','reading','concerts','cinema'};
 bin2 = {'chores','account','social','grandchildren','journeys','pets'};
+end
 if use_ranks
     leisurebyranking;
     bin3 = best_leis;

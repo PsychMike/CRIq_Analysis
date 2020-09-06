@@ -1,8 +1,8 @@
 % function criq_analysis(run_all,write2table,elim_outliers,binning,one_col,two_col,uplow_quart,more_subs,use_vars)
 %Runs all analyses using CRIq data
-clearvars -except comps1 comps2 signif_count binning one_col two_col c signif
+clearvars -except comps1 comps2 signif_count binning one_col two_col c signif indiv
 
-global use_ranks all_labels norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all
+global use_indivs use_ranks all_labels norm_score_vals use_vars binning uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all
 
 % Add stat functions to path
 addpath('StatsFunctions');
@@ -29,7 +29,7 @@ anova_all_data = 0;
 % Use binned data?
 % if (~exist('binning') && ~exist('one_col') && ~exist('two_col')) || isempty(binning)
 % if nargin < 4
-% binning = 0;
+binning = 1;
 % end
 % if nargin < 5
 % if ~exist(one_col)
@@ -56,16 +56,26 @@ more_subs = 0;
 norm_score_vals = 1;
 
 % Ensure compared sub #'s are the same?
-cut_to_samesize = 0;
+cut_to_samesize = 1;
 
 % Use subjects with high variance between bin scores?
 % if nargin < 9
-use_vars = 1;
+use_vars = 0;
 % end
 
 % Use rankings of leisure items by subjective cognitive effort
 % if nargin < 10
 use_ranks = 0;
+% end
+
+% Individually analyze leisure items?
+% if nargin < 11
+use_indivs = 1;
+if use_indivs
+    indiv_comps = 17;
+else
+    indiv_comps = 1;
+end
 % end
 
 %% Add stats folder %%
@@ -379,36 +389,39 @@ xlswrite('extract_scores.xlsx',extract_scores);
 % xlswrite('CRIq_new_dataworksheet.xlsx',new_worksheet);
 
 %% Other functions
-if run_all
-    runs = 6;
-    for i = 1:runs
-        if i > 1
-            binning = 1;
-            use_vars = 1;
-        else
-            binning = 0;
-            use_vars = 0;
+% for indiv = 1:indiv_comps
+    if run_all
+        runs = 6;
+        for i = 1:runs
+            if i > 1
+                binning = 1;
+                use_vars = 1;
+            else
+                binning = 0;
+                use_vars = 0;
+            end
+            if i == 1; one_col = 0; two_col = 0;
+            elseif i == 2; one_col = 1; two_col = 2;
+            elseif i == 3; one_col = 1; two_col = 3;
+            elseif i == 4; one_col = 1; two_col = 4;
+            elseif i == 5; one_col = 2; two_col = 3;
+            elseif i == 6; one_col = 3; two_col = 4;
+            end
+            clearvars -except var_names CRI_ft_vals sub_nums criq_scores analysis_matrix extract_scores binning one_col two_col norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all indiv use_indivs
+            bin_cluster_subs;
+            split_fts;
+            read_studysheet;
+            find_bestworst_mri;
         end
-        if i == 1; one_col = 0; two_col = 0;
-        elseif i == 2; one_col = 1; two_col = 2;
-        elseif i == 3; one_col = 1; two_col = 3;
-        elseif i == 4; one_col = 1; two_col = 4;
-        elseif i == 5; one_col = 2; two_col = 3;
-        elseif i == 6; one_col = 3; two_col = 4;
-        end
-        clearvars -except var_names CRI_ft_vals sub_nums criq_scores analysis_matrix extract_scores binning one_col two_col norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all
+    else
+        runs = 1;
         bin_cluster_subs;
         split_fts;
         read_studysheet;
         find_bestworst_mri;
+%         clearvars -except var_names CRI_ft_vals sub_nums criq_scores analysis_matrix extract_scores binning one_col two_col norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all indiv use_indivs signif signif_points
     end
-else
-    runs = 1;
-    bin_cluster_subs;
-    split_fts;
-    read_studysheet;
-    find_bestworst_mri;
-end
+% end
 % for i = 1:runs
 % bin_cluster_subs;
 % split_fts;
