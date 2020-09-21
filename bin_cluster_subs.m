@@ -25,14 +25,14 @@ item_labels = {'newspaper','chores','driving','leisure_acts','new_tech','social'
 %     bin3 = {'social','volunteer','leisure_acts'};
 %     bin4 = {'grandchildren','pets'};
 % else
-    % Set bin labels for cognitive activities(CA) & social activities(SA)
-    %     bin1 = {'newspaper','chores','driving','new_tech','garden','art','reading','account'};
-    %     bin2 = {'social','grandchildren','concerts','children'};
-    %strict cogn
+% Set bin labels for cognitive activities(CA) & social activities(SA)
+%     bin1 = {'newspaper','chores','driving','new_tech','garden','art','reading','account'};
+%     bin2 = {'social','grandchildren','concerts','children'};
+%strict cogn
 %     bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account','leisure_acts','journeys','cinema'};
-    %incl cogn
+%incl cogn
 %     bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account','leisure_acts','journeys','cinema','volunteer','pets'};
-    %     bin4 = {'social','grandchildren','concerts','children'};
+%     bin4 = {'social','grandchildren','concerts','children'};
 %     bin4 = {'social','grandchildren','children'};
 %     bin1 = {'volunteer','pets'};
 %     bin2 = {'leisure_acts','cinema','volunteer','journeys','pets'};
@@ -43,15 +43,15 @@ all_bins = item_labels;
 %     'grandchildren','pets'};
 
 if use_indivs
-bin1 = all_bins(indiv);
-if indiv == 1
-bin2 = all_bins(2:end);
+    bin1 = all_bins(indiv);
+    if indiv == 1
+        bin2 = all_bins(2:end);
+    else
+        bin2 = all_bins(1:length(all_bins)~=indiv);
+    end
 else
-    bin2 = all_bins(1:length(all_bins)~=indiv);
-end
-else
-bin1 = {'newspaper','driving','garden','reading','concerts','cinema'};
-bin2 = {'chores','account','social','grandchildren','journeys','pets'};
+    bin1 = {'newspaper','driving','garden','reading','concerts','cinema'};
+    bin2 = {'chores','account','social','grandchildren','journeys','pets'};
 end
 if use_ranks
     leisurebyranking;

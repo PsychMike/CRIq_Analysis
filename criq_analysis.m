@@ -8,9 +8,9 @@ global use_indivs use_ranks all_labels norm_score_vals use_vars binning uplow_qu
 addpath('StatsFunctions');
 
 %Run all bins + best/worst?
-run_all = 0;
+run_all = 1;
 
-%Use normal binning or CA/SA binning?
+%Use normal binning or CA/Sbin3_scoresA binning?
 all_labels = 1;
 
 % Write MRI datafile names to file?
@@ -33,13 +33,18 @@ binning = 1;
 % end
 % if nargin < 5
 % if ~exist(one_col)
-% one_col = 1;
-% end
-% if nargin < 6
-% if ~exist(two_col)
-% two_col = 3;
-% end
-% end
+if binning
+%     one_col = 1;
+    % end
+    % if nargin < 6
+    % if ~exist(two_col)
+%     two_col = 2;
+    % end
+    % end
+else
+    one_col = 0;
+    two_col = 0;
+end
 
 % Use upper & lower quartile data?
 % if nargin < 7
@@ -70,10 +75,11 @@ use_ranks = 0;
 
 % Individually analyze leisure items?
 % if nargin < 11
-use_indivs = 1;
+use_indivs = 0;
 if use_indivs
     indiv_comps = 17;
 else
+    indiv = 0;
     indiv_comps = 1;
 end
 % end
@@ -274,7 +280,11 @@ fix_wms;
 WMS_vals = wms_tot_nVals;
 if normalize; WMS_vals = normalize_values(WMS_vals); end
 
-stroop_vals = worksheet(:,44) + worksheet(:,45) + worksheet(:,46);
+% stroop_vals = worksheet(:,44) + worksheet(:,45) + worksheet(:,46); old method
+c_score = worksheet(:,44);
+w_score = worksheet(:,45);
+cw_score = worksheet(:,46);
+stroop_vals = ((c_score+w_score)/2) - cw_score;
 % stroop_vals = stroop_vals(1:current_sub);
 fix_stroop;
 if normalize; stroop_vals = normalize_values(stroop_vals); end
@@ -323,7 +333,7 @@ count_complete_subs;
 
 [r,p,rlo,rup]=corrcoef(complete_subs);
 % p
-var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'Story Recall'},{'TMT'},{'WMS'},{'Stroop'},{'Memory'},{'MOCA'},{'Reading'}];
+var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'SRT'},{'TMT'},{'WMSR'},{'Stroop'},{'PRMQ'},{'MoCA'},{'DART'}];
 %{'SRP'},
 
 var_names = [var_names(1:skip_point) var_names(start_point:end)];
@@ -390,37 +400,37 @@ xlswrite('extract_scores.xlsx',extract_scores);
 
 %% Other functions
 % for indiv = 1:indiv_comps
-    if run_all
-        runs = 6;
-        for i = 1:runs
-            if i > 1
-                binning = 1;
-                use_vars = 1;
-            else
-                binning = 0;
-                use_vars = 0;
-            end
-            if i == 1; one_col = 0; two_col = 0;
-            elseif i == 2; one_col = 1; two_col = 2;
-            elseif i == 3; one_col = 1; two_col = 3;
-            elseif i == 4; one_col = 1; two_col = 4;
-            elseif i == 5; one_col = 2; two_col = 3;
-            elseif i == 6; one_col = 3; two_col = 4;
-            end
-            clearvars -except var_names CRI_ft_vals sub_nums criq_scores analysis_matrix extract_scores binning one_col two_col norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all indiv use_indivs
-            bin_cluster_subs;
-            split_fts;
-            read_studysheet;
-            find_bestworst_mri;
+if run_all
+    runs = 6;
+    for i = 1:runs
+        if i > 1
+            binning = 1;
+            use_vars = 1;
+        else
+            binning = 0;
+            use_vars = 0;
         end
-    else
-        runs = 1;
+        if i == 1; one_col = 0; two_col = 0;
+        elseif i == 2; one_col = 1; two_col = 2;
+        elseif i == 3; one_col = 1; two_col = 3;
+        elseif i == 4; one_col = 1; two_col = 4;
+        elseif i == 5; one_col = 2; two_col = 3;
+        elseif i == 6; one_col = 3; two_col = 4;
+        end
+        clearvars -except var_names CRI_ft_vals sub_nums criq_scores analysis_matrix extract_scores binning one_col two_col norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all indiv use_indivs
         bin_cluster_subs;
         split_fts;
         read_studysheet;
         find_bestworst_mri;
-%         clearvars -except var_names CRI_ft_vals sub_nums criq_scores analysis_matrix extract_scores binning one_col two_col norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all indiv use_indivs signif signif_points
     end
+else
+    runs = 1;
+    bin_cluster_subs;
+    split_fts;
+    read_studysheet;
+    find_bestworst_mri;
+    %         clearvars -except var_names CRI_ft_vals sub_nums criq_scores analysis_matrix extract_scores binning one_col two_col norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all indiv use_indivs signif signif_points
+end
 % end
 % for i = 1:runs
 % bin_cluster_subs;

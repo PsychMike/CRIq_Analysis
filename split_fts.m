@@ -181,36 +181,36 @@ if elim_outliers
 end
 
 %% Cut datasets to same size
-% randomize_data = 0;
-% if cut_to_samesize
-%     if size(best_ft_data,1) > size(worst_ft_data,1)
-%         best = 1;
-%         if randomize_data
-%             shuff_Is = randperm(length(best_ft_data));
-%             best_ft_data = best_ft_data(shuff_Is(1:length(worst_ft_data)),:);
-%         else
-%             bestbestorworstworst
-%             best_ft_data = best_ft_data(bestbests,:);
-%             %         best_ft_data = best_ft_data(1:length(worst_ft_data),:);
-%         end
-%     else
-%         best = 0;
-%         if randomize_data
-%             shuff_Is = randperm(length(worst_ft_data));
-%             worst_ft_data = worst_ft_data(shuff_Is(1:length(best_ft_data)),:);
-%         else
-% %             index_range = 1:length(best_ft_data);
-% %             rand_i = randi([length(best_ft_data)+1 length(worst_ft_data)]);
-% %             rand_i2 = randi(length(best_ft_data));
-% %             range = 1:length(best_ft_data);
-% %             range(rand_i2) = rand_i;
-%             %         worst_ft_data = worst_ft_data(range,:);
-%             bestbestorworstworst;
-%             worst_ft_data = worst_ft_data(worstworsts,:);
-%             %         worst_ft_data = worst_ft_data(1:length(best_ft_data),:);
-%         end
-%     end
-% end
+randomize_data = 0;
+if cut_to_samesize
+    if size(best_ft_data,1) > size(worst_ft_data,1)
+        best = 1;
+        if randomize_data
+            shuff_Is = randperm(length(best_ft_data));
+            best_ft_data = best_ft_data(shuff_Is(1:length(worst_ft_data)),:);
+        else
+            find_bw;
+            best_ft_data = best_ft_data(bestbests,:);
+            %         best_ft_data = best_ft_data(1:length(worst_ft_data),:);
+        end
+    else
+        best = 0;
+        if randomize_data
+            shuff_Is = randperm(length(worst_ft_data));
+            worst_ft_data = worst_ft_data(shuff_Is(1:length(best_ft_data)),:);
+        else
+%             index_range = 1:length(best_ft_data);
+%             rand_i = randi([length(best_ft_data)+1 length(worst_ft_data)]);
+%             rand_i2 = randi(length(best_ft_data));
+%             range = 1:length(best_ft_data);
+%             range(rand_i2) = rand_i;
+            %         worst_ft_data = worst_ft_data(range,:);
+            find_bw;
+            worst_ft_data = worst_ft_data(worstworsts,:);
+            %         worst_ft_data = worst_ft_data(1:length(best_ft_data),:);
+        end
+    end
+end
 
 %% Find upper & lower quartile data
 if uplow_quart && ~binning
@@ -373,8 +373,8 @@ end
 if ~anova_all_data
     one_col
     two_col
-    Ps = round(Ps,2,'decimal');
-    table(Ps(1),Ps(2),Ps(3),Ps(4),Ps(5),Ps(6),Ps(7),'VariableNames',{'SR','TMT','WMS','Stroop','Mem','MOCA','Reading'})
+    Ps = round(Ps,5,'decimal');
+    table(Ps(1),Ps(2),Ps(3),Ps(4),Ps(5),Ps(6),Ps(7),'VariableNames',{'SRT','TMT','WMSR','SCWT','PRMQ','MoCA','DART'})
 end
 start_point = 1;
 % [d,p] = manova1([manova_matrix(:,1) manova_matrix(:,2) manova_matrix(:,3) ...

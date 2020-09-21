@@ -1,3 +1,4 @@
+%% Sums WMS-R scores
 for i = 1:length(CRI_all_vals)
     r_num = round(worksheet(i,42));
     deci_vals(i) = r_num - worksheet(i,42);
