@@ -199,11 +199,11 @@ if cut_to_samesize
             shuff_Is = randperm(length(worst_ft_data));
             worst_ft_data = worst_ft_data(shuff_Is(1:length(best_ft_data)),:);
         else
-%             index_range = 1:length(best_ft_data);
-%             rand_i = randi([length(best_ft_data)+1 length(worst_ft_data)]);
-%             rand_i2 = randi(length(best_ft_data));
-%             range = 1:length(best_ft_data);
-%             range(rand_i2) = rand_i;
+            %             index_range = 1:length(best_ft_data);
+            %             rand_i = randi([length(best_ft_data)+1 length(worst_ft_data)]);
+            %             rand_i2 = randi(length(best_ft_data));
+            %             range = 1:length(best_ft_data);
+            %             range(rand_i2) = rand_i;
             %         worst_ft_data = worst_ft_data(range,:);
             find_bw;
             worst_ft_data = worst_ft_data(worstworsts,:);
@@ -224,7 +224,7 @@ if uplow_quart && ~binning
         w_med = w2_med;
     end
     
-%     clear best_fts bestis best_ft_data best_ft_subs worst_fts worst_is worst_ft_data worst_ft_subs
+    %     clear best_fts bestis best_ft_data best_ft_subs worst_fts worst_is worst_ft_data worst_ft_subs
     best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
     for i = 1:length(scaled_fts)
         if ~isnan(scaled_fts(i))
@@ -301,8 +301,8 @@ for start_point = 1:for_end
         end_point = start_point;
     end
     try
-    m_best_ft_data = best_ft_data(:,start_point:end_point);
-    m_worst_ft_data = worst_ft_data(:,start_point:end_point);
+        m_best_ft_data = best_ft_data(:,start_point:end_point);
+        m_worst_ft_data = worst_ft_data(:,start_point:end_point);
     catch
         keyboard
     end
@@ -374,7 +374,10 @@ if ~anova_all_data
     one_col
     two_col
     Ps = round(Ps,5,'decimal');
-    table(Ps(1),Ps(2),Ps(3),Ps(4),Ps(5),Ps(6),Ps(7),'VariableNames',{'SRT','TMT','WMSR','SCWT','PRMQ','MoCA','DART'})
+    ANOVA_T=table(Ps(1),Ps(2),Ps(3),Ps(4),Ps(5),Ps(6),Ps(7),'VariableNames',{'SRT','TMT','WMSR','SCWT','PRMQ','MoCA','DART'})
+    ANOVA_Tname = sprintf('output/%d%d_ANOVAout.xls',one_col,two_col);
+    writetable(ANOVA_T,ANOVA_Tname);
+    save('ANOVA_Tnametemp.mat','ANOVA_Tname');
 end
 start_point = 1;
 % [d,p] = manova1([manova_matrix(:,1) manova_matrix(:,2) manova_matrix(:,3) ...

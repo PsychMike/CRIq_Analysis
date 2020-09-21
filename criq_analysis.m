@@ -8,9 +8,9 @@ global use_indivs use_ranks all_labels norm_score_vals use_vars binning uplow_qu
 addpath('StatsFunctions');
 
 %Run all bins + best/worst?
-run_all = 1;
+run_all = 0;
 
-%Use normal binning or CA/Sbin3_scoresA binning?
+%Use normal binning(1) or CA/SA binning(0)?
 all_labels = 1;
 
 % Write MRI datafile names to file?
@@ -33,7 +33,7 @@ binning = 1;
 % end
 % if nargin < 5
 % if ~exist(one_col)
-if binning
+if ~binning
 %     one_col = 1;
     % end
     % if nargin < 6
@@ -41,7 +41,7 @@ if binning
 %     two_col = 2;
     % end
     % end
-else
+% else
     one_col = 0;
     two_col = 0;
 end
@@ -61,11 +61,11 @@ more_subs = 0;
 norm_score_vals = 1;
 
 % Ensure compared sub #'s are the same?
-cut_to_samesize = 1;
+cut_to_samesize = 0;
 
 % Use subjects with high variance between bin scores?
 % if nargin < 9
-use_vars = 0;
+use_vars = 1;
 % end
 
 % Use rankings of leisure items by subjective cognitive effort
