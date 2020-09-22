@@ -5,11 +5,11 @@ binning = 1;
 
 use_indivs = 0;
 
-comps1 = [1;1;1;2;2;3];
-comps2 = [2;3;4;3;4;4];
+% comps1 = [1;1;1;2;2;3];
+% comps2 = [2;3;4;3;4;4];
 
-% comps1 = 1;
-% comps2 = 4;
+comps1 = 0;
+comps2 = 0;
 
 if use_indivs
     indiv = 17;
@@ -25,11 +25,11 @@ for c = 1:length(comps1)
     %     for indiv = 1:indiv
     criq_analysis;
     if signif
-        load signifs.mat
+        try load signifs.mat; end
         signif_count = signif_count + 1;
         signifs(signif_count,1) = c;
         signifs(signif_count,2:length(signif_points)+1) = signif_points;
-        save('signifs.mat',{'signifs','signif_count','signif_points');
+        save('signifs.mat','signif*');
     end
     %     end
     if length(comps1) > 1
@@ -46,5 +46,5 @@ if length(comps1) > 1
         gT(t,:)=iT;
     end
 end
-gT
+try gT; end
 % keyboard

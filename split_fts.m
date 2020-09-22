@@ -176,8 +176,48 @@ end
 
 %% Eliminate outliers from the datasets
 if elim_outliers
-    [best_ft_data,best_ft_subs] = find_outliers(best_ft_data,best_ft_subs);
-    [worst_ft_data,worst_ft_subs] = find_outliers(worst_ft_data,worst_ft_subs);
+    [best_ft_data,best_ft_subs,best_fts] = find_outliers(best_ft_data,best_ft_subs,best_fts);
+    [worst_ft_data,worst_ft_subs,worst_fts] = find_outliers(worst_ft_data,worst_ft_subs,worst_fts);
+end
+
+%% Find upper & lower quartile data
+if uplow_quart && ~binning
+    b_med = median(best_fts);
+    w_med = median(worst_fts);
+    
+    if more_subs
+        load('b2_med');
+        load('w2_med');
+        b_med = b2_med;
+        w_med = w2_med;
+    end
+    
+         clear best_fts bestis best_ft_data best_ft_subs worst_fts worst_is worst_ft_data worst_ft_subs
+    best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
+    for i = 1:length(scaled_fts)
+        if ~isnan(scaled_fts(i))
+            if scaled_fts(i) >= b_med
+                best_count = best_count + 1;
+                best_fts(best_count) = scaled_fts(i);
+                best_is(best_count) = i;
+                best_ft_data(best_count,:) = analysis_matrix(best_is(best_count),:);
+                best_ft_subs(best_count) = sub_nums(i);
+            elseif scaled_fts(i) <= w_med
+                worst_count = worst_count + 1;
+                worst_fts(worst_count) = scaled_fts(i);
+                worst_is(worst_count) = i;
+                worst_ft_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
+                worst_ft_subs(worst_count) = sub_nums(i);
+            elseif scaled_fts(i) >= med_ft
+                b2_count = b2_count + 1;
+                best_fts2(b2_count) = scaled_fts(i);
+            elseif scaled_fts(i) < med_ft
+                w2_count = w2_count + 1;
+                worst_fts2(w2_count) = scaled_fts(i);
+            end
+        end
+    end
+    b2_med=median(best_fts2);w2_med=median(worst_fts2);
 end
 
 %% Cut datasets to same size
@@ -212,45 +252,45 @@ if cut_to_samesize
     end
 end
 
-%% Find upper & lower quartile data
-if uplow_quart && ~binning
-    b_med = median(best_fts);
-    w_med = median(worst_fts);
-    
-    if more_subs
-        load('b2_med');
-        load('w2_med');
-        b_med = b2_med;
-        w_med = w2_med;
-    end
-    
-    %     clear best_fts bestis best_ft_data best_ft_subs worst_fts worst_is worst_ft_data worst_ft_subs
-    best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
-    for i = 1:length(scaled_fts)
-        if ~isnan(scaled_fts(i))
-            if scaled_fts(i) >= b_med
-                best_count = best_count + 1;
-                best_fts(best_count) = scaled_fts(i);
-                best_is(best_count) = i;
-                best_ft_data(best_count,:) = analysis_matrix(best_is(best_count),:);
-                best_ft_subs(best_count) = sub_nums(i);
-            elseif scaled_fts(i) <= w_med
-                worst_count = worst_count + 1;
-                worst_fts(worst_count) = scaled_fts(i);
-                worst_is(worst_count) = i;
-                worst_ft_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
-                worst_ft_subs(worst_count) = sub_nums(i);
-            elseif scaled_fts(i) >= med_ft
-                b2_count = b2_count + 1;
-                best_fts2(b2_count) = scaled_fts(i);
-            elseif scaled_fts(i) < med_ft
-                w2_count = w2_count + 1;
-                worst_fts2(w2_count) = scaled_fts(i);
-            end
-        end
-    end
-    b2_med=median(best_fts2);w2_med=median(worst_fts2);
-end
+% %% Find upper & lower quartile data
+% if uplow_quart && ~binning
+%     b_med = median(best_fts);
+%     w_med = median(worst_fts);
+%     
+%     if more_subs
+%         load('b2_med');
+%         load('w2_med');
+%         b_med = b2_med;
+%         w_med = w2_med;
+%     end
+%     
+%         clear best_fts bestis best_ft_data best_ft_subs worst_fts worst_is worst_ft_data worst_ft_subs
+%     best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
+%     for i = 1:length(scaled_fts)
+%         if ~isnan(scaled_fts(i))
+%             if scaled_fts(i) >= b_med
+%                 best_count = best_count + 1;
+%                 best_fts(best_count) = scaled_fts(i);
+%                 best_is(best_count) = i;
+%                 best_ft_data(best_count,:) = analysis_matrix(best_is(best_count),:);
+%                 best_ft_subs(best_count) = sub_nums(i);
+%             elseif scaled_fts(i) <= w_med
+%                 worst_count = worst_count + 1;
+%                 worst_fts(worst_count) = scaled_fts(i);
+%                 worst_is(worst_count) = i;
+%                 worst_ft_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
+%                 worst_ft_subs(worst_count) = sub_nums(i);
+%             elseif scaled_fts(i) >= med_ft
+%                 b2_count = b2_count + 1;
+%                 best_fts2(b2_count) = scaled_fts(i);
+%             elseif scaled_fts(i) < med_ft
+%                 w2_count = w2_count + 1;
+%                 worst_fts2(w2_count) = scaled_fts(i);
+%             end
+%         end
+%     end
+%     b2_med=median(best_fts2);w2_med=median(worst_fts2);
+% end
 
 find_bw;
 
@@ -276,8 +316,8 @@ if plot_ft
         comp1 = sprintf('Bin %d',one_col);
         comp2 = sprintf('Bin %d',two_col);
     else
-        comp1 = 'Upper';
-        comp2 = 'Lower';
+        comp1 = 'Upper Tier';
+        comp2 = 'Lower Tier';
     end
     lgd = legend(sprintf('%s n = %d',comp1,length(best_ft_data)),sprintf('%s n = %d',comp2,length(worst_ft_data)));
     lgd.Location = 'northeast';

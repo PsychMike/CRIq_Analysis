@@ -30,18 +30,23 @@ anova_all_data = 0;
 % if (~exist('binning') && ~exist('one_col') && ~exist('two_col')) || isempty(binning)
 % if nargin < 4
 binning = 1;
+try
+    if one_col == 0
+        binning = 0;
+    end
+end
 % end
 % if nargin < 5
 % if ~exist(one_col)
 if ~binning
-%     one_col = 1;
+    %     one_col = 1;
     % end
     % if nargin < 6
     % if ~exist(two_col)
-%     two_col = 2;
+    %     two_col = 2;
     % end
     % end
-% else
+    % else
     one_col = 0;
     two_col = 0;
 end
@@ -66,6 +71,9 @@ cut_to_samesize = 0;
 % Use subjects with high variance between bin scores?
 % if nargin < 9
 use_vars = 1;
+if one_col == 0
+    use_vars = 0;
+end
 % end
 
 % Use rankings of leisure items by subjective cognitive effort

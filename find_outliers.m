@@ -1,4 +1,4 @@
-function [m_ft_data,m_ft_subs] = find_outliers(ft_data,ft_subs)
+function [m_ft_data,m_ft_subs,m_fts] = find_outliers(ft_data,ft_subs,fts)
 
 %% Find outliers
 for i = 1:size(ft_data,2)
@@ -46,6 +46,7 @@ for j = 1:size(new_ft_data,1)
         m_ft_data(count,:) = new_ft_data(j,:);
         try
         m_ft_subs(count) = ft_subs(j);
+        m_fts(count) = fts(j);
         catch
             keyboard
         end
