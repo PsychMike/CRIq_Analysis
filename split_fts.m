@@ -185,12 +185,12 @@ if uplow_quart && ~binning
     b_med = median(best_fts);
     w_med = median(worst_fts);
     
-    if more_subs
-        load('b2_med');
-        load('w2_med');
-        b_med = b2_med;
-        w_med = w2_med;
-    end
+%     if more_subs
+%         load('b2_med');
+%         load('w2_med');
+%         b_med = b2_med;
+%         w_med = w2_med;
+%     end
     
          clear best_fts bestis best_ft_data best_ft_subs worst_fts worst_is worst_ft_data worst_ft_subs
     best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
@@ -208,16 +208,16 @@ if uplow_quart && ~binning
                 worst_is(worst_count) = i;
                 worst_ft_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
                 worst_ft_subs(worst_count) = sub_nums(i);
-            elseif scaled_fts(i) >= med_ft
-                b2_count = b2_count + 1;
-                best_fts2(b2_count) = scaled_fts(i);
-            elseif scaled_fts(i) < med_ft
-                w2_count = w2_count + 1;
-                worst_fts2(w2_count) = scaled_fts(i);
+%             elseif scaled_fts(i) >= med_ft
+%                 b2_count = b2_count + 1;
+%                 best_fts2(b2_count) = scaled_fts(i);
+%             elseif scaled_fts(i) < med_ft
+%                 w2_count = w2_count + 1;
+%                 worst_fts2(w2_count) = scaled_fts(i);
             end
         end
     end
-    b2_med=median(best_fts2);w2_med=median(worst_fts2);
+%     b2_med=median(best_fts2);w2_med=median(worst_fts2);
 end
 
 %% Cut datasets to same size
@@ -229,24 +229,32 @@ if cut_to_samesize
             shuff_Is = randperm(length(best_ft_data));
             best_ft_data = best_ft_data(shuff_Is(1:length(worst_ft_data)),:);
         else
-            find_bw;
-            best_ft_data = best_ft_data(bestbests,:);
+            if binning
+                best_fts = best_fts(1:length(worst_ft_data));
+                best_ft_data = best_ft_data(1:length(worst_ft_data),:);
+            end
+%             find_bw;
+%             best_ft_data = best_ft_data(bestbests,:);
             %         best_ft_data = best_ft_data(1:length(worst_ft_data),:);
         end
-    else
+    elseif size(worst_ft_data,1) > size(best_ft_data,1)
         best = 0;
         if randomize_data
             shuff_Is = randperm(length(worst_ft_data));
             worst_ft_data = worst_ft_data(shuff_Is(1:length(best_ft_data)),:);
         else
+            if binning
+                worst_fts = worst_fts(1:length(best_ft_data));
+                worst_ft_data = worst_ft_data(1:length(best_ft_data),:);
+            end
             %             index_range = 1:length(best_ft_data);
             %             rand_i = randi([length(best_ft_data)+1 length(worst_ft_data)]);
             %             rand_i2 = randi(length(best_ft_data));
             %             range = 1:length(best_ft_data);
             %             range(rand_i2) = rand_i;
             %         worst_ft_data = worst_ft_data(range,:);
-            find_bw;
-            worst_ft_data = worst_ft_data(worstworsts,:);
+%             find_bw;
+%             worst_ft_data = worst_ft_data(worstworsts,:);
             %         worst_ft_data = worst_ft_data(1:length(best_ft_data),:);
         end
     end
@@ -292,10 +300,12 @@ end
 %     b2_med=median(best_fts2);w2_med=median(worst_fts2);
 % end
 
+if ~binning
 find_bw;
+end
 
-fBest_ft_data = best_ft_data(~isnan(best_ft_data));
-fWorst_ft_data = worst_ft_data(~isnan(worst_ft_data));
+% fBest_ft_data = best_ft_data(~isnan(best_ft_data));
+% fWorst_ft_data = worst_ft_data(~isnan(worst_ft_data));
 
 med_fBest_ft = nanmedian(best_ft_data);
 med_fWorst_ft = nanmedian(worst_ft_data);

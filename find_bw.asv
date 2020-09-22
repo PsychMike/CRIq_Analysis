@@ -1,16 +1,28 @@
-%% New script (cut by leisure scores)
+%% New script
 if length(best_fts)>length(worst_fts)
-    [sort_fts,sort_i] = sort(best_fts,'descend');
-    ss_i = sort(sort_i(1:length(worst_fts)));
-    best_fts = best_fts(ss_i);
-    best_ft_data = best_ft_data(ss_i,:);
+    sort_fts = sort(best_fts,'descend');
+    count = 0;
+    for i = 1:length(worst_fts)
+        for j = 1:length(best_fts)
+            if best_fts(j) == sort_fts(i) && count < length(worst_fts)
+                count = count + 1;
+                new_best_fts(count) = best_fts(j);
+            end
+        end
+    end
 elseif length(worst_fts)>length(best_fts)
     [sort_fts,sort_i] = sort(worst_fts);
-    ss_i = sort(sort_i(1:length(best_fts)));
-    worst_fts = worst_fts(ss_i);
-    worst_ft_data = worst_ft_data(ss_i,:);
+    count = 0;
+    for i = 1:length(best_fts)
+        for j = 1:length(worst_fts)
+            if worst_fts(j) == sort_fts(i) && count < length(best_fts)
+                count = count + 1;
+                new_worst_fts(count) = worst_fts(j);
+            end
+        end
+    end
 end
-
+keyboard
 %% Old script
 % add = 0;
 % if size(best_ft_data,1) > size(worst_ft_data,1)

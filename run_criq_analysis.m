@@ -5,11 +5,11 @@ binning = 1;
 
 use_indivs = 0;
 
-% comps1 = [1;1;1;2;2;3];
-% comps2 = [2;3;4;3;4;4];
+comps1 = [1;1;1;2;2;3];
+comps2 = [2;3;4;3;4;4];
 
-comps1 = 0;
-comps2 = 0;
+% comps1 = 0;
+% comps2 = 0;
 
 if use_indivs
     indiv = 17;

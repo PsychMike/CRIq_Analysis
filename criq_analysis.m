@@ -29,7 +29,7 @@ anova_all_data = 0;
 % Use binned data?
 % if (~exist('binning') && ~exist('one_col') && ~exist('two_col')) || isempty(binning)
 % if nargin < 4
-binning = 1;
+% binning = 1;
 try
     if one_col == 0
         binning = 0;
@@ -59,14 +59,14 @@ if binning == 1; uplow_quart = 0; end
 
 % Add more subs to quartiles? (top & bottom 37.5%)
 % if nargin < 8
-more_subs = 0;
+more_subs = 1;
 % end
 
 % Normalize scores?
 norm_score_vals = 1;
 
 % Ensure compared sub #'s are the same?
-cut_to_samesize = 0;
+cut_to_samesize = 1;
 
 % Use subjects with high variance between bin scores?
 % if nargin < 9
