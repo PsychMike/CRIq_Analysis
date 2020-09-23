@@ -1,15 +1,23 @@
 clear all
-global one_col two_col use_indivs
+global one_col two_col use_indivs use_ranks binning
 
 binning = 1;
 
 use_indivs = 0;
+use_ranks = 1;
 
-comps1 = [1;1;1;2;2;3];
-comps2 = [2;3;4;3;4;4];
+% comps1 = [1;1;1;2;2;3];
+% comps2 = [2;3;4;3;4;4];
 
-% comps1 = 0;
-% comps2 = 0;
+comps1 = 0;
+comps2 = 0;
+if use_ranks
+    comps1 = 3;
+    comps2 = 4;
+end
+if comps1 == 0 && ~use_ranks
+    binning = 0;
+end
 
 if use_indivs
     indiv = 17;
@@ -46,5 +54,7 @@ if length(comps1) > 1
         gT(t,:)=iT;
     end
 end
-try gT; end
+if length(comps1) > 1
+    gT
+end
 % keyboard
