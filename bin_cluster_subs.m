@@ -1,6 +1,6 @@
 %% Bin subs by cluster
 
-global use_vars all_labels use_ranks use_indivs
+global use_vars all_labels use_ranks use_indivs indiv
 % binning one_col two_col
 
 % Grab leisure item scores
@@ -19,23 +19,24 @@ fixi = 15:17;
 item_labels = {'newspaper','chores','driving','leisure_acts','new_tech','social','cinema','garden','grandchildren','volunteer','art','concerts','journeys','reading','children','pets','account'};
 
 % Set item labels in bins
-% if all_labels
+% if ~all_labels
 %     bin1 = {'newspaper','account','new_tech','children','driving','chores','garden'};
 %     bin2 = {'cinema','concerts','reading','journeys','art'};
-%     bin3 = {'social','volunteer','leisure_acts'};
-%     bin4 = {'grandchildren','pets'};
-% else
-% Set bin labels for cognitive activities(CA) & social activities(SA)
-%     bin1 = {'newspaper','chores','driving','new_tech','garden','art','reading','account'};
-%     bin2 = {'social','grandchildren','concerts','children'};
-%strict cogn
-%     bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account','leisure_acts','journeys','cinema'};
-%incl cogn
-%     bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account','leisure_acts','journeys','cinema','volunteer','pets'};
-%     bin4 = {'social','grandchildren','concerts','children'};
+%     %     bin3 = {'social','volunteer','leisure_acts'};
+%     %     bin4 = {'grandchildren','pets'};
+%     % else
+%     % Set bin labels for cognitive activities(CA) & social activities(SA)
+%     %     bin1 = {'newspaper','chores','driving','new_tech','garden','art','reading','account'};
+%     %     bin2 = {'social','grandchildren','concerts','children'};
+%     %strict cogn
+%     %     bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account','leisure_acts','journeys','cinema'};
+%     %incl cogn
+%     %     bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account','leisure_acts','journeys','cinema','volunteer','pets'};
+%     %     bin4 = {'social','grandchildren','concerts','children'};
+%     bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account'};
 %     bin4 = {'social','grandchildren','children'};
-%     bin1 = {'volunteer','pets'};
-%     bin2 = {'leisure_acts','cinema','volunteer','journeys','pets'};
+%     %     bin1 = {'volunteer','pets'};
+%     %     bin2 = {'leisure_acts','cinema','volunteer','journeys','pets'};
 % end
 all_bins = item_labels;
 % all_bins = {'newspaper','account','new_tech','children','driving','chores','garden', ...
@@ -58,8 +59,13 @@ if use_ranks
     bin3 = best_leis;
     bin4 = worst_leis;
 else
-    bin3 = {'art','children','volunteer'};
-    bin4 = {'new_tech','leisure_acts'};
+    if all_labels
+        bin3 = {'art','children','volunteer'};
+        bin4 = {'new_tech','leisure_acts'};
+    else
+        bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account'};
+        bin4 = {'social','grandchildren','children'};
+    end
 end
 
 % Find item indices

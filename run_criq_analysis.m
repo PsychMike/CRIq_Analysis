@@ -1,28 +1,40 @@
-clear all
-global one_col two_col use_indivs use_ranks binning
-
+% clear all
+function run_criq_analysis(indiv_num)
+global one_col two_col use_indivs use_ranks binning all_labels
 binning = 1;
 
 use_indivs = 0;
-use_ranks = 1;
+use_ranks = 0;
+all_labels = 1;
+if use_indivs || use_ranks
+    all_labels = 1;
+end
 
 % comps1 = [1;1;1;2;2;3];
 % comps2 = [2;3;4;3;4;4];
 
-comps1 = 0;
-comps2 = 0;
-if use_ranks
+comps1 = 3;
+comps2 = 4;
+if use_ranks || ~all_labels
     comps1 = 3;
     comps2 = 4;
+elseif use_indivs
+    comps1 = 1;
+    comps2 = 2;
 end
-if comps1 == 0 && ~use_ranks
+if comps1 == 0 & ~use_ranks & ~use_indivs
     binning = 0;
 end
 
 if use_indivs
-    indiv = 17;
+    indiv_num = 17;
 else
-    indiv = 1;
+    indiv_num = 1;
+end
+
+if binning == 0
+    comps1 = 0;
+    comps2 = 0;
 end
 
 signif_count = 0;
@@ -30,7 +42,7 @@ for c = 1:length(comps1)
     signif = 0;
     one_col = comps1(c);
     two_col = comps2(c);
-    %     for indiv = 1:indiv
+    %     for indiv = 1:indiv_num
     criq_analysis;
     if signif
         try load signifs.mat; end
@@ -56,5 +68,6 @@ if length(comps1) > 1
 end
 if length(comps1) > 1
     gT
+end
 end
 % keyboard

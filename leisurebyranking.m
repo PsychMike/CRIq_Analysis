@@ -59,6 +59,10 @@ best_ranks = sum(sort_ranks>=med_rank);
 best_leis = rank_labels2(1:best_ranks);
 worst_ranks = sum(sort_ranks<med_rank);
 worst_leis = rank_labels2(best_ranks+1:end);
+
+% best_leis = best_leis(1:end);
+% worst_leis = worst_leis(1:end);
+
 % new = 0;
 % for i = 1:length(sort_rank_mat)
 %     curr_rank = sort_rank_mat(i);
