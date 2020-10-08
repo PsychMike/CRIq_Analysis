@@ -1,7 +1,7 @@
 % clear all
 function run_criq_analysis(indiv_num)
 global one_col two_col use_indivs use_ranks binning all_labels
-binning = 1;
+binning = 0;
 
 use_indivs = 0;
 use_ranks = 0;
