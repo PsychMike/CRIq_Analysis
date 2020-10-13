@@ -1,4 +1,4 @@
-global one_col two_col
+% global one_col two_col
 %% Find subjects with high variance between bins
 n = size(stand_bins,2);
 k = 2;

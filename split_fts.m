@@ -1,6 +1,6 @@
 %% Split data into upper & lower tiers
 
-global use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs indiv all_labels use_ranks use_indivs
+% global use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs indiv all_labels use_ranks use_indivs
 % Fix & set variables
 CRIs_to_use = CRI_ft_vals;
 am2 = analysis_matrix;

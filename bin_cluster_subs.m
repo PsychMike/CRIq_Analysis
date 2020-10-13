@@ -1,6 +1,6 @@
 %% Bin subs by cluster
 
-global use_vars all_labels use_ranks use_indivs indiv
+% global use_vars all_labels use_ranks use_indivs indiv
 % binning one_col two_col
 
 % Grab leisure item scores
@@ -59,7 +59,7 @@ if use_ranks
     bin3 = best_leis;
     bin4 = worst_leis;
 else
-    if all_labels
+    if ~socog_binning
         bin3 = {'art','children','volunteer'};
         bin4 = {'new_tech','leisure_acts'};
     else

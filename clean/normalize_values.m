@@ -1,6 +1,6 @@
-function norm_vals = normalize_values(vals)
+function norm_vals = normalize_values(vals,norm_score_vals)
 
-global norm_score_vals
+% global norm_score_vals
 
 if norm_score_vals
     % Normalizes scores

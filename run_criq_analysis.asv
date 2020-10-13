@@ -1,10 +1,9 @@
-                    %% Runs CRIq analysis %%
+%% Runs CRIq analysis %%
 
 %% Clean up old files/variables
-clear vars
+clear all
 delete('output/*.mat','output/*.xls*','*.mat')
 
-%% Set analysis parameters
 %Write subject MRI pathnames to file?
 write2table = 1;
 
@@ -34,6 +33,7 @@ if use_indivs
 else
     indiv_num = 1;
 end
+indiv = indiv_num;
 
 %Use cog effort rankings to bin?
 use_ranks = 0;
@@ -68,27 +68,26 @@ elseif use_indivs
     comps2 = 2;
 end
 
-%% Run analysis
 signif_count = 0;
 for c = 1:length(comps1)
     signif = 0;
     one_col = comps1(c);
     two_col = comps2(c);
-    for indiv = 1:indiv_num
-        criq_analysis;
-        if signif
-            try load signifs.mat; end
-            signif_count = signif_count + 1;
-            signifs(signif_count,1) = c;
-            signifs(signif_count,2:length(signif_points)+1) = signif_points;
-            save('signifs.mat','signif*');
-        end
-        if length(comps1) > 1
-            load ANOVA_Tnametemp.mat
-            load Tnames.mat
-            T_names{c} = ANOVA_Tname;
-            save('Tnames.mat','T_names');
-        end
+    %     for indiv = 1:indiv_num
+    criq_analysis;
+    if signif
+        try load signifs.mat; end
+        signif_count = signif_count + 1;
+        signifs(signif_count,1) = c;
+        signifs(signif_count,2:length(signif_points)+1) = signif_points;
+        save('signifs.mat','signif*');
+    end
+    %     end
+    if length(comps1) > 1
+        load ANOVA_Tnametemp.mat
+        load Tnames.mat
+        T_names{c} = ANOVA_Tname;
+        save('Tnames.mat','T_names');
     end
 end
 if length(comps1) > 1
@@ -99,7 +98,7 @@ if length(comps1) > 1
     end
 end
 
-%% If all_comps, output ANOVA results for every comparison
+%
 if all_comps
     gT
 end

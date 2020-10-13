@@ -1,6 +1,6 @@
 %% Find the corresponding MRI filenames
 
-global norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table
+% global norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table
 
 try
     clear best_mri_names worst_mri_names
