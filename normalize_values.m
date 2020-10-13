@@ -1,8 +1,6 @@
-function norm_vals = normalize_values(vals,norm_score_vals)
+function norm_vals = normalize_values(vals,normalize)
 
-% global norm_score_vals
-
-if norm_score_vals
+if normalize
     % Normalizes scores
     for i = 1:length(vals)
         norm_vals(i) = (vals(i) - min(vals))/(max(vals)-min(vals));

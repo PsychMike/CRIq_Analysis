@@ -1,8 +1,7 @@
 %% Split data into upper & lower tiers
 
-% global use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs indiv all_labels use_ranks use_indivs
 % Fix & set variables
-CRIs_to_use = CRI_ft_vals;
+CRIs_to_use = CRI_leis_vals;
 am2 = analysis_matrix;
 analysis_matrix = analysis_matrix(:,7:end);
 
@@ -38,12 +37,12 @@ work_scores = work_scores(good_indices==1);
 %     find_topvars;
 % end
 
-new_ft_vals = flipped_CRIs;
+new_leis_vals = flipped_CRIs;
 add_row = 0;
 for row = 1:length(flipped_CRIs)
     if ~isnan(flipped_CRIs(row)) && ~isnan(ages(row)) && ~isnan(edu_scores(row)) && ~isnan(work_scores(row))
         add_row = add_row + 1;
-%         new_ft_vals(add_row) = flipped_CRIs(row);
+%         new_leis_vals(add_row) = flipped_CRIs(row);
         new_ages(add_row) = ages(row);
         new_edus(add_row) = edu_scores(row);
         new_works(add_row) = work_scores(row);
@@ -56,16 +55,16 @@ ages = new_ages;
 edu_scores = new_edus;
 work_scores = new_works;
 
-% mean_ft = mean(new_ft_vals);
-% std_ft = std(new_ft_vals);
-% stand_fts = (new_ft_vals-mean_ft)/std_ft;
+% mean_ft = mean(new_leis_vals);
+% std_ft = std(new_leis_vals);
+% stand_fts = (new_leis_vals-mean_ft)/std_ft;
 % scaled_fts = stand_fts*15+100;
-%
+% 
 % med_ft = median(scaled_fts);
 
 %% Plot linear regression of age & leisure scores
 x = ages;
-y = new_ft_vals;
+y = new_leis_vals;
 % y = scaled_fts;
 x = x';
 y = y';
@@ -94,11 +93,11 @@ legend('Data','Slope','Slope & Intercept','Location','best');
 Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
 Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
 
-new_ft_vals = new_ft_vals - yCalc2';
-% new_ft_vals = yCalc2;
-mean_ft = mean(new_ft_vals);
-std_ft = std(new_ft_vals);
-stand_fts = (new_ft_vals-mean_ft)/std_ft;
+new_leis_vals = new_leis_vals - yCalc2';
+% new_leis_vals = yCalc2;
+mean_ft = mean(new_leis_vals);
+std_ft = std(new_leis_vals);
+stand_fts = (new_leis_vals-mean_ft)/std_ft;
 scaled_fts = stand_fts*15+100;
 med_ft = median(scaled_fts)% Find best & worst subs and their data
 
@@ -106,7 +105,7 @@ med_ft = median(scaled_fts)% Find best & worst subs and their data
 regress_edu = 1;
 if regress_edu
 x = edu_scores;
-y = new_ft_vals;
+y = new_leis_vals;
 % y = scaled_fts;
 x = x';
 y = y';
@@ -131,11 +130,11 @@ legend('Data','Slope','Slope & Intercept','Location','best');
 Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
 Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
 
-new_ft_vals = new_ft_vals - yCalc2';
-% new_ft_vals = yCalc2;
-mean_ft = mean(new_ft_vals);
-std_ft = std(new_ft_vals);
-stand_fts = (new_ft_vals-mean_ft)/std_ft;
+new_leis_vals = new_leis_vals - yCalc2';
+% new_leis_vals = yCalc2;
+mean_ft = mean(new_leis_vals);
+std_ft = std(new_leis_vals);
+stand_fts = (new_leis_vals-mean_ft)/std_ft;
 scaled_fts = stand_fts*15+100;
 med_ft = median(scaled_fts)% Find best & worst subs and their data
 end
@@ -143,7 +142,7 @@ end
 regress_work = 1;
 if regress_work
 x = work_scores;
-y = new_ft_vals;
+y = new_leis_vals;
 % y = scaled_fts;
 x = x';
 y = y';
@@ -168,11 +167,11 @@ legend('Data','Slope','Slope & Intercept','Location','best');
 Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
 Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
 
-new_ft_vals = new_ft_vals - yCalc2';
-% new_ft_vals = yCalc2;
-mean_ft = mean(new_ft_vals);
-std_ft = std(new_ft_vals);
-stand_fts = (new_ft_vals-mean_ft)/std_ft;
+new_leis_vals = new_leis_vals - yCalc2';
+% new_leis_vals = yCalc2;
+mean_ft = mean(new_leis_vals);
+std_ft = std(new_leis_vals);
+stand_fts = (new_leis_vals-mean_ft)/std_ft;
 scaled_fts = stand_fts*15+100;
 med_ft = median(scaled_fts)% Find best & worst subs and their data
 end
@@ -187,14 +186,14 @@ if binning == 0
                 best_count = best_count + 1;
                 best_fts(best_count) = scaled_fts(i);
                 best_is(best_count) = i;
-                best_ft_data(best_count,:) = analysis_matrix(best_is(best_count),:);
-                best_ft_subs(best_count) = sub_nums(i);
+                best_leis_data(best_count,:) = analysis_matrix(best_is(best_count),:);
+                best_leis_subs(best_count) = sub_nums(i);
             elseif scaled_fts(i) < med_ft
                 worst_count = worst_count + 1;
                 worst_fts(worst_count) = scaled_fts(i);
                 worst_is(worst_count) = i;
-                worst_ft_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
-                worst_ft_subs(worst_count) = sub_nums(i);
+                worst_leis_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
+                worst_leis_subs(worst_count) = sub_nums(i);
             end
         end
     end
@@ -202,7 +201,7 @@ end
 
 %% Find bin data, if binning
 if binning
-    clear best_ft_subs worst_ft_subs one_col_data two_col_data worst_fts best_fts
+    clear best_leis_subs worst_leis_subs one_col_data two_col_data worst_fts best_fts
     one_count = 0; two_count = 0;
     for i = 1:length(sub_nums)
         for j = 1:length(top_subs(:,one_col))
@@ -210,25 +209,25 @@ if binning
                 one_count = one_count + 1;
                 one_col_data(one_count,:) = analysis_matrix(i,:);
                 best_fts(one_count) = scaled_fts(i);
-                best_ft_subs(one_count) = sub_nums(i);
+                best_leis_subs(one_count) = sub_nums(i);
             end
             if sub_nums(i) == top_subs(j,two_col)
                 two_count = two_count + 1;
                 two_col_data(two_count,:) = analysis_matrix(i,:);
                 worst_fts(two_count) = scaled_fts(i);
-                worst_ft_subs(two_count) = sub_nums(i);
+                worst_leis_subs(two_count) = sub_nums(i);
             end
         end
     end
-    best_ft_data = one_col_data;
-    worst_ft_data = two_col_data;
+    best_leis_data = one_col_data;
+    worst_leis_data = two_col_data;
 end
 
 %% Eliminate outliers from the datasets
 if elim_outliers
     try
-    [best_ft_data,best_ft_subs,best_fts] = find_outliers(best_ft_data,best_ft_subs,best_fts);
-    [worst_ft_data,worst_ft_subs,worst_fts] = find_outliers(worst_ft_data,worst_ft_subs,worst_fts);
+    [best_leis_data,best_leis_subs,best_fts] = find_outliers(best_leis_data,best_leis_subs,best_fts);
+    [worst_leis_data,worst_leis_subs,worst_fts] = find_outliers(worst_leis_data,worst_leis_subs,worst_fts);
     catch
         keyboard
     end
@@ -246,22 +245,22 @@ if uplow_quart && ~binning
     %         w_med = w2_med;
     %     end
     
-    clear best_fts bestis best_ft_data best_ft_subs worst_fts worst_is worst_ft_data worst_ft_subs
+    clear best_fts bestis best_leis_data best_leis_subs worst_fts worst_is worst_leis_data worst_leis_subs
     best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
     for i = 1:length(scaled_fts)
         if ~isnan(scaled_fts(i))
-            if scaled_fts(i) >= b_med
+            if scaled_fts(i) > b_med
                 best_count = best_count + 1;
                 best_fts(best_count) = scaled_fts(i);
                 best_is(best_count) = i;
-                best_ft_data(best_count,:) = analysis_matrix(best_is(best_count),:);
-                best_ft_subs(best_count) = sub_nums(i);
-            elseif scaled_fts(i) <= w_med
+                best_leis_data(best_count,:) = analysis_matrix(best_is(best_count),:);
+                best_leis_subs(best_count) = sub_nums(i);
+            elseif scaled_fts(i) < w_med
                 worst_count = worst_count + 1;
                 worst_fts(worst_count) = scaled_fts(i);
                 worst_is(worst_count) = i;
-                worst_ft_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
-                worst_ft_subs(worst_count) = sub_nums(i);
+                worst_leis_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
+                worst_leis_subs(worst_count) = sub_nums(i);
                 %             elseif scaled_fts(i) >= med_ft
                 %                 b2_count = b2_count + 1;
                 %                 best_fts2(b2_count) = scaled_fts(i);
@@ -277,39 +276,39 @@ end
 %% Cut datasets to same size
 randomize_data = 0;
 if cut_to_samesize
-    if size(best_ft_data,1) > size(worst_ft_data,1)
+    if size(best_leis_data,1) > size(worst_leis_data,1)
         best = 1;
         if randomize_data
-            shuff_Is = randperm(length(best_ft_data));
-            best_ft_data = best_ft_data(shuff_Is(1:length(worst_ft_data)),:);
+            shuff_Is = randperm(length(best_leis_data));
+            best_leis_data = best_leis_data(shuff_Is(1:length(worst_leis_data)),:);
         else
             if binning
-                best_fts = best_fts(1:length(worst_ft_data));
-                best_ft_data = best_ft_data(1:length(worst_ft_data),:);
+                best_fts = best_fts(1:length(worst_leis_data));
+                best_leis_data = best_leis_data(1:length(worst_leis_data),:);
             end
             %             find_bw;
-            %             best_ft_data = best_ft_data(bestbests,:);
-            %         best_ft_data = best_ft_data(1:length(worst_ft_data),:);
+            %             best_leis_data = best_leis_data(bestbests,:);
+            %         best_leis_data = best_leis_data(1:length(worst_leis_data),:);
         end
-    elseif size(worst_ft_data,1) > size(best_ft_data,1)
+    elseif size(worst_leis_data,1) > size(best_leis_data,1)
         best = 0;
         if randomize_data
-            shuff_Is = randperm(length(worst_ft_data));
-            worst_ft_data = worst_ft_data(shuff_Is(1:length(best_ft_data)),:);
+            shuff_Is = randperm(length(worst_leis_data));
+            worst_leis_data = worst_leis_data(shuff_Is(1:length(best_leis_data)),:);
         else
             if binning
-                worst_fts = worst_fts(1:length(best_ft_data));
-                worst_ft_data = worst_ft_data(1:length(best_ft_data),:);
+                worst_fts = worst_fts(1:length(best_leis_data));
+                worst_leis_data = worst_leis_data(1:length(best_leis_data),:);
             end
-            %             index_range = 1:length(best_ft_data);
-            %             rand_i = randi([length(best_ft_data)+1 length(worst_ft_data)]);
-            %             rand_i2 = randi(length(best_ft_data));
-            %             range = 1:length(best_ft_data);
+            %             index_range = 1:length(best_leis_data);
+            %             rand_i = randi([length(best_leis_data)+1 length(worst_leis_data)]);
+            %             rand_i2 = randi(length(best_leis_data));
+            %             range = 1:length(best_leis_data);
             %             range(rand_i2) = rand_i;
-            %         worst_ft_data = worst_ft_data(range,:);
+            %         worst_leis_data = worst_leis_data(range,:);
             %             find_bw;
-            %             worst_ft_data = worst_ft_data(worstworsts,:);
-            %         worst_ft_data = worst_ft_data(1:length(best_ft_data),:);
+            %             worst_leis_data = worst_leis_data(worstworsts,:);
+            %         worst_leis_data = worst_leis_data(1:length(best_leis_data),:);
         end
     end
 end
@@ -326,7 +325,7 @@ end
 %         w_med = w2_med;
 %     end
 %
-%         clear best_fts bestis best_ft_data best_ft_subs worst_fts worst_is worst_ft_data worst_ft_subs
+%         clear best_fts bestis best_leis_data best_leis_subs worst_fts worst_is worst_leis_data worst_leis_subs
 %     best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
 %     for i = 1:length(scaled_fts)
 %         if ~isnan(scaled_fts(i))
@@ -334,14 +333,14 @@ end
 %                 best_count = best_count + 1;
 %                 best_fts(best_count) = scaled_fts(i);
 %                 best_is(best_count) = i;
-%                 best_ft_data(best_count,:) = analysis_matrix(best_is(best_count),:);
-%                 best_ft_subs(best_count) = sub_nums(i);
+%                 best_leis_data(best_count,:) = analysis_matrix(best_is(best_count),:);
+%                 best_leis_subs(best_count) = sub_nums(i);
 %             elseif scaled_fts(i) <= w_med
 %                 worst_count = worst_count + 1;
 %                 worst_fts(worst_count) = scaled_fts(i);
 %                 worst_is(worst_count) = i;
-%                 worst_ft_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
-%                 worst_ft_subs(worst_count) = sub_nums(i);
+%                 worst_leis_data(worst_count,:) = analysis_matrix(worst_is(worst_count),:);
+%                 worst_leis_subs(worst_count) = sub_nums(i);
 %             elseif scaled_fts(i) >= med_ft
 %                 b2_count = b2_count + 1;
 %                 best_fts2(b2_count) = scaled_fts(i);
@@ -358,11 +357,11 @@ if ~binning
     find_bw;
 end
 
-% fBest_ft_data = best_ft_data(~isnan(best_ft_data));
-% fWorst_ft_data = worst_ft_data(~isnan(worst_ft_data));
+% fBest_leis_data = best_leis_data(~isnan(best_leis_data));
+% fWorst_leis_data = worst_leis_data(~isnan(worst_leis_data));
 
-med_fBest_ft = nanmedian(best_ft_data);
-med_fWorst_ft = nanmedian(worst_ft_data);
+med_fBest_ft = nanmedian(best_leis_data);
+med_fWorst_ft = nanmedian(worst_leis_data);
 
 % Plot best & worst data
 plot_ft = 1;
@@ -372,9 +371,9 @@ if plot_ft
     plot(med_fBest_ft);
     hold on
     plot(med_fWorst_ft);
-    xticks(1:size(best_ft_data,2)+1);
-    xticklabels(var_names(end-size(best_ft_data,2)+1:end));
-    xlim([0 size(best_ft_data,2)+1]);
+    xticks(1:size(best_leis_data,2)+1);
+    xticklabels(var_names(end-size(best_leis_data,2)+1:end));
+    xlim([0 size(best_leis_data,2)+1]);
     ylim([0.2 1.2]);
     if binning
         if all_labels && ~use_ranks && ~use_indivs
@@ -394,38 +393,38 @@ if plot_ft
         comp1 = 'Upper Tier';
         comp2 = 'Lower Tier';
     end
-    lgd = legend(sprintf('%s n = %d',comp1,length(best_ft_data)),sprintf('%s n = %d',comp2,length(worst_ft_data)));
+    lgd = legend(sprintf('%s n = %d',comp1,length(best_leis_data)),sprintf('%s n = %d',comp2,length(worst_leis_data)));
     lgd.Location = 'northeast';
     title(sprintf('%s - %s Comparison',comp1,comp2));
 end
 
 % Choose which variables to include in ANOVA
-Ps = zeros(1,size(best_ft_data,2));
+Ps = zeros(1,size(best_leis_data,2));
 anova_all_data = 0;
 if anova_all_data
     for_end = 1;
 else
-    for_end = size(best_ft_data,2);
+    for_end = size(best_leis_data,2);
 end
 for_end = 7;
 for start_point = 1:for_end
     if anova_all_data
         start_point = 1;
-        end_point = size(best_ft_data,2);
+        end_point = size(best_leis_data,2);
     else
         end_point = start_point;
     end
     try
-        m_best_ft_data = best_ft_data(:,start_point:end_point);
-        m_worst_ft_data = worst_ft_data(:,start_point:end_point);
+        m_best_leis_data = best_leis_data(:,start_point:end_point);
+        m_worst_leis_data = worst_leis_data(:,start_point:end_point);
     catch
         keyboard
     end
     for a = 1:2
         if a == 1
-            mod_wrksht = m_best_ft_data;
+            mod_wrksht = m_best_leis_data;
         else
-            mod_wrksht = m_worst_ft_data;
+            mod_wrksht = m_worst_leis_data;
         end
         
         count = 0;

@@ -21,7 +21,7 @@ for i = 1:size(raw,1)
     end
     
     if ~isnan(TMT_vals1) & ~isnan(TMT_vals2)
-        TMT_vals(i) = 1-(TMT_vals2-TMT_vals1);
+        TMT_vals(i) = 0-(TMT_vals2+TMT_vals1);
 %         TMT_vals(i) =  100 - (TMT_vals1 + TMT_vals2);
     else
         TMT_vals(i) = NaN;

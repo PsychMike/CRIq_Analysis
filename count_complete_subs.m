@@ -1,9 +1,4 @@
-% mod_wrksht = worksheet(:,(2:26));
-% mod_wrksht(:,end+1:end+4) = worksheet(:,33:36);
-% mod_wrksht(:,end+1:end+11) = worksheet(:,37:47);
-% mod_wrksht(:,end+1:end+3) = worksheet(:,50:52);
-% mod_wrksht = mod_wrksht(1:length(current_sub),:);
-
+%% Only include subs with complete data
 mod_wrksht = analysis_matrix;
 count = 0;
 

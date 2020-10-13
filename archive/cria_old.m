@@ -234,18 +234,21 @@ new_raw = raw(2:end,:);
 raw = new_raw(comp_sub_indices,1:52);
 
 %Make list of CRIq scores, computed or recorded
-consolidate_criq_scores;
+for i = 1:length(CRI_total_vals)
+    if ~isnan(CRI_total_vals(i))
+        CRI_all_vals(i) = CRI_total_vals(i);
+    else
+        CRI_all_vals(i) = worksheet(i,36);
+    end
+end
 
-%% Correlatory Analyses
-normalize = 1;
-corr(CRI_all_vals(~isnan(CRI_all_vals)&~isnan(CRI_ft_vals))',CRI_ft_vals(~isnan(CRI_all_vals)&~isnan(CRI_ft_vals))');
+%% Fix behavioral scores for analysis
 
-col_thirtysix = worksheet(:,36);
-col_thirtyfive = worksheet(:,35);
-corr(col_thirtysix(~isnan(col_thirtysix)&~isnan(col_thirtyfive)),col_thirtyfive(~isnan(col_thirtysix)&~isnan(col_thirtyfive)));
-
-story_recall_vals = worksheet(:,38) + worksheet(:,39);
-fix_storyrecall;
+for i = 1:size(worksheet,1)
+   srv1 = raw{i,38}; try srv1 = str2num(srv1); end
+   srv2 = raw{i,39}; try srv2 = str2num(srv2); end
+   story_recall_vals(i) = srv1 + srv2;
+end
 if normalize; story_recall_vals = normalize_values(story_recall_vals); end
 
 fix_tmt2;

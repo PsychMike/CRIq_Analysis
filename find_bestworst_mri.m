@@ -7,9 +7,9 @@ try
 end
 
 b_mri_count = 0;
-for i = 1:length(best_ft_subs)
-    if sum(find(behav_nums==best_ft_subs(i)))
-        index = find(behav_nums==best_ft_subs(i));
+for i = 1:length(best_leis_subs)
+    if sum(find(behav_nums==best_leis_subs(i)))
+        index = find(behav_nums==best_leis_subs(i));
         b_mri_count = b_mri_count + 1;
         best_mri_nums(b_mri_count) = mri_nums(index);
         best_behav_nums(b_mri_count) = behav_nums(index);
@@ -22,9 +22,9 @@ best_mri_nums = best_mri_nums(best_mri_nums>0);
 
 w_mri_count = 0;
 
-for i = 1:length(worst_ft_subs)
-    if sum(find(behav_nums==worst_ft_subs(i)))
-        index = find(behav_nums==worst_ft_subs(i));
+for i = 1:length(worst_leis_subs)
+    if sum(find(behav_nums==worst_leis_subs(i)))
+        index = find(behav_nums==worst_leis_subs(i));
         w_mri_count = w_mri_count + 1;
         worst_mri_nums(w_mri_count) = mri_nums(index);
         worst_behav_nums(w_mri_count) = behav_nums(index);
@@ -79,4 +79,4 @@ if write2table
 %     end
 %     writetable(T,table_name);
 end
-clear best_ft_data best_ft_subs best_fts best_is worst_ft_data worst_ft_subs worst_fts worst_is
+clear best_leis_data best_leis_subs best_fts best_is worst_leis_data worst_leis_subs worst_fts worst_is

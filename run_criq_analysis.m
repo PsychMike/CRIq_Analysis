@@ -9,9 +9,9 @@ delete('output/*.mat','output/*.xls*','*.mat')
 write2table = 1;
 
 %Eliminate outliers?
-elim_outliers = 1;
+elim_outliers = 0;
 
-%Normalize scores?
+%Normalize scores? (keep set at 1)
 normalize = 1;
 
 %Use the upper and lower quartile scores?
@@ -21,7 +21,7 @@ uplow_quart = 1;
 more_subs = 0;
 
 %Cut sub nums to be equal between comparison groups?
-cut_to_samesize = 1;
+cut_to_samesize = 0;
 
 %Bin leis act types?
 binning = 0;

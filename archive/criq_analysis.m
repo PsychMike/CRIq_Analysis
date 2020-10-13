@@ -1,6 +1,5 @@
 %% Runs all analyses using CRIq data
-
-% global use_indivs norm_score_vals use_vars binning uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all
+if ~exist('all_comps');run_criq_analysis;end
 
 %% Add stats folder %%
 addpath('StatsFunctions');
@@ -36,9 +35,9 @@ work_sd = 40.21979;
 work_intrcpt = -2.082;
 work_coeff = 1.124;
 
-ft_sd = 80.24101;
-ft_intrcpt = 2.68;
-ft_coeff = 3.754;
+leis_sd = 80.24101;
+leis_intrcpt = 2.68;
+leis_coeff = 3.754;
 
 record_CRIq = worksheet(:,36);
 record_CRIq = record_CRIq(1:length(ages));
@@ -114,15 +113,15 @@ for current_sub = 1:sum(~isnan(worksheet(:,1)))
     if ~isnan(free_time(current_sub,:))
         children_val = free_time(current_sub,end-2);
         ft_total = sum(free_time(current_sub,:)) - children_val;
-        exp_ft_CRI = ages(current_sub) * ft_coeff + ft_intrcpt;
+        exp_ft_CRI = ages(current_sub) * leis_coeff + leis_intrcpt;
         if children_val > 0
             children_val = 5*children_val+10;
         end
         ft_total = ft_total + children_val;
-        CRI_ft_curr_val = (ft_total-exp_ft_CRI)/ft_sd;
+        CRI_ft_curr_val = (ft_total-exp_ft_CRI)/leis_sd;
         ft = 1;
     else
-        CRI_ft_vals(current_sub) = CRI_ft_record;
+        CRI_leis_vals(current_sub) = CRI_ft_record;
         ft = 0;
     end
     
@@ -133,7 +132,7 @@ for current_sub = 1:sum(~isnan(worksheet(:,1)))
         CRI_work_vals(current_sub) = round(CRI_work_curr_val*15+100);
     end
     if ft == 1
-        CRI_ft_vals(current_sub) = round(CRI_ft_curr_val*15+100);
+        CRI_leis_vals(current_sub) = round(CRI_ft_curr_val*15+100);
     end
     
     if isnan(CRI_edu_vals(current_sub))
@@ -142,18 +141,18 @@ for current_sub = 1:sum(~isnan(worksheet(:,1)))
     if isnan(CRI_work_vals(current_sub))
         CRI_work_vals(current_sub) = CRI_w_record;
     end
-    if isnan(CRI_ft_vals(current_sub))
-        CRI_ft_vals(current_sub) = CRI_ft_record;
+    if isnan(CRI_leis_vals(current_sub))
+        CRI_leis_vals(current_sub) = CRI_ft_record;
     end
     
-    CRI_total_vals(current_sub) = round(mean([CRI_edu_vals(current_sub) CRI_work_vals(current_sub) CRI_ft_vals(current_sub)] - 100)/11.32277*15+100);
+    CRI_total_vals(current_sub) = round(mean([CRI_edu_vals(current_sub) CRI_work_vals(current_sub) CRI_leis_vals(current_sub)] - 100)/11.32277*15+100);
 end
 
 % Use only complete datasets
-comp_sub_indices = (~isnan(CRI_edu_vals)&~isnan(CRI_work_vals)&~isnan(CRI_ft_vals));
+comp_sub_indices = (~isnan(CRI_edu_vals)&~isnan(CRI_work_vals)&~isnan(CRI_leis_vals));
 CRI_edu_vals = CRI_edu_vals(comp_sub_indices);
 CRI_work_vals = CRI_work_vals(comp_sub_indices);
-CRI_ft_vals = CRI_ft_vals(comp_sub_indices);
+CRI_leis_vals = CRI_leis_vals(comp_sub_indices);
 CRI_total_vals = CRI_total_vals(comp_sub_indices);
 
 sub_nums = sub_nums(comp_sub_indices);
@@ -163,46 +162,49 @@ new_raw = raw(2:end,:);
 raw = new_raw(comp_sub_indices,1:52);
 
 %Make list of CRIq scores, computed or recorded
-consolidate_criq_scores;
+for i = 1:length(CRI_total_vals)
+    if ~isnan(CRI_total_vals(i))
+        CRI_all_vals(i) = CRI_total_vals(i);
+    else
+        CRI_all_vals(i) = worksheet(i,36);
+    end
+end
 
-%% Correlatory Analyses
-normalize = 1;
-corr(CRI_all_vals(~isnan(CRI_all_vals)&~isnan(CRI_ft_vals))',CRI_ft_vals(~isnan(CRI_all_vals)&~isnan(CRI_ft_vals))');
+%% Fix behavioral scores for analysis
 
-col_thirtysix = worksheet(:,36);
-col_thirtyfive = worksheet(:,35);
-corr(col_thirtysix(~isnan(col_thirtysix)&~isnan(col_thirtyfive)),col_thirtyfive(~isnan(col_thirtysix)&~isnan(col_thirtyfive)));
-
-story_recall_vals = worksheet(:,38) + worksheet(:,39);
-fix_storyrecall;
-if normalize; story_recall_vals = normalize_values(story_recall_vals); end
+for i = 1:size(worksheet,1)
+   srv1 = raw{i,38}; try srv1 = str2num(srv1); end
+   srv2 = raw{i,39}; try srv2 = str2num(srv2); end
+   story_recall_vals(i) = srv1 + srv2;
+end
+if normalize; story_recall_vals = normalize_values(story_recall_vals,normalize); end
 
 fix_tmt2;
-if normalize; TMT_vals = normalize_values(TMT_vals); end
+if normalize; TMT_vals = normalize_values(TMT_vals,normalize); end
 
 fix_wms;
 WMS_vals = wms_tot_nVals;
-if normalize; WMS_vals = normalize_values(WMS_vals); end
+if normalize; WMS_vals = normalize_values(WMS_vals,normalize); end
 
 c_score = worksheet(:,44);
 w_score = worksheet(:,45);
 cw_score = worksheet(:,46);
 stroop_vals = ((c_score+w_score)/2) - cw_score;
 fix_stroop;
-if normalize; stroop_vals = normalize_values(stroop_vals); end
+if normalize; stroop_vals = normalize_values(stroop_vals,normalize); end
 
 mem_vals = worksheet(:,47);
 mem_vals = -mem_vals;
-if normalize; mem_vals = normalize_values(mem_vals); end %"remembering to do things"
+if normalize; mem_vals = normalize_values(mem_vals,normalize); end %"remembering to do things"
 
 srp_vals = worksheet(:,50);
-if normalize; srp_vals = normalize_values(srp_vals); end
+if normalize; srp_vals = normalize_values(srp_vals,normalize); end
 
 moca_vals = worksheet(:,51);
-if normalize; moca_vals = normalize_values(moca_vals); end
+if normalize; moca_vals = normalize_values(moca_vals,normalize); end
 
 read_vals = worksheet(:,52);
-if normalize; read_vals = normalize_values(read_vals); end
+if normalize; read_vals = normalize_values(read_vals,normalize); end
 
 story_recall_vals = flip_data(story_recall_vals);
 TMT_vals = flip_data(TMT_vals);
@@ -213,7 +215,7 @@ moca_vals = flip_data(moca_vals);
 read_vals = flip_data(read_vals);
 
 analysis_matrix = ([sub_nums ages CRI_edu_vals' CRI_work_vals' ...
-    CRI_ft_vals' CRI_all_vals' story_recall_vals TMT_vals ...
+    CRI_leis_vals' CRI_all_vals' story_recall_vals TMT_vals ...
     WMS_vals stroop_vals mem_vals  moca_vals read_vals]);
 
 skip_point = 5;
@@ -277,61 +279,8 @@ end
 
 xlswrite('extract_scores.xlsx',extract_scores);
 
-%% Other functions
-for indiv = 1:length(comps1)
-    if run_all
-        runs = length(comps;
-        for i = 1:runs
-            if i > 1
-                binning = 1;
-                use_vars = 1;
-            else
-                binning = 0;
-                use_vars = 0;
-            end
-%             if i == 1; one_col = 0; two_col = 0;
-%             elseif i == 2; one_col = 1; two_col = 2;
-%             elseif i == 3; one_col = 1; two_col = 3;
-%             elseif i == 4; one_col = 1; two_col = 4;
-%             elseif i == 5; one_col = 2; two_col = 3;
-%             elseif i == 6; one_col = 2; two_col = 4;
-%             elseif i == 7; one_col = 3; two_col = 4;
-%             end
-            switch i
-                case 1
-                    one_col = 0; two_col = 0;
-                case 2
-                    one_col = 1; two_col = 2;
-                case 3
-                    one_col = 1; two_col = 3;
-                case 4
-                    one_col = 1; two_col = 4;
-                case 5
-                    one_col = 2; two_col = 3;
-                case 6
-                    one_col = 2; two_col = 4;
-                case 7
-                    one_col = 3; two_col = 4;
-            end
-%             clearvars -except var_names CRI_ft_vals sub_nums criq_scores analysis_matrix extract_scores binning one_col two_col norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all indiv use_indivs
-            bin_cluster_subs;
-            split_fts;
-            read_studysheet;
-            find_bestworst_mri;
-        end
-    else
-        runs = 1;
-        bin_cluster_subs;
-        split_fts;
-        read_studysheet;
-        find_bestworst_mri;
-        %         clearvars -except var_names CRI_ft_vals sub_nums criq_scores analysis_matrix extract_scores binning one_col two_col norm_score_vals use_vars binning one_col two_col uplow_quart cut_to_samesize elim_outliers anova_all_data more_subs write2table run_all indiv use_indivs signif signif_points
-    end
-end
-% for i = 1:runs
-% bin_cluster_subs;
-% split_fts;
-% read_studysheet;
-% find_bestworst_mri;
-% end
-% end
+%% Main functions
+bin_cluster_subs;
+split_fts;
+read_studysheet;
+find_bestworst_mri;
