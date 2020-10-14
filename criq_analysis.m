@@ -284,9 +284,14 @@ end
 xlswrite('extract_scores.xlsx',extract_scores);
 
 %% Main functions
+
+%Bin subjects
 if binning
 bin_cluster_subs;
 end
+
+%Split subjects by appropriate scores
 split_fts;
-read_studysheet;
+
+%Find MRI numbers of included subjects
 find_bestworst_mri;

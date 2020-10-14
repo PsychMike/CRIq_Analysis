@@ -17,8 +17,8 @@ normalize = 1;
 %Use the upper and lower quartile scores?
 uplow_quart = 1;
 
-%Include more subs in each group?
-more_subs = 0;
+%Include (~333%) more subs in each group?
+more_subs = 1;
 
 %Cut sub nums to be equal between comparison groups?
 cut_to_samesize = 0;
@@ -39,7 +39,7 @@ end
 use_ranks = 0;
 
 %Bin by social/intellectual?
-socog_binning = 1; %formerly all_labels, value flipped
+socog_binning = 0; %formerly all_labels, value flipped
 if use_indivs || use_ranks
     socog_binning = 0;
 end

@@ -237,15 +237,19 @@ end
 if uplow_quart && ~binning
     b_med = median(best_fts);
     w_med = median(worst_fts);
-    
-    if more_subs
-    sort_bfts = sort(best_fts);
-    sort_wfts = sort(worst_fts,'descend');
-    bbot = sort_bfts(1:(length(sort_bfts)/4)-3);
-    wbot = sort_wfts(1:(length(sort_wfts)/4)-3);
-    b_med = median(bbot);
-    w_med = median(wbot);
-    end
+    sort_bfts = sort(best_fts,'descend');
+    sort_wfts = sort(worst_fts);
+    btop = sort_bfts(1:(length(sort_bfts)/2));
+    bbot = sort_bfts((length(sort_bfts)/2)+1:end);
+    wtop = sort_wfts(1:(length(sort_wfts)/2));
+    wbot = sort_wfts((length(sort_wfts)/2)+1:end);
+    b_med = median(btop);
+    %     if more_subs
+    %         load('b2_med');
+    %         load('w2_med');
+    %         b_med = b2_med;
+    %         w_med = w2_med;
+    %     end
     
     clear best_fts bestis best_leis_data best_leis_subs worst_fts worst_is worst_leis_data worst_leis_subs
     best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
