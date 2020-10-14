@@ -16,29 +16,7 @@ fixi = 15:17;
 item_labels = {'newspaper','chores','driving','leisure_acts','new_tech','social','cinema','garden','grandchildren','volunteer','art','concerts','journeys','reading','children','pets','account'};
 
 % Set item labels in bins
-% if ~all_labels
-%     bin1 = {'newspaper','account','new_tech','children','driving','chores','garden'};
-%     bin2 = {'cinema','concerts','reading','journeys','art'};
-%     %     bin3 = {'social','volunteer','leisure_acts'};
-%     %     bin4 = {'grandchildren','pets'};
-%     % else
-%     % Set bin labels for cognitive activities(CA) & social activities(SA)
-%     %     bin1 = {'newspaper','chores','driving','new_tech','garden','art','reading','account'};
-%     %     bin2 = {'social','grandchildren','concerts','children'};
-%     %strict cogn
-%     %     bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account','leisure_acts','journeys','cinema'};
-%     %incl cogn
-%     %     bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account','leisure_acts','journeys','cinema','volunteer','pets'};
-%     %     bin4 = {'social','grandchildren','concerts','children'};
-%     bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account'};
-%     bin4 = {'social','grandchildren','children'};
-%     %     bin1 = {'volunteer','pets'};
-%     %     bin2 = {'leisure_acts','cinema','volunteer','journeys','pets'};
-% end
 all_bins = item_labels;
-% all_bins = {'newspaper','account','new_tech','children','driving','chores','garden', ...
-%     'cinema','concerts','reading','journeys','art','social','volunteer','leisure_acts', ...
-%     'grandchildren','pets'};
 
 if use_indivs
     bin1 = all_bins(indiv);
@@ -56,7 +34,7 @@ if use_ranks
     bin3 = best_leis;
     bin4 = worst_leis;
 else
-    if ~socog_binning
+    if socog_binning
         bin3 = {'art','children','volunteer'};
         bin4 = {'new_tech','leisure_acts'};
     else
@@ -67,9 +45,7 @@ end
 
 % Find item indices
 ibin1=zeros(1,length(bin1));ibin2=zeros(1,length(bin2));
-% if all_labels
 ibin3=zeros(1,length(bin3));ibin4=zeros(1,length(bin4));
-% end
 bin1_count = 0;bin2_count = 0;bin3_count = 0;bin4_count = 0;
 for i = 1:length(item_labels)
     for j = 1:length(bin1)
@@ -84,7 +60,6 @@ for i = 1:length(item_labels)
             ibin2(bin2_count) = i;
         end
     end
-    %     if all_labels
     for j = 1:length(bin3)
         if strcmp(item_labels{i},bin3{j})
             bin3_count = bin3_count + 1;
@@ -97,7 +72,6 @@ for i = 1:length(item_labels)
             ibin4(bin4_count) = i;
         end
     end
-    %     end
 end
 
 %% Find CRIq bin scores
@@ -107,17 +81,14 @@ numerize_scores;
 
 bin1_scores = num_scores(:,ibin1);
 bin2_scores = num_scores(:,ibin2);
-% if all_labels
 bin3_scores = num_scores(:,ibin3);
 bin4_scores = num_scores(:,ibin4);
-% end
+
 stand_count = 0;
 [top1_scores,top1_subs,stand_bins,stand_count] = find_best_scores(bin1_scores,analysis_matrix,sub_nums,stand_count);
 [top2_scores,top2_subs,stand_bins,stand_count] = find_best_scores(bin2_scores,analysis_matrix,sub_nums,stand_count,stand_bins);
-% if all_labels
 [top3_scores,top3_subs,stand_bins,stand_count] = find_best_scores(bin3_scores,analysis_matrix,sub_nums,stand_count,stand_bins);
 [top4_scores,top4_subs,stand_bins,stand_count] = find_best_scores(bin4_scores,analysis_matrix,sub_nums,stand_count,stand_bins);
-% end
 %% Bin subjects
 
 if use_vars

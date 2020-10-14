@@ -33,7 +33,7 @@ work_scores = work_scores(good_indices==1);
 %     find_binvariances;
 %     flipped_gi = good_indices';
 %     stand_bins = stand_bins(flipped_gi==1,:);
-%     %     stand_bins = stand_bins(var_indices==1,:);
+    %     stand_bins = stand_bins(var_indices==1,:);
 %     find_topvars;
 % end
 
@@ -197,10 +197,9 @@ if binning == 0
             end
         end
     end
-end
 
 %% Find bin data, if binning
-if binning
+else
     clear best_leis_subs worst_leis_subs one_col_data two_col_data worst_fts best_fts
     one_count = 0; two_count = 0;
     for i = 1:length(sub_nums)
@@ -210,8 +209,7 @@ if binning
                 one_col_data(one_count,:) = analysis_matrix(i,:);
                 best_fts(one_count) = scaled_fts(i);
                 best_leis_subs(one_count) = sub_nums(i);
-            end
-            if sub_nums(i) == top_subs(j,two_col)
+            elseif sub_nums(i) == top_subs(j,two_col)
                 two_count = two_count + 1;
                 two_col_data(two_count,:) = analysis_matrix(i,:);
                 worst_fts(two_count) = scaled_fts(i);
@@ -378,10 +376,10 @@ if plot_ft
     xlim([0 size(best_leis_data,2)+1]);
     ylim([0.2 1.2]);
     if binning
-        if all_labels && ~use_ranks && ~use_indivs
+        if ~socog_binning && ~use_ranks && ~use_indivs
             comp1 = sprintf('Bin %d',one_col);
             comp2 = sprintf('Bin %d',two_col);
-        elseif ~all_labels
+        elseif socog_binning
             comp1 = 'CA';
             comp2 = 'SA';
         elseif use_ranks
