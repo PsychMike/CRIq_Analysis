@@ -11,17 +11,17 @@ elim_outliers = 0;
 normalize = 1;
 
 %Use the upper and lower quartile scores?
-uplow_quart = 0;
+uplow_quart = 1;
 
 %Include (~333%) more subs in each group?
-more_subs = 0;
+more_subs = 1;
 
 %Cut sub nums to be equal between comparison groups?
 cut_to_samesize = 0;
 
 %Bin leis act types?
 binning = 1;
-if binning;use_vars=1;else;use_vars=0;end %if binning, use subjects who vary between compared bins
+if binning;use_vars=1;uplow_quart=0;else;use_vars=0;end %if binning, use subjects who vary between compared bins
 
 %Bin leis individually?
 use_indivs = 0;
@@ -42,6 +42,7 @@ end
 
 %Run all comparisons?
 all_comps = 1;
+if ~binning; all_comps = 0; end
 acomps1 = [1;1;1;2;2;3];
 acomps2 = [2;3;4;3;4;4];
 if all_comps
@@ -74,9 +75,10 @@ for c = 1:length(comps1)
     %Clean up old files/variables
     clear vars
     copyfile('Tnames.mat',sprintf('%s/clean/Tnames.mat',pwd));
-    delete('output/*.mat','*.mat')
+    
     if c == 1
         delete('output/*.xls*');
+        delete('output/*.mat','*.mat')
     end
     copyfile(sprintf('%s/clean/Tnames.mat',pwd),'Tnames.mat');
     
