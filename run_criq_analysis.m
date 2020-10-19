@@ -1,11 +1,12 @@
-%% Runs CRIq analysis %%
+                        %% Runs CRIq analysis %%
 
 %% Set analysis parameters
+
 %Write subject MRI pathnames to file?
 write2table = 1;
 
 %Eliminate outliers?
-elim_outliers = 0;
+elim_outliers = 1;
 
 %Normalize scores? (keep set at 1)
 normalize = 1;
@@ -14,13 +15,13 @@ normalize = 1;
 uplow_quart = 1;
 
 %Include (~333%) more subs in each group?
-more_subs = 0;
+more_subs = 1;
 
 %Cut sub nums to be equal between comparison groups?
 cut_to_samesize = 1;
 
 %Bin leis act types?
-binning = 1;
+binning = 0;
 if binning;use_vars=1;uplow_quart=0;else;use_vars=0;end %if binning, use subjects who vary between compared bins
 
 %Bin leis individually?
@@ -35,7 +36,7 @@ end
 use_ranks = 0;
 
 %Bin by social/intellectual?
-socog_binning = 1; %formerly all_labels, value flipped
+socog_binning = 0; %formerly all_labels, value flipped
 if use_indivs || use_ranks
     socog_binning = 0;
 end

@@ -33,7 +33,7 @@ work_scores = work_scores(good_indices==1);
 %     find_binvariances;
 %     flipped_gi = good_indices';
 %     stand_bins = stand_bins(flipped_gi==1,:);
-    %     stand_bins = stand_bins(var_indices==1,:);
+%     stand_bins = stand_bins(var_indices==1,:);
 %     find_topvars;
 % end
 
@@ -42,7 +42,7 @@ add_row = 0;
 for row = 1:length(flipped_CRIs)
     if ~isnan(flipped_CRIs(row)) && ~isnan(ages(row)) && ~isnan(edu_scores(row)) && ~isnan(work_scores(row))
         add_row = add_row + 1;
-%         new_leis_vals(add_row) = flipped_CRIs(row);
+        %         new_leis_vals(add_row) = flipped_CRIs(row);
         new_ages(add_row) = ages(row);
         new_edus(add_row) = edu_scores(row);
         new_works(add_row) = work_scores(row);
@@ -59,7 +59,7 @@ work_scores = new_works;
 % std_ft = std(new_leis_vals);
 % stand_fts = (new_leis_vals-mean_ft)/std_ft;
 % scaled_fts = stand_fts*15+100;
-% 
+%
 % med_ft = median(scaled_fts);
 
 %% Plot linear regression of age & leisure scores
@@ -75,7 +75,7 @@ close all
 figure
 yCalc1 = b1*x;
 try
-scatter(x,y)
+    scatter(x,y)
 catch
     keyboard
 end
@@ -104,76 +104,76 @@ med_ft = median(scaled_fts)% Find best & worst subs and their data
 %% Plot linear regression of education & leisure scores
 regress_edu = 1;
 if regress_edu
-x = edu_scores;
-y = new_leis_vals;
-% y = scaled_fts;
-x = x';
-y = y';
-format long
-b1 = x\y;
-
-close all
-figure
-yCalc1 = b1*x;
-scatter(x,y)
-hold on
-plot(x,yCalc1)
-xlabel('Age')
-ylabel('Leisure Scores')
-title('Linear Regression Relation Between Education & Leisure Scores')
-grid on
-X = [ones(length(x),1) x];
-b = X\y;
-yCalc2 = X*b;
-plot(x,yCalc2,'--')
-legend('Data','Slope','Slope & Intercept','Location','best');
-Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
-Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
-
-new_leis_vals = new_leis_vals - yCalc2';
-% new_leis_vals = yCalc2;
-mean_ft = mean(new_leis_vals);
-std_ft = std(new_leis_vals);
-stand_fts = (new_leis_vals-mean_ft)/std_ft;
-scaled_fts = stand_fts*15+100;
-med_ft = median(scaled_fts)% Find best & worst subs and their data
+    x = edu_scores;
+    y = new_leis_vals;
+    % y = scaled_fts;
+    x = x';
+    y = y';
+    format long
+    b1 = x\y;
+    
+    close all
+    figure
+    yCalc1 = b1*x;
+    scatter(x,y)
+    hold on
+    plot(x,yCalc1)
+    xlabel('Age')
+    ylabel('Leisure Scores')
+    title('Linear Regression Relation Between Education & Leisure Scores')
+    grid on
+    X = [ones(length(x),1) x];
+    b = X\y;
+    yCalc2 = X*b;
+    plot(x,yCalc2,'--')
+    legend('Data','Slope','Slope & Intercept','Location','best');
+    Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
+    Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
+    
+    new_leis_vals = new_leis_vals - yCalc2';
+    % new_leis_vals = yCalc2;
+    mean_ft = mean(new_leis_vals);
+    std_ft = std(new_leis_vals);
+    stand_fts = (new_leis_vals-mean_ft)/std_ft;
+    scaled_fts = stand_fts*15+100;
+    med_ft = median(scaled_fts)% Find best & worst subs and their data
 end
 %% Plot linear regression of work & leisure scores
 regress_work = 1;
 if regress_work
-x = work_scores;
-y = new_leis_vals;
-% y = scaled_fts;
-x = x';
-y = y';
-format long
-b1 = x\y;
-
-close all
-figure
-yCalc1 = b1*x;
-scatter(x,y)
-hold on
-plot(x,yCalc1)
-xlabel('Age')
-ylabel('Leisure Scores')
-title('Linear Regression Relation Between Education & Leisure Scores')
-grid on
-X = [ones(length(x),1) x];
-b = X\y;
-yCalc2 = X*b;
-plot(x,yCalc2,'--')
-legend('Data','Slope','Slope & Intercept','Location','best');
-Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
-Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
-
-new_leis_vals = new_leis_vals - yCalc2';
-% new_leis_vals = yCalc2;
-mean_ft = mean(new_leis_vals);
-std_ft = std(new_leis_vals);
-stand_fts = (new_leis_vals-mean_ft)/std_ft;
-scaled_fts = stand_fts*15+100;
-med_ft = median(scaled_fts)% Find best & worst subs and their data
+    x = work_scores;
+    y = new_leis_vals;
+    % y = scaled_fts;
+    x = x';
+    y = y';
+    format long
+    b1 = x\y;
+    
+    close all
+    figure
+    yCalc1 = b1*x;
+    scatter(x,y)
+    hold on
+    plot(x,yCalc1)
+    xlabel('Age')
+    ylabel('Leisure Scores')
+    title('Linear Regression Relation Between Education & Leisure Scores')
+    grid on
+    X = [ones(length(x),1) x];
+    b = X\y;
+    yCalc2 = X*b;
+    plot(x,yCalc2,'--')
+    legend('Data','Slope','Slope & Intercept','Location','best');
+    Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
+    Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
+    
+    new_leis_vals = new_leis_vals - yCalc2';
+    % new_leis_vals = yCalc2;
+    mean_ft = mean(new_leis_vals);
+    std_ft = std(new_leis_vals);
+    stand_fts = (new_leis_vals-mean_ft)/std_ft;
+    scaled_fts = stand_fts*15+100;
+    med_ft = median(scaled_fts)% Find best & worst subs and their data
 end
 %% Find best and worst data
 best_count = 0;
@@ -197,8 +197,8 @@ if binning == 0
             end
         end
     end
-
-%% Find bin data, if binning
+    
+    %% Find bin data, if binning
 else
     clear best_leis_subs worst_leis_subs one_col_data two_col_data worst_fts best_fts
     one_count = 0; two_count = 0;
@@ -222,10 +222,11 @@ else
 end
 
 %% Eliminate outliers from the datasets
+elim_outliers = 1;
 if elim_outliers
     try
-    [best_leis_data,best_leis_subs,best_fts] = find_outliers(best_leis_data,best_leis_subs,best_fts);
-    [worst_leis_data,worst_leis_subs,worst_fts] = find_outliers(worst_leis_data,worst_leis_subs,worst_fts);
+        [best_leis_data,best_leis_subs,best_fts] = find_outliers(best_leis_data,best_leis_subs,best_fts);
+        [worst_leis_data,worst_leis_subs,worst_fts] = find_outliers(worst_leis_data,worst_leis_subs,worst_fts);
     catch
         keyboard
     end
@@ -237,25 +238,30 @@ if uplow_quart && ~binning
     w_med = median(worst_fts);
     
     if more_subs
-    sort_bfts = sort(best_fts);
-    sort_wfts = sort(worst_fts,'descend');
-    bbot = sort_bfts(1:(length(sort_bfts)/4)-3);
-    wbot = sort_wfts(1:(length(sort_wfts)/4)-3);
-    b_med = median(bbot);
-    w_med = median(wbot);
+        sort_bfts = sort(best_fts,'descend');
+        sort_wfts = sort(worst_fts);
+        perc_include = 1;
+        bbot = sort_bfts(1:round(length(sort_bfts)*perc_include));
+        wbot = sort_wfts(1:round(length(sort_wfts)*perc_include));
+        b_med = min(bbot);
+        w_med = max(wbot);
+        %     b_med = median(bbot);
+        %     w_med = median(wbot);
     end
-    
-    clear best_fts bestis best_leis_data best_leis_subs worst_fts worst_is worst_leis_data worst_leis_subs
+    %99.16
+    %98.88
+    comb_subs = 
+%     clear best_fts bestis best_leis_data best_leis_subs worst_fts worst_is worst_leis_data worst_leis_subs
     best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
     for i = 1:length(scaled_fts)
-        if ~isnan(scaled_fts(i))
-            if scaled_fts(i) > b_med
+        if ~isnan(scaled_fts(i)) && (sum(any(sub_nu
+            if scaled_fts(i) >= b_med
                 best_count = best_count + 1;
                 best_fts(best_count) = scaled_fts(i);
                 best_is(best_count) = i;
                 best_leis_data(best_count,:) = analysis_matrix(best_is(best_count),:);
                 best_leis_subs(best_count) = sub_nums(i);
-            elseif scaled_fts(i) < w_med
+            elseif scaled_fts(i) <= w_med
                 worst_count = worst_count + 1;
                 worst_fts(worst_count) = scaled_fts(i);
                 worst_is(worst_count) = i;
@@ -273,7 +279,7 @@ if uplow_quart && ~binning
     %     b2_med=median(best_fts2);w2_med=median(worst_fts2);
 end
 
-%% Cut datasets to same size
+%% Cut datasets to same size if needed
 randomize_data = 0;
 if cut_to_samesize
     if size(best_leis_data,1) > size(worst_leis_data,1)
@@ -354,7 +360,17 @@ end
 % end
 
 if ~binning
-    find_bw;
+    if length(best_fts)>length(worst_fts)
+        [sort_fts,sort_i] = sort(best_fts,'descend');
+        ss_i = sort(sort_i(1:length(worst_fts)));
+        best_fts = best_fts(ss_i);
+        best_leis_data = best_leis_data(ss_i,:);
+    elseif length(worst_fts)>length(best_fts)
+        [sort_fts,sort_i] = sort(worst_fts);
+        ss_i = sort(sort_i(1:length(best_fts)));
+        worst_fts = worst_fts(ss_i);
+        worst_leis_data = worst_leis_data(ss_i,:);
+    end
 end
 
 % fBest_leis_data = best_leis_data(~isnan(best_leis_data));
