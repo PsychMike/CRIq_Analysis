@@ -1,7 +1,5 @@
 %% Find the corresponding MRI filenames
 
-read_studysheet
-
 try
     clear best_mri_names worst_mri_names
 end

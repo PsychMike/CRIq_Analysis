@@ -1,9 +1,10 @@
                         %% Runs CRIq analysis %%
-
+clear vars
+addpath tables funcs
 %% Set analysis parameters
 
 %Write subject MRI pathnames to file?
-write2table = 1;
+write2table = 0;
 
 %Eliminate outliers?
 elim_outliers = 1;
@@ -16,12 +17,13 @@ uplow_quart = 1;
 
 %Include (~333%) more subs in each group?
 more_subs = 1;
+perc_include = .95
 
 %Cut sub nums to be equal between comparison groups?
 cut_to_samesize = 1;
 
 %Bin leis act types?
-binning = 0;
+binning = 1;
 if binning;use_vars=1;uplow_quart=0;else;use_vars=0;end %if binning, use subjects who vary between compared bins
 
 %Bin leis individually?
@@ -33,7 +35,8 @@ else
 end
 
 %Use cog effort rankings to bin?
-use_ranks = 0;
+use_ranks = 1;
+if use_indivs; use_ranks = 0; end
 
 %Bin by social/intellectual?
 socog_binning = 0; %formerly all_labels, value flipped
@@ -42,8 +45,8 @@ if use_indivs || use_ranks
 end
 
 %Run all comparisons?
-all_comps = 0;
-if ~binning; all_comps = 0; end
+all_comps = 1;
+if ~binning || socog_binning || use_indivs || use_ranks; all_comps = 0; end
 acomps1 = [1;1;1;2;2;3];
 acomps2 = [2;3;4;3;4;4];
 if all_comps
@@ -69,19 +72,22 @@ elseif use_indivs
     comps2 = 2;
 end
 
+%% Find available MRI data
+read_studysheet
+
 %% Run analysis
 signif_count = 0;
 for c = 1:length(comps1)
     
     %Clean up old files/variables
     clear vars
-    copyfile('Tnames.mat',sprintf('%s/clean/Tnames.mat',pwd));
+    copyfile('tables/Tnames.mat',sprintf('%s/clean/Tnames.mat',pwd));
     
     if c == 1
         delete('output/*.xls*');
         delete('output/*.mat','*.mat')
     end
-    copyfile(sprintf('%s/clean/Tnames.mat',pwd),'Tnames.mat');
+    copyfile(sprintf('%s/clean/Tnames.mat',pwd),'tables/Tnames.mat');
     
     signif = 0;
     one_col = comps1(c);
@@ -89,22 +95,22 @@ for c = 1:length(comps1)
     for indiv = 1:indiv_num
         criq_analysis;
         if signif
-            try load signifs.mat; end
+            try load tables/signifs.mat; end
             signif_count = signif_count + 1;
             signifs(signif_count,1) = c;
             signifs(signif_count,2:length(signif_points)+1) = signif_points;
-            save('signifs.mat','signif*');
+            save('tables/signifs.mat','signif*');
         end
         if length(comps1) > 1
-            load ANOVA_Tnametemp.mat
-            load Tnames.mat
+            load tables/ANOVA_Tnametemp.mat
+            load tables/Tnames.mat
             T_names{c} = ANOVA_Tname;
-            save('Tnames.mat','T_names');
+            save('tables/Tnames.mat','T_names');
         end
     end
 end
 if length(comps1) > 1
-    load Tnames.mat
+    load tables/Tnames.mat
     for t = 1:length(T_names)
         iT=readtable(T_names{t});
         gT(t,:)=iT;

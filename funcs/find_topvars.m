@@ -18,31 +18,18 @@ for i = 1:size(stand_bins,1) %every subject
             wanted_two_comp = two_comp;
             wanted_col = j;
         end
-        %         try
-        %             sub_var_scores(i,j) = abs(stand_bins(i,one_comp)-(stand_bins(i,two_comp)));
-        %         catch
-        %             keyboard
-        %         end
         sub_var_scores(i,j) = abs(stand_bins(i,one_comp)-(stand_bins(i,two_comp)));
     end
 end
 
 % Find highest varying subs
 try clear top_sub_vars; end
-% for i = 1:size(sub_var_scores,2)
 top_count = 0;
-%     med_var = median(sub_var_scores(:,i));
-% med_var = median(sub_var_scores(:,wanted_col));
-perc_include = .95;
 sub_var_scores = sub_var_scores(:,wanted_col);
 sort_var_scores = sort(sub_var_scores,'descend');
-% med_var = median(sub_var_scores);
 med_var = min(sort_var_scores(1:round(length(sort_var_scores)*perc_include)));
 for j = 1:length(sub_var_scores)
-    %         if sub_var_scores(j,i) >= med_var
     if sub_var_scores(j) >= med_var
-%         top_count = top_count + 1;
-        %             top_sub_vars(top_count,i) = sub_nums(j);
         top_sub_vars(j) = sub_nums(j);
     else
         top_sub_vars(j) = 0;

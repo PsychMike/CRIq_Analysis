@@ -281,7 +281,7 @@ for i = 1:length(criq_scores)
     end
 end
 
-xlswrite('extract_scores.xlsx',extract_scores);
+xlswrite('tables/extract_scores.xlsx',extract_scores);
 
 %% Main functions
 

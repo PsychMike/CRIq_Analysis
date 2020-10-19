@@ -2,6 +2,7 @@ function [m_ft_data,m_ft_subs,m_fts] = find_outliers(ft_data,ft_subs,fts)
 
 %% Find outliers
 for i = 1:size(ft_data,2)
+    
     %Order data least to greatest
     sorted_ft = sort(ft_data(:,i));
     

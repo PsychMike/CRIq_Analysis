@@ -12,7 +12,7 @@ if ~strcmp(C,'M:\ThesisWork\CRIq_Analysis')
 end
 
 %% Load in worksheet & parse columns %%
-[worksheet,txt,raw] = xlsread('CRIq_dataworksheet_m_2.xlsx');
+[worksheet,txt,raw] = xlsread('tables/CRIq_dataworksheet_m_2.xlsx');
 worksheet = worksheet(:,1:52);
 
 col_names = txt(1,:);
@@ -277,7 +277,7 @@ for i = 1:length(criq_scores)
     end
 end
 
-xlswrite('extract_scores.xlsx',extract_scores);
+xlswrite('tables/extract_scores.xlsx',extract_scores);
 
 %% Main functions
 bin_cluster_subs;

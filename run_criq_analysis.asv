@@ -1,27 +1,28 @@
-                    %% Runs CRIq analysis %%
+                        %% Runs CRIq analysis %%
 
 %% Set analysis parameters
+
 %Write subject MRI pathnames to file?
 write2table = 1;
 
 %Eliminate outliers?
-elim_outliers = 0;
+elim_outliers = 1;
 
 %Normalize scores? (keep set at 1)
 normalize = 1;
 
 %Use the upper and lower quartile scores?
-uplow_quart = 0;
+uplow_quart = 1;
 
 %Include (~333%) more subs in each group?
-more_subs = 0;
+more_subs = 1;
 
 %Cut sub nums to be equal between comparison groups?
-cut_to_samesize = 0;
+cut_to_samesize = 1;
 
 %Bin leis act types?
 binning = 1;
-if binning;use_vars=1;else;use_vars=0;end %if binning, use subjects who vary between compared bins
+if binning;use_vars=1;uplow_quart=0;else;use_vars=0;end %if binning, use subjects who vary between compared bins
 
 %Bin leis individually?
 use_indivs = 0;
@@ -41,11 +42,12 @@ if use_indivs || use_ranks
 end
 
 %Run all comparisons?
-all_comps = 1;
+all_comps = 0;
+if ~binning; all_comps = 0; end
 acomps1 = [1;1;1;2;2;3];
 acomps2 = [2;3;4;3;4;4];
 if all_comps
-    binning = 1;
+    binning = 1; use_vars = 1;
     comps1 = acomps1;
     comps2 = acomps2;
 else
@@ -70,13 +72,17 @@ end
 %% Run analysis
 signif_count = 0;
 for c = 1:length(comps1)
-
-%Clean up old files/variables
-clear vars
-copyfile('Tnames.mat',sprintf('%s/clean/Tnames.mat',pwd));
-delete('output/*.mat','output/*.xls*','*.mat')
-copyfile(sprintf('%s/clean/Tnames.mat',pwd),'Tnames.mat');
-
+    
+    %Clean up old files/variables
+    clear vars
+    copyfile('Tnames.mat',sprintf('%s/clean/Tnames.mat',pwd));
+    
+    if c == 1
+        delete('output/*.xls*');
+        delete('output/*.mat','*.mat')
+    end
+    copyfile(sprintf('%s/clean/Tnames.mat',pwd),'Tnames.mat');
+    
     signif = 0;
     one_col = comps1(c);
     two_col = comps2(c);
@@ -97,15 +103,15 @@ copyfile(sprintf('%s/clean/Tnames.mat',pwd),'Tnames.mat');
         end
     end
 end
-% if length(comps1) > 1
-%     load Tnames.mat
-%     for t = 1:length(T_names)
-%         iT=readtable(T_names{t});
-%         gT(t,:)=iT;
-%     end
-% end
+if length(comps1) > 1
+    load Tnames.mat
+    for t = 1:length(T_names)
+        iT=readtable(T_names{t});
+        gT(t,:)=iT;
+    end
+end
 
 %% If all_comps, output ANOVA results for every comparison
-% if all_comps
-%     gT
-% end
+if all_comps
+    gT
+end

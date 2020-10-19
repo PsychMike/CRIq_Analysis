@@ -19,20 +19,21 @@ item_labels = {'newspaper','chores','driving','leisure_acts','new_tech','social'
 all_bins = item_labels;
 
 if use_indivs
-    bin1 = all_bins(indiv);
+    bin1 = all_bins(indiv)
     if indiv == 1
         bin2 = all_bins(2:end);
     else
         bin2 = all_bins(1:length(all_bins)~=indiv);
     end
+% bin2 = all_bins(all_bins~=bin1);
 else
     bin1 = {'newspaper','driving','garden','reading','concerts','cinema'};
     bin2 = {'chores','account','social','grandchildren','journeys','pets'};
 end
 if use_ranks
     leisurebyranking;
-    bin3 = best_leis;
-    bin4 = worst_leis;
+    bin3 = best_leis(1:end);
+    bin4 = worst_leis(1:end);
 else
     if socog_binning
         bin3 = {'art','children','volunteer'};
