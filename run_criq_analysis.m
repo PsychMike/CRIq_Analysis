@@ -14,10 +14,10 @@ normalize = 1;
 uplow_quart = 1;
 
 %Include (~333%) more subs in each group?
-more_subs = 1;
+more_subs = 0;
 
 %Cut sub nums to be equal between comparison groups?
-cut_to_samesize = 0;
+cut_to_samesize = 1;
 
 %Bin leis act types?
 binning = 1;
@@ -35,13 +35,13 @@ end
 use_ranks = 0;
 
 %Bin by social/intellectual?
-socog_binning = 0; %formerly all_labels, value flipped
+socog_binning = 1; %formerly all_labels, value flipped
 if use_indivs || use_ranks
     socog_binning = 0;
 end
 
 %Run all comparisons?
-all_comps = 1;
+all_comps = 0;
 if ~binning; all_comps = 0; end
 acomps1 = [1;1;1;2;2;3];
 acomps2 = [2;3;4;3;4;4];
