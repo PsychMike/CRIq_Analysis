@@ -17,14 +17,15 @@ uplow_quart = 1;
 
 %Include (~333%) more subs in each group?
 more_subs = 1;
-perc_include = 1
+perc_include = 100
+perc_include = perc_include *.01;
 
 %Cut sub nums to be equal between comparison groups?
 cut_to_samesize = 1;
 
 %Bin leis act types?
-binning = 1;
-if binning; elim_outliers = 0; end
+binning = 0;
+% if binning; elim_outliers = 0; end
 
 %Bin leis individually?
 use_indivs = 0;
