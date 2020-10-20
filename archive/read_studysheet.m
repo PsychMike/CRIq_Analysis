@@ -1,6 +1,5 @@
 %% Extracts MRI numbers of associated participants
-
-[worksheet,txt,raw] = xlsread('tables/MRI_nums.xlsx');
+[worksheet,txt,raw] = xlsread('MRI_nums.xlsx');
 
 mri_nums = zeros(1,length(raw)-1);
 behav_nums = zeros(1,length(raw)-1);

@@ -4,7 +4,7 @@ addpath tables funcs
 %% Set analysis parameters
 
 %Write subject MRI pathnames to file?
-write2table = 0;
+write2table = 1;
 
 %Eliminate outliers?
 elim_outliers = 1;
@@ -23,7 +23,7 @@ perc_include = .95
 cut_to_samesize = 1;
 
 %Bin leis act types?
-binning = 1;
+binning = 0;
 if binning;use_vars=1;uplow_quart=0;else;use_vars=0;end %if binning, use subjects who vary between compared bins
 
 %Bin leis individually?
@@ -35,7 +35,7 @@ else
 end
 
 %Use cog effort rankings to bin?
-use_ranks = 1;
+use_ranks = 0;
 if use_indivs; use_ranks = 0; end
 
 %Bin by social/intellectual?
@@ -73,7 +73,7 @@ elseif use_indivs
 end
 
 %% Find available MRI data
-read_studysheet
+read_studysheet2
 
 %% Run analysis
 signif_count = 0;
@@ -85,7 +85,7 @@ for c = 1:length(comps1)
     
     if c == 1
         delete('output/*.xls*');
-        delete('output/*.mat','*.mat')
+        delete('output/*.mat');
     end
     copyfile(sprintf('%s/clean/Tnames.mat',pwd),'tables/Tnames.mat');
     
