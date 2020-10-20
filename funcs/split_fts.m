@@ -4,6 +4,8 @@
 CRIs_to_use = CRI_leis_vals;
 am2 = analysis_matrix;
 analysis_matrix = analysis_matrix(:,7:end);
+med_analymat = mean(analysis_matrix)
+
 
 % Only include complete datasets
 for i = 1:size(analysis_matrix,1)
@@ -347,7 +349,7 @@ if plot_ft
     xticks(1:size(best_leis_data,2)+1);
     xticklabels(var_names(end-size(best_leis_data,2)+1:end));
     xlim([0 size(best_leis_data,2)+1]);
-    ylim([0.2 1.2]);
+    ylim([0 1]);
     if binning
         if ~socog_binning && ~use_ranks && ~use_indivs
             comp1 = sprintf('Bin %d',one_col);
@@ -460,8 +462,8 @@ for start_point = 1:for_end
     end
 end
 
-if ~anova_all_data
-    Ps = round(Ps,4,'decimal');
+if ~anova_all_data || use_indivs
+    Ps = round(Ps,2,'decimal');
     ANOVA_T=table(Ps(1),Ps(2),Ps(3),Ps(4),Ps(5),Ps(6),Ps(7),'VariableNames',{'SRT','TMT','WMSR','SCWT','PRMQ','MoCA','DART'})
     ANOVA_Tname = sprintf('output/%d%d_ANOVAout.xls',one_col,two_col);
     if write2table

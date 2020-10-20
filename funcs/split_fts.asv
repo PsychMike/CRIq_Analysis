@@ -4,6 +4,8 @@
 CRIs_to_use = CRI_leis_vals;
 am2 = analysis_matrix;
 analysis_matrix = analysis_matrix(:,7:end);
+med_analymat = median(analysis_matrix);
+
 
 % Only include complete datasets
 for i = 1:size(analysis_matrix,1)
@@ -182,7 +184,7 @@ worst_count = 0;
 if binning == 0
     for i = 1:length(scaled_fts)
         if ~isnan(scaled_fts(i))
-            if scaled_fts(i) > med_ft
+            if scaled_fts(i) >= med_ft
                 best_count = best_count + 1;
                 best_fts(best_count) = scaled_fts(i);
                 best_is(best_count) = i;
@@ -204,7 +206,7 @@ else
     one_count = 0; two_count = 0;
     for i = 1:length(sub_nums)
         for j = 1:length(top_subs(:,one_col))
-            if ~use_indivs
+%             if ~use_indivs
             if sub_nums(i) == top_subs(j,one_col)
                 one_count = one_count + 1;
                 one_col_data(one_count,:) = analysis_matrix(i,:);
@@ -216,8 +218,21 @@ else
                 worst_fts(two_count) = scaled_fts(i);
                 worst_leis_subs(two_count) = sub_nums(i);
             end
-            else
-                if sub_num
+%             else
+%                 try
+%                     if sub_nums(i) == top1_subs(j)
+%                         one_count = one_count + 1;
+%                         one_col_data(one_count,:) = analysis_matrix(i,:);
+%                         best_fts(one_count) = scaled_fts(i);
+%                         best_leis_subs(one_count) = sub_nums(i);
+%                     elseif sub_nums(i) == bot1_subs(j)
+%                         two_count = two_count + 1;
+%                         two_col_data(two_count,:) = analysis_matrix(i,:);
+%                         worst_fts(two_count) = scaled_fts(i);
+%                         worst_leis_subs(two_count) = sub_nums(i);
+%                     end
+%                 end
+%             end
         end
     end
     best_leis_data = one_col_data;
@@ -447,8 +462,8 @@ for start_point = 1:for_end
     end
 end
 
-if ~anova_all_data
-    Ps = round(Ps,4,'decimal');
+if ~anova_all_data || use_indivs
+    Ps = round(Ps,2,'decimal');
     ANOVA_T=table(Ps(1),Ps(2),Ps(3),Ps(4),Ps(5),Ps(6),Ps(7),'VariableNames',{'SRT','TMT','WMSR','SCWT','PRMQ','MoCA','DART'})
     ANOVA_Tname = sprintf('output/%d%d_ANOVAout.xls',one_col,two_col);
     if write2table

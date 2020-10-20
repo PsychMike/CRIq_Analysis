@@ -209,7 +209,10 @@ if normalize; moca_vals = normalize_values(moca_vals,normalize); end
 %DART
 read_vals = worksheet(:,52);
 if normalize; read_vals = normalize_values(read_vals,normalize); end
-
+% srvs = sort(read_vals);
+close all
+% plot(0:1,srvs);
+hist(read_vals)
 story_recall_vals = flip_data(story_recall_vals);
 TMT_vals = flip_data(TMT_vals);
 WMS_vals = flip_data(WMS_vals);

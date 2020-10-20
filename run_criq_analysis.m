@@ -1,4 +1,4 @@
-                        %% Runs CRIq analysis %%
+%% Runs CRIq analysis %%
 clear all
 addpath tables funcs
 %% Set analysis parameters
@@ -24,6 +24,7 @@ cut_to_samesize = 1;
 
 %Bin leis act types?
 binning = 1;
+if binning; elim_outliers = 0; end
 
 %Bin leis individually?
 use_indivs = 0;
@@ -33,7 +34,7 @@ else
     indiv_num = 1;
 end
 
-if binning;use_vars=1;uplow_quart=0;else;use_vars=0;end %if binning, use subjects who vary between compared bins
+if binning;use_vars=1;uplow_quart=0;else;use_vars=0;use_indivs=0;end %if binning, use subjects who vary between compared bins
 
 %Use cog effort rankings to bin?
 use_ranks = 0;
@@ -77,6 +78,11 @@ end
 read_studysheet2
 
 %% Run analysis
+item_labels = {'newspaper','chores','driving','leisure_acts','new_tech','social','cinema','garden','grandchildren','volunteer','art','concerts','journeys','reading','children','pets','account'};
+if use_indivs
+z=zeros(17,1);
+indiv_ANOVA_T=table(item_labels',z,z,z,z,z,z,z,'VariableNames',{'Cat','SRT','TMT','WMSR','SCWT','PRMQ','MoCA','DART'});
+end
 signif_count = 0;
 for c = 1:length(comps1)
     
@@ -94,7 +100,18 @@ for c = 1:length(comps1)
     one_col = comps1(c);
     two_col = comps2(c);
     for indiv = 1:indiv_num
+        %         indiv = 14;
         criq_analysis;
+        %         keyboard
+        if use_indivs
+        indiv_ANOVA_T.SRT(indiv) = ANOVA_T.SRT;
+        indiv_ANOVA_T.TMT(indiv) = ANOVA_T.TMT;
+        indiv_ANOVA_T.WMSR(indiv) = ANOVA_T.WMSR;
+        indiv_ANOVA_T.SCWT(indiv) = ANOVA_T.SCWT;
+        indiv_ANOVA_T.PRMQ(indiv) = ANOVA_T.PRMQ;
+        indiv_ANOVA_T.MoCA(indiv) = ANOVA_T.MoCA;
+        indiv_ANOVA_T.DART(indiv) = ANOVA_T.DART;
+        end
         if signif
             try load tables/signifs.mat; end
             signif_count = signif_count + 1;
@@ -121,4 +138,9 @@ end
 %% If all_comps, output ANOVA results for every comparison
 if all_comps
     gT
+end
+
+%% If use_indivs, output ANOVA results for each category
+if use_indivs
+    indiv_ANOVA_T
 end
