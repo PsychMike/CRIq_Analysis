@@ -90,11 +90,10 @@ for row = 1:length(ageless_scores)
         end
     end
 end
-num_scores2 = num_scores(:,8:end);
-bin1_scores = num_scores2(:,ibin1);
-bin2_scores = num_scores2(:,ibin2);
-bin3_scores = num_scores2(:,ibin3);
-bin4_scores = num_scores2(:,ibin4);
+bin1_scores = num_scores(:,ibin1);
+bin2_scores = num_scores(:,ibin2);
+bin3_scores = num_scores(:,ibin3);
+bin4_scores = num_scores(:,ibin4);
 
 stand_count = 0;
 [top1_scores,top1_subs,bot1_scores,bot1_subs,stand_bins,stand_count] = find_bw_scores(bin1_scores,analysis_matrix,sub_nums,stand_count);

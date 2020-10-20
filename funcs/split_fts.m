@@ -182,7 +182,7 @@ worst_count = 0;
 if binning == 0
     for i = 1:length(scaled_fts)
         if ~isnan(scaled_fts(i))
-            if scaled_fts(i) > med_ft
+            if scaled_fts(i) >= med_ft
                 best_count = best_count + 1;
                 best_fts(best_count) = scaled_fts(i);
                 best_is(best_count) = i;
@@ -204,6 +204,7 @@ else
     one_count = 0; two_count = 0;
     for i = 1:length(sub_nums)
         for j = 1:length(top_subs(:,one_col))
+%             if ~use_indivs
             if sub_nums(i) == top_subs(j,one_col)
                 one_count = one_count + 1;
                 one_col_data(one_count,:) = analysis_matrix(i,:);
@@ -215,6 +216,21 @@ else
                 worst_fts(two_count) = scaled_fts(i);
                 worst_leis_subs(two_count) = sub_nums(i);
             end
+%             else
+%                 try
+%                     if sub_nums(i) == top1_subs(j)
+%                         one_count = one_count + 1;
+%                         one_col_data(one_count,:) = analysis_matrix(i,:);
+%                         best_fts(one_count) = scaled_fts(i);
+%                         best_leis_subs(one_count) = sub_nums(i);
+%                     elseif sub_nums(i) == bot1_subs(j)
+%                         two_count = two_count + 1;
+%                         two_col_data(two_count,:) = analysis_matrix(i,:);
+%                         worst_fts(two_count) = scaled_fts(i);
+%                         worst_leis_subs(two_count) = sub_nums(i);
+%                     end
+%                 end
+%             end
         end
     end
     best_leis_data = one_col_data;

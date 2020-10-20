@@ -1,5 +1,5 @@
                         %% Runs CRIq analysis %%
-clear vars
+clear all
 addpath tables funcs
 %% Set analysis parameters
 
@@ -17,14 +17,13 @@ uplow_quart = 1;
 
 %Include (~333%) more subs in each group?
 more_subs = 1;
-perc_include = .95
+perc_include = 1
 
 %Cut sub nums to be equal between comparison groups?
 cut_to_samesize = 1;
 
 %Bin leis act types?
-binning = 0;
-if binning;use_vars=1;uplow_quart=0;else;use_vars=0;end %if binning, use subjects who vary between compared bins
+binning = 1;
 
 %Bin leis individually?
 use_indivs = 0;
@@ -33,6 +32,8 @@ if use_indivs
 else
     indiv_num = 1;
 end
+
+if binning;use_vars=1;uplow_quart=0;else;use_vars=0;end %if binning, use subjects who vary between compared bins
 
 %Use cog effort rankings to bin?
 use_ranks = 0;
