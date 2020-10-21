@@ -21,6 +21,18 @@ if normalize % normalizes scores
     %Find outlier values
     outliers = sorted_ft(sorted_ft > up_outlier | sorted_ft < down_outlier);
     
+    load sub_nums
+    if elim_subouts && sum(outliers) ~= 0
+        bad_count = bad_count + 1;
+        bad_sub_i = (vals > up_outlier | vals < down_outlier);
+        bad_sub_i = find(bad_sub_i==1);
+        try
+            bad_subs(bad_count:bad_count+length(bad_sub_i)-1) = sub_nums(bad_sub_i)'
+        catch
+            keyboard
+        end
+    end
+    
     sorted_ft = sorted_ft(length(outliers)+1:end);
     %%
     %     min_val = min(vals);
@@ -35,7 +47,10 @@ if normalize % normalizes scores
 else
     norm_vals = vals;
 end
-
+if elim_subouts
+save('sub_nums.mat','sub_nums','elim_subouts','bad_count','bad_subs');
+end
+end
 % Example Data
 % x = sample(-100:100, 50)
 %

@@ -28,9 +28,9 @@ if use_indivs
     end
 %     bin2 = all_bins(all_bins~=bin1);
 else
-    bin1 = {'newspaper','driving','garden','reading','concerts','cinema'};
-    bin2 = {'chores','account','social','grandchildren','journeys','pets'};
-end
+    bin1 = {'newspaper','account','new_tech','children','driving','chores','garden'};
+    bin2 = {'cinema','concerts','reading','journeys','art'};
+        end
 if use_ranks
     leisurebyranking;
     bin3 = best_leis(1:end);
@@ -40,8 +40,8 @@ else
         bin3 = {'art','children','volunteer'};
         bin4 = {'new_tech','leisure_acts'};
     else
-        bin3 = {'newspaper','chores','driving','new_tech','garden','art','reading','account'};
-        bin4 = {'social','grandchildren','children'};
+        bin3 = {'social','volunteer','leisure_acts'};
+        bin4 = {'grandchildren','pets'};
     end
 end
 
@@ -96,6 +96,21 @@ bin2_scores = num_scores2(:,ibin2);
 bin3_scores = num_scores2(:,ibin3);
 bin4_scores = num_scores2(:,ibin4);
 
+edu_scores = analysis_matrix(:,3);
+work_scores = analysis_matrix(:,4);
+
+bin1_scores = regress_scores(bin1_scores,ages);
+bin1_scores = regress_scores(bin1_scores,edu_scores);
+bin1_scores = regress_scores(bin1_scores,work_scores);
+bin2_scores = regress_scores(bin2_scores,ages);
+bin2_scores = regress_scores(bin2_scores,edu_scores);
+bin2_scores = regress_scores(bin2_scores,work_scores);
+bin3_scores = regress_scores(bin3_scores,ages);
+bin3_scores = regress_scores(bin3_scores,edu_scores);
+bin3_scores = regress_scores(bin3_scores,work_scores);
+bin4_scores = regress_scores(bin4_scores,ages);
+bin4_scores = regress_scores(bin4_scores,edu_scores);
+bin4_scores = regress_scores(bin4_scores,work_scores);
 stand_count = 0;
 [top1_scores,top1_subs,bot1_scores,bot1_subs,stand_bins,stand_count] = find_bw_scores(bin1_scores,analysis_matrix,sub_nums,stand_count);
 [top2_scores,top2_subs,bot2_scores,bot2_subs,stand_bins,stand_count] = find_bw_scores(bin2_scores,analysis_matrix,sub_nums,stand_count,stand_bins);
@@ -107,6 +122,26 @@ if use_vars
     find_topvars;
 else
     find_best_bin;
+end
+
+function bin_scores = regress_scores(bin_scores,regress_var)
+x = regress_var;
+bin_scores = mean(bin_scores,2);
+y = bin_scores;
+format long
+b1 = x\y;
+yCalc1 = b1*x;
+X = [ones(length(x),1) x];
+b = X\y;
+yCalc2 = X*b;
+Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
+Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
+bin_scores = bin_scores - yCalc2;
+mean_ft = mean(bin_scores);
+std_ft = std(bin_scores);
+stand_fts = (bin_scores-mean_ft)/std_ft;
+scaled_fts = stand_fts*15+100;
+med_ft = median(scaled_fts);
 end
 
 function [top_scores,top_subs,bot_scores,bot_subs,stand_bins,stand_count] = find_bw_scores(bin_scores_m,analysis_matrix,sub_nums,stand_count,stand_bins)

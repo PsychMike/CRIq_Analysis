@@ -227,11 +227,6 @@ if elim_subouts
         if bad_out == 0
             gc = gc + 1;
             nsub_nums(gc) = sub_nums(i);
-            nages(gc) = ages(i);
-            neduvals(gc) = CRI_edu_vals(i);
-            nworkvals(gc) = CRI_work_vals(i);
-            nleisvals(gc) = CRI_leis_vals(i);
-            nallvals(gc) = CRI_all_vals(i);
             nsrvals(gc) = story_recall_vals(i);
             ntmtvals(gc) = TMT_vals(i);
             nwmsvals(gc) = WMS_vals(i);
@@ -241,19 +236,9 @@ if elim_subouts
             nread_vals(gc) = read_vals(i);
         end
     end
-    sub_nums = nsub_nums';
-    ages = nages';
-    CRI_edu_vals = neduvals;
-    CRI_work_vals = nworkvals;
-    CRI_leis_vals = nleisvals;
-    CRI_all_vals = nallvals;
+    sub_nums = nsub_nums;
     story_recall_vals = nsrvals;
-    TMT_vals = ntmtvals;
-    WMS_vals = nwmsvals;
-    stroop_vals = nstroopvals;
-    mem_vals = nmemvals;
-    moca_vals = nmocavals;
-    read_vals = nread_vals;
+    TMT_vals = 
 end
 
 story_recall_vals = flip_data(story_recall_vals);

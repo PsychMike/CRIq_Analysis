@@ -8,6 +8,9 @@ write2table = 1;
 
 %Eliminate outliers?
 elim_outliers = 1;
+outlie_indiv = 0;
+elim_subouts = 0;
+elim_indiv = 1;
 
 %Normalize scores? (keep set at 1)
 normalize = 1;
@@ -17,14 +20,14 @@ uplow_quart = 1;
 
 %Include (~333%) more subs in each group?
 more_subs = 1;
-perc_include = 100
+perc_include = 50
 perc_include = perc_include *.01;
 
 %Cut sub nums to be equal between comparison groups?
 cut_to_samesize = 1;
 
 %Bin leis act types?
-binning = 0;
+binning = 1;
 % if binning; elim_outliers = 0; end
 
 %Bin leis individually?

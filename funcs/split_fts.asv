@@ -4,7 +4,7 @@
 CRIs_to_use = CRI_leis_vals;
 am2 = analysis_matrix;
 analysis_matrix = analysis_matrix(:,7:end);
-med_analymat = median(analysis_matrix);
+med_analymat = mean(analysis_matrix)
 
 
 % Only include complete datasets
@@ -241,8 +241,13 @@ end
 
 %% Eliminate outliers from the datasets
 if elim_outliers
+    if outlie_indiv
+        [best_leis_data,best_leis_subs,best_fts] = find_outliers3(best_leis_data,best_leis_subs,best_fts);
+        [worst_leis_data,worst_leis_subs,worst_fts] = find_outliers3(worst_leis_data,worst_leis_subs,worst_fts);
+    else
         [best_leis_data,best_leis_subs,best_fts] = find_outliers2(best_leis_data,best_leis_subs,best_fts);
         [worst_leis_data,worst_leis_subs,worst_fts] = find_outliers2(worst_leis_data,worst_leis_subs,worst_fts);
+    end
 end
 
 %% Find upper & lower quartile data
@@ -338,41 +343,6 @@ end
 med_fBest_ft = nanmedian(best_leis_data);
 med_fWorst_ft = nanmedian(worst_leis_data);
 
-% Plot best & worst data
-plot_ft = 1;
-if plot_ft
-    close all
-    figure
-    plot(med_fBest_ft);
-    hold on
-    plot(med_fWorst_ft);
-    xticks(1:size(best_leis_data,2)+1);
-    xticklabels(var_names(end-size(best_leis_data,2)+1:end));
-    xlim([0 size(best_leis_data,2)+1]);
-    ylim([0.2 1.2]);
-    if binning
-        if ~socog_binning && ~use_ranks && ~use_indivs
-            comp1 = sprintf('Bin %d',one_col);
-            comp2 = sprintf('Bin %d',two_col);
-        elseif socog_binning
-            comp1 = 'CA';
-            comp2 = 'SA';
-        elseif use_ranks
-            comp1 = 'Upper Tier';
-            comp2 = 'Lower Tier';
-        elseif use_indivs
-            comp1 = sprintf('Item %d',indiv);
-            comp2 = sprintf('Other Items');
-        end
-    else
-        comp1 = 'Upper Tier';
-        comp2 = 'Lower Tier';
-    end
-    lgd = legend(sprintf('%s n = %d',comp1,length(best_leis_data)),sprintf('%s n = %d',comp2,length(worst_leis_data)));
-    lgd.Location = 'northeast';
-    title(sprintf('%s - %s Comparison',comp1,comp2));
-end
-
 % Choose which variables to include in ANOVA
 Ps = zeros(1,size(best_leis_data,2));
 anova_all_data = 0;
@@ -392,12 +362,20 @@ for start_point = 1:for_end
     else
         end_point = start_point;
     end
-    try
-        m_best_leis_data = best_leis_data(:,start_point:end_point);
-        m_worst_leis_data = worst_leis_data(:,start_point:end_point);
-    catch
-        keyboard
+    
+    m_best_leis_data = best_leis_data(:,start_point:end_point);
+    m_worst_leis_data = worst_leis_data(:,start_point:end_point);
+    
+    if elim_indiv
+        if start_point == 7
+            ty = 1;
+        end
+        [m_best_leis_data] = remove_outliers(m_best_leis_data);
+        [m_worst_leis_data] = remove_outliers(m_worst_leis_data);
+        best_leis_data(:,start_point) = m_best_leis_data;
+        worst_leis_data(:,start_point) = m_worst_leis_data;
     end
+    
     for a = 1:2
         if a == 1
             mod_wrksht = m_best_leis_data;
@@ -463,7 +441,7 @@ for start_point = 1:for_end
 end
 
 if ~anova_all_data || use_indivs
-    Ps = round(Ps,2,'decimal');
+    Ps = round(Ps,3,'decimal');
     ANOVA_T=table(Ps(1),Ps(2),Ps(3),Ps(4),Ps(5),Ps(6),Ps(7),'VariableNames',{'SRT','TMT','WMSR','SCWT','PRMQ','MoCA','DART'})
     ANOVA_Tname = sprintf('output/%d%d_ANOVAout.xls',one_col,two_col);
     if write2table
@@ -472,5 +450,43 @@ if ~anova_all_data || use_indivs
     save('tables/ANOVA_Tnametemp.mat','ANOVA_Tname');
 end
 start_point = 1;
+
+% Plot best & worst data
+best_leis_data = m_best_leis_data;
+worst_leis_data = m_worst_leis_data;
+plot_ft = 1;
+if plot_ft
+    close all
+    figure
+    plot(med_fBest_ft);
+    hold on
+    plot(med_fWorst_ft);
+    xticks(1:size(best_leis_data,2)+1);
+    xticklabels(var_names(end-size(best_leis_data,2)+1:end));
+    xlim([0 size(best_leis_data,2)+1]);
+    ylim([0 1]);
+    if binning
+        if ~socog_binning && ~use_ranks && ~use_indivs
+            comp1 = sprintf('Bin %d',one_col);
+            comp2 = sprintf('Bin %d',two_col);
+        elseif socog_binning
+            comp1 = 'CA';
+            comp2 = 'SA';
+        elseif use_ranks
+            comp1 = 'Upper Tier';
+            comp2 = 'Lower Tier';
+        elseif use_indivs
+            comp1 = sprintf('Item %d',indiv);
+            comp2 = sprintf('Other Items');
+        end
+    else
+        comp1 = 'Upper Tier';
+        comp2 = 'Lower Tier';
+    end
+    lgd = legend(sprintf('%s n = %d',comp1,length(best_leis_data)),sprintf('%s n = %d',comp2,length(worst_leis_data)));
+    lgd.Location = 'northeast';
+    title(sprintf('%s - %s Comparison',comp1,comp2));
+end
+
 % [d,p] = manova1([manova_matrix(:,1) manova_matrix(:,2) manova_matrix(:,3) ...
 %     manova_matrix(:,4) manova_matrix(:,5) manova_matrix(:,6)],origin)

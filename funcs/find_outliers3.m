@@ -1,4 +1,4 @@
-function [m_ft_data,m_ft_subs,m_fts] = find_outliers2(ft_data,ft_subs,fts)
+function [m_ft_data,m_ft_subs,m_fts] = find_outliers3(ft_data,ft_subs,fts)
 
 %% Find outliers
 % for i = 1:size(ft_data,1)
