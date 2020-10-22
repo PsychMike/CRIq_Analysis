@@ -6,30 +6,32 @@ am2 = analysis_matrix;
 analysis_matrix = analysis_matrix(:,7:end);
 % med_analymat = mean(analysis_matrix)
 
-
 % Only include complete datasets
-for i = 1:size(analysis_matrix,1)
-    if ~sum(isnan(analysis_matrix(i,:)))
-        new_analy_matrix(i,:) = analysis_matrix(i,:);
-        ages(i,:) = extract_scores(i,1);
-        edu_scores(i,:) = am2(i,3);
-        work_scores(i,:) = am2(i,4);
-        flipped_CRIs(i) = CRIs_to_use(i);
-        good_indices(i) = 1;
-    else
-        keyboard
-        good_indices(i) = 0;
-    end
-end
-
-flipped_CRIs = flipped_CRIs(good_indices==1);
+% for i = 1:size(analysis_matrix,1)
+%     if ~sum(isnan(analysis_matrix(i,:)))
+%         new_analy_matrix(i,:) = analysis_matrix(i,:);
+%         ages(i,:) = extract_scores(i,1);
+%         edu_scores(i,:) = am2(i,3);
+%         work_scores(i,:) = am2(i,4);
+%         flipped_CRIs(i) = CRIs_to_use(i);
+%         good_indices(i) = 1;
+%     else
+%         keyboard
+%         good_indices(i) = 0;
+%     end
+% end
+flipped_CRIs = CRIs_to_use;
+% flipped_CRIs = flipped_CRIs(good_indices==1);
 % flipped_CRIs = flipped_CRIs';
-new_analy_matrix = new_analy_matrix(good_indices==1,:);
-analysis_matrix = new_analy_matrix;
-sub_nums = sub_nums(good_indices==1);
-ages = ages(good_indices==1);
-edu_scores = edu_scores(good_indices==1);
-work_scores = work_scores(good_indices==1);
+% new_analy_matrix = new_analy_matrix(good_indices==1,:);
+% analysis_matrix = new_analy_matrix;
+% sub_nums = sub_nums(good_indices==1);
+ages = ages';
+edu_scores = edu_scores';
+work_scores = work_scores';
+% ages = ages(good_indices==1);
+% edu_scores = edu_scores(good_indices==1);
+% work_scores = work_scores(good_indices==1);
 
 % if use_vars
 %     find_binvariances;
@@ -40,22 +42,22 @@ work_scores = work_scores(good_indices==1);
 % end
 
 new_leis_vals = flipped_CRIs;
-add_row = 0;
-for row = 1:length(flipped_CRIs)
-    if ~isnan(flipped_CRIs(row)) && ~isnan(ages(row)) && ~isnan(edu_scores(row)) && ~isnan(work_scores(row))
-        add_row = add_row + 1;
-        %         new_leis_vals(add_row) = flipped_CRIs(row);
-        new_ages(add_row) = ages(row);
-        new_edus(add_row) = edu_scores(row);
-        new_works(add_row) = work_scores(row);
-    else
-        keyboard
-    end
-end
-
-ages = new_ages;
-edu_scores = new_edus;
-work_scores = new_works;
+% add_row = 0;
+% for row = 1:length(flipped_CRIs)
+%     if ~isnan(flipped_CRIs(row)) && ~isnan(ages(row)) && ~isnan(edu_scores(row)) && ~isnan(work_scores(row))
+%         add_row = add_row + 1;
+%         %         new_leis_vals(add_row) = flipped_CRIs(row);
+%         new_ages(add_row) = ages(row);
+%         new_edus(add_row) = edu_scores(row);
+%         new_works(add_row) = work_scores(row);
+%     else
+%         keyboard
+%     end
+% end
+% 
+% ages = new_ages;
+% edu_scores = new_edus;
+% work_scores = new_works;
 
 % mean_ft = mean(new_leis_vals);
 % std_ft = std(new_leis_vals);
@@ -65,6 +67,8 @@ work_scores = new_works;
 % med_ft = median(scaled_fts);
 
 %% Plot linear regression of age & leisure scores
+regress_age = 1;
+if regress_age
 x = ages;
 y = new_leis_vals;
 % y = scaled_fts;
@@ -102,6 +106,7 @@ std_ft = std(new_leis_vals);
 stand_fts = (new_leis_vals-mean_ft)/std_ft;
 scaled_fts = stand_fts*15+100;
 med_ft = median(scaled_fts); % Find best & worst subs and their data
+end
 
 %% Plot linear regression of education & leisure scores
 regress_edu = 1;
@@ -177,6 +182,10 @@ if regress_work
     scaled_fts = stand_fts*15+100;
     med_ft = median(scaled_fts);% Find best & worst subs and their data
 end
+
+% scaled_fts = new_leis_vals;
+% med_ft = median(scaled_fts);
+
 %% Find best and worst data
 best_count = 0;
 worst_count = 0;
@@ -204,35 +213,20 @@ if binning == 0
 else
     clear best_leis_subs worst_leis_subs one_col_data two_col_data worst_fts best_fts
     one_count = 0; two_count = 0;
+elim_dupes
     for i = 1:length(sub_nums)
-        for j = 1:length(top_subs(:,one_col))
-            %             if ~use_indivs
-            if sub_nums(i) == top_subs(j,one_col)
+        for j = 1:length(top_subs(:,1))
+            if sub_nums(i) == top_subs(j,1)
                 one_count = one_count + 1;
                 one_col_data(one_count,:) = analysis_matrix(i,:);
                 best_fts(one_count) = scaled_fts(i);
                 best_leis_subs(one_count) = sub_nums(i);
-            elseif sub_nums(i) == top_subs(j,two_col)
+            elseif sub_nums(i) == top_subs(j,2)
                 two_count = two_count + 1;
                 two_col_data(two_count,:) = analysis_matrix(i,:);
                 worst_fts(two_count) = scaled_fts(i);
                 worst_leis_subs(two_count) = sub_nums(i);
             end
-            %             else
-            %                 try
-            %                     if sub_nums(i) == top1_subs(j)
-            %                         one_count = one_count + 1;
-            %                         one_col_data(one_count,:) = analysis_matrix(i,:);
-            %                         best_fts(one_count) = scaled_fts(i);
-            %                         best_leis_subs(one_count) = sub_nums(i);
-            %                     elseif sub_nums(i) == bot1_subs(j)
-            %                         two_count = two_count + 1;
-            %                         two_col_data(two_count,:) = analysis_matrix(i,:);
-            %                         worst_fts(two_count) = scaled_fts(i);
-            %                         worst_leis_subs(two_count) = sub_nums(i);
-            %                     end
-            %                 end
-            %             end
         end
     end
     best_leis_data = one_col_data;
@@ -355,6 +349,7 @@ end
 try
     clear nonan_best_fts nonan_worst_fts
 end
+tic
 for start_point = 1:for_end
     if anova_all_data
         start_point = 1;
@@ -370,12 +365,12 @@ for start_point = 1:for_end
         if start_point == 7
             ty = 1;
         end
-        mean(m_best_leis_data)
-        mean(m_worst_leis_data)
+%         mean(m_best_leis_data)
+%         mean(m_worst_leis_data)
         [m_best_leis_data] = remove_outliers(m_best_leis_data);
         [m_worst_leis_data] = remove_outliers(m_worst_leis_data);
-        mean(m_best_leis_data)
-        mean(m_worst_leis_data)
+%         mean(m_best_leis_data)
+%         mean(m_worst_leis_data)
     end
     mean_plots_b(start_point) = mean(m_best_leis_data);
     mean_plots_w(start_point) = mean(m_worst_leis_data);
@@ -457,7 +452,7 @@ start_point = 1;
 % Plot best & worst data
 % best_leis_data = mean_plots_b;
 % worst_leis_data = mean_plots_w;
-plot_ft = 1;
+plot_ft = 0;
 if plot_ft
     close all
     figure

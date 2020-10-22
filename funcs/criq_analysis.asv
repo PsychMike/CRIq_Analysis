@@ -1,5 +1,7 @@
 %% Runs all analyses using CRIq data
-if ~exist('all_comps');run_criq_analysis;end
+
+% if c == 1
+% if ~exist('all_comps');run_criq_analysis;end
 
 %% Add stats folder %%
 addpath('StatsFunctions');
@@ -156,8 +158,8 @@ CRI_leis_vals = CRI_leis_vals(comp_sub_indices);
 CRI_total_vals = CRI_total_vals(comp_sub_indices);
 
 sub_nums = sub_nums(comp_sub_indices);
-bad_count = 0;
-save('sub_nums.mat','sub_nums','elim_subouts','bad_count');
+% bad_count = 0;
+% save('sub_nums.mat','sub_nums','elim_subouts','bad_count');
 ages = ages(comp_sub_indices);
 worksheet = worksheet(comp_sub_indices,:);
 new_raw = raw(2:end,:);
@@ -227,6 +229,11 @@ if elim_subouts
         if bad_out == 0
             gc = gc + 1;
             nsub_nums(gc) = sub_nums(i);
+            nages(gc) = ages(i);
+            neduvals(gc) = CRI_edu_vals(i);
+            nworkvals(gc) = CRI_work_vals(i);
+            nleisvals(gc) = CRI_leis_vals(i);
+            nallvals(gc) = CRI_all_vals(i);
             nsrvals(gc) = story_recall_vals(i);
             ntmtvals(gc) = TMT_vals(i);
             nwmsvals(gc) = WMS_vals(i);
@@ -236,9 +243,19 @@ if elim_subouts
             nread_vals(gc) = read_vals(i);
         end
     end
-    sub_nums = nsub_nums;
+    sub_nums = nsub_nums';
+    ages = nages';
+    CRI_edu_vals = neduvals;
+    CRI_work_vals = nworkvals;
+    CRI_leis_vals = nleisvals;
+    CRI_all_vals = nallvals;
     story_recall_vals = nsrvals;
-    TMT_vals = 
+    TMT_vals = ntmtvals;
+    WMS_vals = nwmsvals;
+    stroop_vals = nstroopvals;
+    mem_vals = nmemvals;
+    moca_vals = nmocavals;
+    read_vals = nread_vals;
 end
 
 story_recall_vals = flip_data(story_recall_vals);
@@ -311,9 +328,9 @@ for i = 1:length(criq_scores)
         end
     end
 end
-
+save('tables/worksheet_vals.mat');
 xlswrite('tables/extract_scores.xlsx',extract_scores);
-
+% end
 %% Main functions
 
 %Bin subjects

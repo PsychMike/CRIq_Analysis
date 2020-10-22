@@ -143,9 +143,9 @@ a = max(X(:,2));
 b = max(X(:,3));
 s = max(X(:,4));
 
-fprintf('The number of IV1(BS) levels are:%2i\n\n', a);
-fprintf('The number of IV2(WS) levels are:%2i\n\n', b);
-fprintf('The number of subjects are:%2i\n\n', s);
+% fprintf('The number of IV1(BS) levels are:%2i\n\n', a);
+% fprintf('The number of IV2(WS) levels are:%2i\n\n', b);
+% fprintf('The number of subjects are:%2i\n\n', s);
 
 indice = X(:,2);
 for i = 1:a
@@ -255,19 +255,19 @@ P1 = 1 - fcdf(F1,v1,v2);
 P2 = 1 - fcdf(F2,v3,v5);   
 P3 = 1 - fcdf(F3,v4,v5);
 
-disp('Between- and Within- Subject Variables Analysis of Variance Table.')
-fprintf('---------------------------------------------------------------------------\n');
-disp('SOV                  SS          df           MS             F        P')
-fprintf('---------------------------------------------------------------------------\n');
-fprintf('IV1           %11.3f%10i%15.3f%14.3f%9.4f\n\n',SSA,v1,MSA,F1,P1);
-fprintf('Error(IV1)    %11.3f%10i%15.3f\n\n',SSEA,v2,MSEA);
-fprintf('IV2           %11.3f%10i%15.3f%14.3f%9.4f\n\n',SSB,v3,MSB,F2,P2);
-fprintf('IV1xIV2       %11.3f%10i%15.3f%14.3f%9.4f\n\n',SSAB,v4,MSAB,F3,P3);
-fprintf('Error(IV1xIV2)%11.3f%10i%15.3f\n\n',SSEAB,v5,MSEAB);
-fprintf('Total         %11.3f%10i\n\n',SSTO,v6);
-fprintf('---------------------------------------------------------------------------\n');
-
-fprintf('If the P results are smaller than% 3.2f\n', alpha );
-disp('the corresponding Ho''s tested result statistically significant. Otherwise, are not significative.');
+% disp('Between- and Within- Subject Variables Analysis of Variance Table.')
+% fprintf('---------------------------------------------------------------------------\n');
+% disp('SOV                  SS          df           MS             F        P')
+% fprintf('---------------------------------------------------------------------------\n');
+% fprintf('IV1           %11.3f%10i%15.3f%14.3f%9.4f\n\n',SSA,v1,MSA,F1,P1);
+% fprintf('Error(IV1)    %11.3f%10i%15.3f\n\n',SSEA,v2,MSEA);
+% fprintf('IV2           %11.3f%10i%15.3f%14.3f%9.4f\n\n',SSB,v3,MSB,F2,P2);
+% fprintf('IV1xIV2       %11.3f%10i%15.3f%14.3f%9.4f\n\n',SSAB,v4,MSAB,F3,P3);
+% fprintf('Error(IV1xIV2)%11.3f%10i%15.3f\n\n',SSEAB,v5,MSEAB);
+% fprintf('Total         %11.3f%10i\n\n',SSTO,v6);
+% fprintf('---------------------------------------------------------------------------\n');
+% 
+% fprintf('If the P results are smaller than% 3.2f\n', alpha );
+% disp('the corresponding Ho''s tested result statistically significant. Otherwise, are not significative.');
 
 return;

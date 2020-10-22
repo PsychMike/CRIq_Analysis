@@ -10,7 +10,7 @@ write2table = 1;
 elim_outliers = 1;
 outlie_indiv = 0;
 elim_subouts = 0;
-elim_indiv = 1;
+elim_indiv = 0;
 
 %Normalize scores? (keep set at 1)
 normalize = 1;
@@ -20,7 +20,7 @@ uplow_quart = 1;
 
 %Include (~333%) more subs in each group?
 more_subs = 1;
-perc_include = 50
+perc_include = 50;
 perc_include = perc_include *.01;
 
 %Cut sub nums to be equal between comparison groups?
@@ -61,7 +61,7 @@ if all_comps
     comps2 = acomps2;
 else
     if binning
-        comps1 = 3;
+        comps1 = 1;
         comps2 = 4;
     else
         comps1 = 0;
@@ -88,25 +88,28 @@ z=zeros(17,1);
 indiv_ANOVA_T=table(item_labels',z,z,z,z,z,z,z,'VariableNames',{'Cat','SRT','TMT','WMSR','SCWT','PRMQ','MoCA','DART'});
 end
 signif_count = 0;
+save('tables/workspace.mat');
 for c = 1:length(comps1)
     
     %Clean up old files/variables
-    clear vars
-    copyfile('tables/Tnames.mat',sprintf('%s/clean/Tnames.mat',pwd));
     
+    save('tables/c.mat','c');
+    clear all
+    load tables/workspace.mat
+    load tables/c.mat
+   
     if c == 1
+        %         copyfile('tables/Tnames.mat',sprintf('%s/clean/Tnames.mat',pwd));
         delete('output/*.xls*');
         delete('output/*.mat');
+        %         copyfile(sprintf('%s/clean/Tnames.mat',pwd),'tables/Tnames.mat');
     end
-    copyfile(sprintf('%s/clean/Tnames.mat',pwd),'tables/Tnames.mat');
     
-    signif = 0;
+%     signif = 0;
     one_col = comps1(c);
     two_col = comps2(c);
     for indiv = 1:indiv_num
-        %         indiv = 14;
         criq_analysis;
-        %         keyboard
         if use_indivs
         indiv_ANOVA_T.SRT(indiv) = ANOVA_T.SRT;
         indiv_ANOVA_T.TMT(indiv) = ANOVA_T.TMT;
@@ -116,13 +119,13 @@ for c = 1:length(comps1)
         indiv_ANOVA_T.MoCA(indiv) = ANOVA_T.MoCA;
         indiv_ANOVA_T.DART(indiv) = ANOVA_T.DART;
         end
-        if signif
-            try load tables/signifs.mat; end
-            signif_count = signif_count + 1;
-            signifs(signif_count,1) = c;
-            signifs(signif_count,2:length(signif_points)+1) = signif_points;
-            save('tables/signifs.mat','signif*');
-        end
+%         if signif
+%             try load tables/signifs.mat; end
+%             signif_count = signif_count + 1;
+%             signifs(signif_count,1) = c;
+%             signifs(signif_count,2:length(signif_points)+1) = signif_points;
+%             save('tables/signifs.mat','signif*');
+%         end
         if length(comps1) > 1
             load tables/ANOVA_Tnametemp.mat
             load tables/Tnames.mat

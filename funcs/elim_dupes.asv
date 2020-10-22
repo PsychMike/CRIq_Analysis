@@ -1,0 +1,4 @@
+%elim_dupes
+
+for i = 1:size(top_subs,1)
+    if 
