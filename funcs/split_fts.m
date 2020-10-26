@@ -54,7 +54,7 @@ new_leis_vals = flipped_CRIs;
 %         keyboard
 %     end
 % end
-% 
+%
 % ages = new_ages;
 % edu_scores = new_edus;
 % work_scores = new_works;
@@ -66,125 +66,126 @@ new_leis_vals = flipped_CRIs;
 %
 % med_ft = median(scaled_fts);
 
-%% Plot linear regression of age & leisure scores
-regress_age = 1;
-if regress_age
-x = ages;
-y = new_leis_vals;
-% y = scaled_fts;
-x = x';
-y = y';
-format long
-b1 = x\y;
-
-close all
-figure
-yCalc1 = b1*x;
-try
-    scatter(x,y)
-catch
-    keyboard
+% if ~binning
+    %% Plot linear regression of age & leisure scores
+    regress_age = 1;
+    if regress_age
+        x = ages;
+        y = new_leis_vals;
+        % y = scaled_fts;
+        x = x';
+        y = y';
+        format long
+        b1 = x\y;
+        
+%         close all
+%         figure
+        yCalc1 = b1*x;
+%             scatter(x,y)
+%         hold on
+%         plot(x,yCalc1)
+%         xlabel('Age')
+%         ylabel('Leisure Scores')
+%         title('Linear Regression Relation Between Age & Leisure Scores')
+%         grid on
+        X = [ones(length(x),1) x];
+        b = X\y;
+        yCalc2 = X*b;
+%         plot(x,yCalc2,'--')
+%         legend('Data','Slope','Slope & Intercept','Location','best');
+        Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
+        Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
+        
+        new_leis_vals = new_leis_vals - yCalc2';
+        % new_leis_vals = yCalc2;
+        mean_ft = mean(new_leis_vals);
+        std_ft = std(new_leis_vals);
+        stand_fts = (new_leis_vals-mean_ft)/std_ft;
+        scaled_fts = stand_fts*15+100;
+        med_ft = median(scaled_fts); % Find best & worst subs and their data
+    end
+% else
+%     regress_age = 0;
+% end
+    %% Plot linear regression of education & leisure scores
+    regress_edu = 1;
+    if regress_edu
+        x = edu_scores;
+        y = new_leis_vals;
+        % y = scaled_fts;
+        x = x';
+        y = y';
+        format long
+        b1 = x\y;
+        
+%         close all
+%         figure
+        yCalc1 = b1*x;
+%         scatter(x,y)
+%         hold on
+%         plot(x,yCalc1)
+%         xlabel('Age')
+%         ylabel('Leisure Scores')
+%         title('Linear Regression Relation Between Education & Leisure Scores')
+%         grid on
+        X = [ones(length(x),1) x];
+        b = X\y;
+        yCalc2 = X*b;
+%         plot(x,yCalc2,'--')
+%         legend('Data','Slope','Slope & Intercept','Location','best');
+        Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
+        Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
+        
+        new_leis_vals = new_leis_vals - yCalc2';
+        % new_leis_vals = yCalc2;
+        mean_ft = mean(new_leis_vals);
+        std_ft = std(new_leis_vals);
+        stand_fts = (new_leis_vals-mean_ft)/std_ft;
+        scaled_fts = stand_fts*15+100;
+        med_ft = median(scaled_fts); % Find best & worst subs and their data
+    end
+    %% Plot linear regression of work & leisure scores
+    regress_work = 1;
+    if regress_work
+        x = work_scores;
+        y = new_leis_vals;
+        % y = scaled_fts;
+        x = x';
+        y = y';
+        format long
+        b1 = x\y;
+        
+%         close all
+%         figure
+        yCalc1 = b1*x;
+%         scatter(x,y)
+%         hold on
+%         plot(x,yCalc1)
+%         xlabel('Age')
+%         ylabel('Leisure Scores')
+%         title('Linear Regression Relation Between Education & Leisure Scores')
+%         grid on
+        X = [ones(length(x),1) x];
+        b = X\y;
+%         yCalc2 = X*b;
+%         plot(x,yCalc2,'--')
+%         legend('Data','Slope','Slope & Intercept','Location','best');
+        Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
+        Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
+        
+        new_leis_vals = new_leis_vals - yCalc2';
+        % new_leis_vals = yCalc2;
+        mean_ft = mean(new_leis_vals);
+        std_ft = std(new_leis_vals);
+        stand_fts = (new_leis_vals-mean_ft)/std_ft;
+        scaled_fts = stand_fts*15+100;
+        med_ft = median(scaled_fts);% Find best & worst subs and their data
+    end
+% end
+if ~regress_age && ~regress_edu && ~regress_work
+scaled_fts = new_leis_vals;
+med_ft = median(scaled_fts);
 end
-hold on
-plot(x,yCalc1)
-xlabel('Age')
-ylabel('Leisure Scores')
-title('Linear Regression Relation Between Age & Leisure Scores')
-grid on
-X = [ones(length(x),1) x];
-b = X\y;
-yCalc2 = X*b;
-plot(x,yCalc2,'--')
-legend('Data','Slope','Slope & Intercept','Location','best');
-Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
-Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
-
-new_leis_vals = new_leis_vals - yCalc2';
-% new_leis_vals = yCalc2;
-mean_ft = mean(new_leis_vals);
-std_ft = std(new_leis_vals);
-stand_fts = (new_leis_vals-mean_ft)/std_ft;
-scaled_fts = stand_fts*15+100;
-med_ft = median(scaled_fts); % Find best & worst subs and their data
-end
-
-%% Plot linear regression of education & leisure scores
-regress_edu = 1;
-if regress_edu
-    x = edu_scores;
-    y = new_leis_vals;
-    % y = scaled_fts;
-    x = x';
-    y = y';
-    format long
-    b1 = x\y;
-    
-    close all
-    figure
-    yCalc1 = b1*x;
-    scatter(x,y)
-    hold on
-    plot(x,yCalc1)
-    xlabel('Age')
-    ylabel('Leisure Scores')
-    title('Linear Regression Relation Between Education & Leisure Scores')
-    grid on
-    X = [ones(length(x),1) x];
-    b = X\y;
-    yCalc2 = X*b;
-    plot(x,yCalc2,'--')
-    legend('Data','Slope','Slope & Intercept','Location','best');
-    Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
-    Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
-    
-    new_leis_vals = new_leis_vals - yCalc2';
-    % new_leis_vals = yCalc2;
-    mean_ft = mean(new_leis_vals);
-    std_ft = std(new_leis_vals);
-    stand_fts = (new_leis_vals-mean_ft)/std_ft;
-    scaled_fts = stand_fts*15+100;
-    med_ft = median(scaled_fts); % Find best & worst subs and their data
-end
-%% Plot linear regression of work & leisure scores
-regress_work = 1;
-if regress_work
-    x = work_scores;
-    y = new_leis_vals;
-    % y = scaled_fts;
-    x = x';
-    y = y';
-    format long
-    b1 = x\y;
-    
-    close all
-    figure
-    yCalc1 = b1*x;
-    scatter(x,y)
-    hold on
-    plot(x,yCalc1)
-    xlabel('Age')
-    ylabel('Leisure Scores')
-    title('Linear Regression Relation Between Education & Leisure Scores')
-    grid on
-    X = [ones(length(x),1) x];
-    b = X\y;
-    yCalc2 = X*b;
-    plot(x,yCalc2,'--')
-    legend('Data','Slope','Slope & Intercept','Location','best');
-    Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
-    Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
-    
-    new_leis_vals = new_leis_vals - yCalc2';
-    % new_leis_vals = yCalc2;
-    mean_ft = mean(new_leis_vals);
-    std_ft = std(new_leis_vals);
-    stand_fts = (new_leis_vals-mean_ft)/std_ft;
-    scaled_fts = stand_fts*15+100;
-    med_ft = median(scaled_fts);% Find best & worst subs and their data
-end
-
-% scaled_fts = new_leis_vals;
-% med_ft = median(scaled_fts);
 
 %% Find best and worst data
 best_count = 0;
@@ -213,7 +214,7 @@ if binning == 0
 else
     clear best_leis_subs worst_leis_subs one_col_data two_col_data worst_fts best_fts
     one_count = 0; two_count = 0;
-elim_dupes
+    elim_dupes
     for i = 1:length(sub_nums)
         for j = 1:length(top_subs(:,1))
             if sub_nums(i) == top_subs(j,1)
@@ -365,12 +366,12 @@ for start_point = 1:for_end
         if start_point == 7
             ty = 1;
         end
-%         mean(m_best_leis_data)
-%         mean(m_worst_leis_data)
+        %         mean(m_best_leis_data)
+        %         mean(m_worst_leis_data)
         [m_best_leis_data] = remove_outliers(m_best_leis_data);
         [m_worst_leis_data] = remove_outliers(m_worst_leis_data);
-%         mean(m_best_leis_data)
-%         mean(m_worst_leis_data)
+        %         mean(m_best_leis_data)
+        %         mean(m_worst_leis_data)
     end
     mean_plots_b(start_point) = mean(m_best_leis_data);
     mean_plots_w(start_point) = mean(m_worst_leis_data);
@@ -452,7 +453,6 @@ start_point = 1;
 % Plot best & worst data
 % best_leis_data = mean_plots_b;
 % worst_leis_data = mean_plots_w;
-plot_ft = 0;
 if plot_ft
     close all
     figure

@@ -1,22 +1,24 @@
 %% Runs CRIq analysis %%
 clear all
-addpath tables funcs
+addpath tables funcs StatsFunctions
 %% Set analysis parameters
+
+global perc_include
 
 %Write subject MRI pathnames to file?
 write2table = 1;
 
+%Plot results?
+plot_ft = 0;
+
 %Eliminate outliers?
-elim_outliers = 1;
+elim_outliers = 0;
 outlie_indiv = 0;
 elim_subouts = 0;
-elim_indiv = 0;
+elim_indiv = 1;
 
 %Normalize scores? (keep set at 1)
 normalize = 1;
-
-%Use the upper and lower quartile scores?
-uplow_quart = 1;
 
 %Include (~333%) more subs in each group?
 more_subs = 1;
@@ -32,13 +34,10 @@ binning = 1;
 
 %Bin leis individually?
 use_indivs = 0;
-if use_indivs
-    indiv_num = 17;
-else
-    indiv_num = 1;
-end
+if use_indivs;indiv_num = 17;else;indiv_num = 1;end
 
 if binning;use_vars=1;uplow_quart=0;else;use_vars=0;use_indivs=0;end %if binning, use subjects who vary between compared bins
+if use_indivs;use_vars=0;end
 
 %Use cog effort rankings to bin?
 use_ranks = 0;
@@ -46,19 +45,14 @@ if use_indivs; use_ranks = 0; end
 
 %Bin by social/intellectual?
 socog_binning = 0; %formerly all_labels, value flipped
-if use_indivs || use_ranks
-    socog_binning = 0;
-end
+if use_indivs || use_ranks;socog_binning = 0;end
 
 %Run all comparisons?
 all_comps = 1;
 if ~binning || socog_binning || use_indivs || use_ranks; all_comps = 0; end
 acomps1 = [1;1;1;2;2;3];
 acomps2 = [2;3;4;3;4;4];
-if all_comps
-    binning = 1; use_vars = 1;
-    comps1 = acomps1;
-    comps2 = acomps2;
+if all_comps;binning = 1; use_vars = 1;comps1 = acomps1;comps2 = acomps2;
 else
     if binning
         comps1 = 1;

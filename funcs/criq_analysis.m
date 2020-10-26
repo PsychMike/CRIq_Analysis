@@ -321,20 +321,28 @@ if create_new == 1
         for j = 1:size(criq_scores,2)
             try
                 extract_scores(i,j) = criq_scores{i,j};
+                if j == 23 && extract_scores(i,23) > 0
+                    extract_scores(i,j) = extract_scores(i,j)*10+15;
+                end
             catch
                 try
                     extract_scores(i,j) = str2num(criq_scores{i,j});
+                    if j == 23 && extract_scores(i,23) > 0
+                        extract_scores(i,j) = extract_scores(i,j)*10+15;
+                    end
                 catch
                     extract_scores(i,j) = NaN;
                 end
             end
         end
     end
+    create_new = 0;
     save('tables/worksheet_vals.mat');
     xlswrite('tables/extract_scores.xlsx',extract_scores);
 else
     load('tables/worksheet_vals.mat');
 end
+criq_scores = extract_scores;
 %% Main functions
 
 %Bin subjects

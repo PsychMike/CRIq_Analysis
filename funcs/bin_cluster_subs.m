@@ -20,11 +20,11 @@ all_bins = item_labels;
 
 if use_indivs
     bin1 = all_bins(indiv)
-    %     bin2 = all_bins(indiv)
+        bin2 = all_bins(indiv);
     if indiv == 1
-        bin2 = all_bins(2:end);
+        bin3 = all_bins(2:end);
     else
-        bin2 = all_bins(1:length(all_bins)~=indiv);
+        bin3 = all_bins(1:length(all_bins)~=indiv);
     end
     %     bin2 = all_bins(all_bins~=bin1);
 else
@@ -40,7 +40,9 @@ else
         bin3 = {'art','children','volunteer'};
         bin4 = {'new_tech','leisure_acts'};
     else
+        if ~use_indivs
         bin3 = {'social','volunteer','leisure_acts'};
+        end
         bin4 = {'grandchildren','pets'};
     end
 end
@@ -81,16 +83,18 @@ end
 ageless_scores = criq_scores(:,2:end);
 
 % Change CRIq score matrix to numeric
-for row = 1:length(ageless_scores)
-    for col = 1:size(ageless_scores,2)
-        if isnumeric(ageless_scores{row,col})
-            num_scores(row,col) = ageless_scores{row,col};
-        else
-            num_scores(row,col) = str2num(ageless_scores{row,col});
-        end
-    end
-end
+% for row = 1:length(ageless_scores)
+%     for col = 1:size(ageless_scores,2)
+%         if isnumeric(ageless_scores{row,col})
+%             num_scores(row,col) = ageless_scores{row,col};
+%         else
+%             num_scores(row,col) = str2num(ageless_scores{row,col});
+%         end
+%     end
+% end
+num_scores = ageless_scores;
 num_scores2 = num_scores(:,8:end);
+
 bin1_scores = num_scores2(:,ibin1);
 bin2_scores = num_scores2(:,ibin2);
 bin3_scores = num_scores2(:,ibin3);
@@ -102,17 +106,21 @@ work_scores = analysis_matrix(:,4);
 regr = 1;
 if regr
     bin1_scores = regress_scores(bin1_scores,ages);
-    % bin1_scores = regress_scores(bin1_scores,edu_scores);
-    % bin1_scores = regress_scores(bin1_scores,work_scores);
+%     bin1_scores = regress_scores(bin1_scores,edu_scores);
+%     bin1_scores = regress_scores(bin1_scores,work_scores);
     bin2_scores = regress_scores(bin2_scores,ages);
-    % bin2_scores = regress_scores(bin2_scores,edu_scores);
-    % bin2_scores = regress_scores(bin2_scores,work_scores);
+%     bin2_scores = regress_scores(bin2_scores,edu_scores);
+%     bin2_scores = regress_scores(bin2_scores,work_scores);
     bin3_scores = regress_scores(bin3_scores,ages);
-    % bin3_scores = regress_scores(bin3_scores,edu_scores);
-    % bin3_scores = regress_scores(bin3_scores,work_scores);
+%     bin3_scores = regress_scores(bin3_scores,edu_scores);
+%     bin3_scores = regress_scores(bin3_scores,work_scores);
     bin4_scores = regress_scores(bin4_scores,ages);
-    % bin4_scores = regress_scores(bin4_scores,edu_scores);
-    % bin4_scores = regress_scores(bin4_scores,work_scores);
+%     bin4_scores = regress_scores(bin4_scores,edu_scores);
+%     bin4_scores = regress_scores(bin4_scores,work_scores);
+    if use_indivs
+        bin1_scores = regress_scores(bin1_scores,CRI_all_vals');
+        bin2_scores = regress_scores(bin2_scores,CRI_all_vals');
+    end
 end
 stand_count = 0;
 
@@ -154,6 +162,12 @@ if use_vars
     % top_scores(:,2) = top2_scores;
     % top_scores(:,3) = top3_scores;
     % top_scores(:,4) = top4_scores;
+end
+
+if use_indivs
+    top2_subs = bot2_subs;
+    top2_scores = bot2_scores;
+    top_subs(1:length(bot2_subs),2) = bot2_subs;
 end
 
 % top_subs(:,1) = top1_subs;
@@ -217,25 +231,55 @@ med_ft = median(scaled_fts);
 end
 
 function [top_scores,top_subs,bot_scores,bot_subs,stand_bins,stand_count] = find_bw_scores(bin_scores_m,analysis_matrix,sub_nums,stand_count,stand_bins)
+global perc_include
 mean_bin = mean(bin_scores_m,2);
 std_bin1 = std(mean_bin);
 stand_bin1 = (mean_bin-mean(mean_bin))/std_bin1;
 stand_count = stand_count + 1;
 stand_bins(:,stand_count) = stand_bin1;
 
+sort_bins = sort(stand_bins(:,stand_count),'descend');
+this_bin = stand_bins(:,stand_count);
+test = 0;
+if test
+    perc_include = 1;
+randbins = randperm(109);
+sort_bins = sort_bins(randbins(1:58));
+end
+
 med_sbin1 = median(stand_bin1);
+
+% perc_include = .5;
+end_mark = round(length(sort_bins)*perc_include);
+med_sbin1 = min(sort_bins(1:end_mark));
+if test
+med_sbin1 = median(sort_bins(1:end_mark));
+end
+
 top_indices = stand_bin1>=med_sbin1;
 top_bin1_scores = stand_bin1(top_indices);
-bot_indices = stand_bin1<med_sbin1;
+
+sort_bins = sort(stand_bins(:,stand_count));
+if test
+sort_bins = this_bin(randbins(59:end));
+end
+
+end_mark = round(length(sort_bins)*perc_include);
+med_sbin1 = max(sort_bins(1:end_mark));
+if test
+med_sbin1 = median(sort_bins(1:end_mark));
+end
+
+bot_indices = stand_bin1<=med_sbin1;
 bot_bin1_scores = stand_bin1(bot_indices);
 
 % med_sbin1 = median(top_bin1_scores);
 % top_indices = stand_bin1>=med_sbin1;
 % top_bin1_scores = stand_bin1(top_indices);
 
-med_sbin2 = median(bot_bin1_scores);
-bot_indices = stand_bin1<=med_sbin2;
-bot_bin1_scores = stand_bin1(bot_indices);
+% med_sbin2 = median(bot_bin1_scores);
+% bot_indices = stand_bin1<=med_sbin2;
+% bot_bin1_scores = stand_bin1(bot_indices);
 
 top_scores = analysis_matrix(top_indices,end-6:end);
 top_subs = sub_nums(top_indices);
