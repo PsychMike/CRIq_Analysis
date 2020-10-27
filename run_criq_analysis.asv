@@ -6,7 +6,7 @@ addpath tables funcs StatsFunctions
 global perc_include
 
 %Write subject MRI pathnames to file?
-write2table = 0;
+write2table = 1;
 
 %Plot results?
 plot_ft = 0;
@@ -47,16 +47,18 @@ acomps2 = [2;3;4;3;4;4];
 %Fix all parameters
 fixparameters
 
-%Find available MRI data
+%% Find available MRI data
 read_studysheet2
 
 %% Run analysis
+item_labels = {'newspaper','chores','driving','leisure_acts','new_tech','social','cinema','garden','grandchildren','volunteer','art','concerts','journeys','reading','children','pets','account'};
+signif_count = 0;
 save('tables/workspace.mat');
 for c = 1:length(comps1)
     
     %Clean up old files/variables
-    clearvars variables -except c ANOVA_T
-    
+    clearvars variables -except c
+   
     if c == 1
         delete('output/*.xls*');
         delete('output/*.mat');
@@ -67,29 +69,29 @@ for c = 1:length(comps1)
     for indiv = 1:indiv_num
         criq_analysis;
         if use_indivs
-            indiv_ANOVA_T.SRT(indiv) = ANOVA_T.SRT;
-            indiv_ANOVA_T.TMT(indiv) = ANOVA_T.TMT;
-            indiv_ANOVA_T.WMSR(indiv) = ANOVA_T.WMSR;
-            indiv_ANOVA_T.SCWT(indiv) = ANOVA_T.SCWT;
-            indiv_ANOVA_T.PRMQ(indiv) = ANOVA_T.PRMQ;
-            indiv_ANOVA_T.MoCA(indiv) = ANOVA_T.MoCA;
-            indiv_ANOVA_T.DART(indiv) = ANOVA_T.DART;
+        indiv_ANOVA_T.SRT(indiv) = ANOVA_T.SRT;
+        indiv_ANOVA_T.TMT(indiv) = ANOVA_T.TMT;
+        indiv_ANOVA_T.WMSR(indiv) = ANOVA_T.WMSR;
+        indiv_ANOVA_T.SCWT(indiv) = ANOVA_T.SCWT;
+        indiv_ANOVA_T.PRMQ(indiv) = ANOVA_T.PRMQ;
+        indiv_ANOVA_T.MoCA(indiv) = ANOVA_T.MoCA;
+        indiv_ANOVA_T.DART(indiv) = ANOVA_T.DART;
         end
         if length(comps1) > 1
-            indiv_ANOVA_T.SRT(c) = ANOVA_T.SRT;
-            indiv_ANOVA_T.TMT(c) = ANOVA_T.TMT;
-            indiv_ANOVA_T.WMSR(c) = ANOVA_T.WMSR;
-            indiv_ANOVA_T.SCWT(c) = ANOVA_T.SCWT;
-            indiv_ANOVA_T.PRMQ(c) = ANOVA_T.PRMQ;
-            indiv_ANOVA_T.MoCA(c) = ANOVA_T.MoCA;
-            indiv_ANOVA_T.DART(c) = ANOVA_T.DART;
+            T_names{c} = ANOVA_Tname;
         end
+    end
+end
+if length(comps1) > 1
+    for t = 1:length(T_names)
+        iT=readtable(T_names{t});
+        gT(t,:)=iT;
     end
 end
 
 %% If all_comps, output ANOVA results for every comparison
 if all_comps
-    indiv_ANOVA_T
+    gT
 end
 
 %% If use_indivs, output ANOVA results for each category

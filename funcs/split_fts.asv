@@ -4,60 +4,60 @@
 am2 = analysis_matrix;
 analysis_matrix = analysis_matrix(:,7:end);
 
-%% Plot linear regression of age & leisure scores
-regress_age = 1;
-if regress_age
-    x = ages';
-    y = CRI_leis_vals;
-    x = x';
-    y = y';
-    format long
-    b1 = x\y;
-    
-    if plot_ft
+    %% Plot linear regression of age & leisure scores
+    regress_age = 1;
+    if regress_age
+        x = ages';
+        y = CRI_leis_vals;
+        x = x';
+        y = y';
+        format long
+        b1 = x\y;
+        
+        if plot_ft
         close all
         figure
-    end
-    yCalc1 = b1*x;
-    if plot_ft
-        scatter(x,y)
+        end
+        yCalc1 = b1*x;
+        if plot_ft
+            scatter(x,y)
         hold on
         plot(x,yCalc1)
         xlabel('Age')
         ylabel('Leisure Scores')
         title('Linear Regression Relation Between Age & Leisure Scores')
         grid on
-    end
-    X = [ones(length(x),1) x];
-    b = X\y;
-    yCalc2 = X*b;
-    if plot_ft
+        end
+        X = [ones(length(x),1) x];
+        b = X\y;
+        yCalc2 = X*b;
+        if plot_ft
         plot(x,yCalc2,'--')
         legend('Data','Slope','Slope & Intercept','Location','best');
+        end
+        CRI_leis_vals = CRI_leis_vals - yCalc2';
+        mean_ft = mean(CRI_leis_vals);
+        std_ft = std(CRI_leis_vals);
+        stand_fts = (CRI_leis_vals-mean_ft)/std_ft;
+        scaled_fts = stand_fts*15+100;
+        med_ft = median(scaled_fts); % Find best & worst subs and their data
     end
-    CRI_leis_vals = CRI_leis_vals - yCalc2';
-    mean_ft = mean(CRI_leis_vals);
-    std_ft = std(CRI_leis_vals);
-    stand_fts = (CRI_leis_vals-mean_ft)/std_ft;
-    scaled_fts = stand_fts*15+100;
-    med_ft = median(scaled_fts); % Find best & worst subs and their data
-end
-
-%% Plot linear regression of education & leisure scores
-regress_edu = 1;
-if regress_edu
-    x = edu_scores';
-    y = CRI_leis_vals;
-    x = x';
-    y = y';
-    format long
-    b1 = x\y;
-    if plot_ft
+    
+    %% Plot linear regression of education & leisure scores
+    regress_edu = 1;
+    if regress_edu
+        x = edu_scores';
+        y = CRI_leis_vals;
+        x = x';
+        y = y';
+        format long
+        b1 = x\y;
+        if plot_ft
         close all
         figure
-    end
-    yCalc1 = b1*x;
-    if plot_ft
+        end
+        yCalc1 = b1*x;
+        if plot_ft
         scatter(x,y)
         hold on
         plot(x,yCalc1)
@@ -65,60 +65,61 @@ if regress_edu
         ylabel('Leisure Scores')
         title('Linear Regression Relation Between Education & Leisure Scores')
         grid on
-    end
-    X = [ones(length(x),1) x];
-    b = X\y;
-    yCalc2 = X*b;
-    if plot_ft
-        plot(x,yCalc2,'--')
-        legend('Data','Slope','Slope & Intercept','Location','best');
-    end
-    CRI_leis_vals = CRI_leis_vals - yCalc2';
-    mean_ft = mean(CRI_leis_vals);
-    std_ft = std(CRI_leis_vals);
-    stand_fts = (CRI_leis_vals-mean_ft)/std_ft;
-    scaled_fts = stand_fts*15+100;
-    med_ft = median(scaled_fts); % Find best & worst subs and their data
-end
-%% Plot linear regression of work & leisure scores
-regress_work = 1;
-if regress_work
-    x = work_scores';
-    y = CRI_leis_vals;
-    x = x';
-    y = y';
-    format long
-    b1 = x\y;
-    if plot_ft
-        figure
-    end
-    yCalc1 = b1*x;
-    if plot_ft
-        scatter(x,y)
-        hold on
-        plot(x,yCalc1)
-        xlabel('Age')
-        ylabel('Leisure Scores')
-        title('Linear Regression Relation Between Education & Leisure Scores')
-        grid on
-    end
-    X = [ones(length(x),1) x];
-    b = X\y;
-    if plot_ft
+        end
+        X = [ones(length(x),1) x];
+        b = X\y;
         yCalc2 = X*b;
+        if plot_ft
         plot(x,yCalc2,'--')
         legend('Data','Slope','Slope & Intercept','Location','best');
+        end
+        CRI_leis_vals = CRI_leis_vals - yCalc2';
+        mean_ft = mean(CRI_leis_vals);
+        std_ft = std(CRI_leis_vals);
+        stand_fts = (CRI_leis_vals-mean_ft)/std_ft;
+        scaled_fts = stand_fts*15+100;
+        med_ft = median(scaled_fts); % Find best & worst subs and their data
     end
-    CRI_leis_vals = CRI_leis_vals - yCalc2';
-    mean_ft = mean(CRI_leis_vals);
-    std_ft = std(CRI_leis_vals);
-    stand_fts = (CRI_leis_vals-mean_ft)/std_ft;
-    scaled_fts = stand_fts*15+100;
-    med_ft = median(scaled_fts);% Find best & worst subs and their data
-end
+    %% Plot linear regression of work & leisure scores
+    regress_work = 1;
+    if regress_work
+        x = work_scores';
+        y = CRI_leis_vals;
+        x = x';
+        y = y';
+        format long
+        b1 = x\y;
+        if plot_ft
+%         close all
+%         figure
+        yCalc1 = b1*x;
+%         scatter(x,y)
+%         hold on
+%         plot(x,yCalc1)
+%         xlabel('Age')
+%         ylabel('Leisure Scores')
+%         title('Linear Regression Relation Between Education & Leisure Scores')
+%         grid on
+        X = [ones(length(x),1) x];
+        b = X\y;
+%         yCalc2 = X*b;
+%         plot(x,yCalc2,'--')
+%         legend('Data','Slope','Slope & Intercept','Location','best');
+        Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
+        Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2);
+        
+        CRI_leis_vals = CRI_leis_vals - yCalc2';
+        % new_leis_vals = yCalc2;
+        mean_ft = mean(CRI_leis_vals);
+        std_ft = std(CRI_leis_vals);
+        stand_fts = (CRI_leis_vals-mean_ft)/std_ft;
+        scaled_fts = stand_fts*15+100;
+        med_ft = median(scaled_fts);% Find best & worst subs and their data
+    end
+% end
 if ~regress_age && ~regress_edu && ~regress_work
-    scaled_fts = CRI_leis_vals;
-    med_ft = median(scaled_fts);
+scaled_fts = CRI_leis_vals;
+med_ft = median(scaled_fts);
 end
 
 %% Find best and worst data
@@ -198,6 +199,7 @@ if uplow_quart && ~binning
     best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
     for i = 1:length(scaled_fts)
         if ~isnan(scaled_fts(i)) && sum(any(sub_nums(i)==comb_subs))
+            %             && sum(any(sub_nums(i)==avail_nums))
             if scaled_fts(i) >= b_med
                 best_count = best_count + 1;
                 best_fts(best_count) = scaled_fts(i);
@@ -214,6 +216,15 @@ if uplow_quart && ~binning
         end
     end
 end
+
+% if elim_outliers
+%     try
+%         [best_leis_data,best_leis_subs,best_fts] = find_outliers(best_leis_data,best_leis_subs,best_fts);
+%         [worst_leis_data,worst_leis_subs,worst_fts] = find_outliers(worst_leis_data,worst_leis_subs,worst_fts);
+%     catch
+%         keyboard
+%     end
+% end
 
 %% Cut datasets to same size if needed
 randomize_data = 0;
@@ -256,6 +267,11 @@ if cut_to_samesize
         end
     end
 end
+% fBest_leis_data = best_leis_data(~isnan(best_leis_data));
+% fWorst_leis_data = worst_leis_data(~isnan(worst_leis_data));
+
+med_fBest_ft = nanmedian(best_leis_data);
+med_fWorst_ft = nanmedian(worst_leis_data);
 
 % Choose which variables to include in ANOVA
 Ps = zeros(1,size(best_leis_data,2));
@@ -266,7 +282,10 @@ else
     for_end = size(best_leis_data,2);
 end
 
-try clear nonan_best_fts nonan_worst_fts;end
+try
+    clear nonan_best_fts nonan_worst_fts
+end
+tic
 for start_point = 1:for_end
     if anova_all_data
         start_point = 1;
@@ -274,14 +293,20 @@ for start_point = 1:for_end
     else
         end_point = start_point;
     end
+    
     m_best_leis_data = best_leis_data(:,start_point:end_point);
     m_worst_leis_data = worst_leis_data(:,start_point:end_point);
+    
     if elim_indiv
         if start_point == 7
             ty = 1;
         end
+        %         mean(m_best_leis_data)
+        %         mean(m_worst_leis_data)
         [m_best_leis_data] = remove_outliers(m_best_leis_data);
         [m_worst_leis_data] = remove_outliers(m_worst_leis_data);
+        %         mean(m_best_leis_data)
+        %         mean(m_worst_leis_data)
     end
     mean_plots_b(start_point) = mean(m_best_leis_data);
     mean_plots_w(start_point) = mean(m_worst_leis_data);
@@ -322,6 +347,7 @@ for start_point = 1:for_end
         for j = 1:size(nonan_best_fts,2)
             count = count + 1;
             anova_matrix(count,:) = [nonan_best_fts(i,j) 1 j sub_count];
+            manova_matrix(sub_count,j) = nonan_best_fts(i,j);
         end
     end
     for i = 1:length(nonan_worst_fts)
@@ -330,6 +356,7 @@ for start_point = 1:for_end
         for j = 1:size(nonan_worst_fts,2)
             count = count + 1;
             anova_matrix(count,:) = [nonan_worst_fts(i,j) 2 j sub_count];
+            %         manova_matrix(sub_count,j) = nonan_worst_fts(i,j);
         end
     end
     run_anova = 1;
@@ -351,10 +378,16 @@ if ~anova_all_data || use_indivs
     Ps = round(Ps,3,'decimal');
     ANOVA_T=table(Ps(1),Ps(2),Ps(3),Ps(4),Ps(5),Ps(6),Ps(7),'VariableNames',{'SRT','TMT','WMSR','SCWT','PRMQ','MoCA','DART'})
     ANOVA_Tname = sprintf('output/%d%d_ANOVAout.xls',one_col,two_col);
+    if write2table
+        writetable(ANOVA_T,ANOVA_Tname);
+    end
+    save('tables/ANOVA_Tnametemp.mat','ANOVA_Tname');
 end
 start_point = 1;
 
 % Plot best & worst data
+% best_leis_data = mean_plots_b;
+% worst_leis_data = mean_plots_w;
 if plot_ft
     close all
     figure
@@ -387,3 +420,6 @@ if plot_ft
     lgd.Location = 'northeast';
     title(sprintf('%s - %s Comparison',comp1,comp2));
 end
+
+% [d,p] = manova1([manova_matrix(:,1) manova_matrix(:,2) manova_matrix(:,3) ...
+%     manova_matrix(:,4) manova_matrix(:,5) manova_matrix(:,6)],origin)

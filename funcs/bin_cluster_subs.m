@@ -20,7 +20,7 @@ all_bins = item_labels;
 
 if use_indivs
     bin1 = all_bins(indiv)
-        bin2 = all_bins(indiv);
+    bin2 = all_bins(indiv);
     if indiv == 1
         bin3 = all_bins(2:end);
     else
@@ -41,7 +41,7 @@ else
         bin4 = {'new_tech','leisure_acts'};
     else
         if ~use_indivs
-        bin3 = {'social','volunteer','leisure_acts'};
+            bin3 = {'social','volunteer','leisure_acts'};
         end
         bin4 = {'grandchildren','pets'};
     end
@@ -79,26 +79,14 @@ for i = 1:length(item_labels)
 end
 
 %% Find CRIq bin scores
-% ages = criq_scores(:,1);
 ageless_scores = criq_scores(:,2:end);
 
-% Change CRIq score matrix to numeric
-% for row = 1:length(ageless_scores)
-%     for col = 1:size(ageless_scores,2)
-%         if isnumeric(ageless_scores{row,col})
-%             num_scores(row,col) = ageless_scores{row,col};
-%         else
-%             num_scores(row,col) = str2num(ageless_scores{row,col});
-%         end
-%     end
-% end
-num_scores = ageless_scores;
-num_scores2 = num_scores(:,8:end);
+num_scores = ageless_scores(:,8:end);
 
-bin1_scores = num_scores2(:,ibin1);
-bin2_scores = num_scores2(:,ibin2);
-bin3_scores = num_scores2(:,ibin3);
-bin4_scores = num_scores2(:,ibin4);
+bin1_scores = num_scores(:,ibin1);
+bin2_scores = num_scores(:,ibin2);
+bin3_scores = num_scores(:,ibin3);
+bin4_scores = num_scores(:,ibin4);
 
 edu_scores = analysis_matrix(:,3);
 work_scores = analysis_matrix(:,4);
@@ -106,17 +94,17 @@ work_scores = analysis_matrix(:,4);
 regr = 1;
 if regr
     bin1_scores = regress_scores(bin1_scores,ages);
-%     bin1_scores = regress_scores(bin1_scores,edu_scores);
-%     bin1_scores = regress_scores(bin1_scores,work_scores);
+    %     bin1_scores = regress_scores(bin1_scores,edu_scores);
+    %     bin1_scores = regress_scores(bin1_scores,work_scores);
     bin2_scores = regress_scores(bin2_scores,ages);
-%     bin2_scores = regress_scores(bin2_scores,edu_scores);
-%     bin2_scores = regress_scores(bin2_scores,work_scores);
+    %     bin2_scores = regress_scores(bin2_scores,edu_scores);
+    %     bin2_scores = regress_scores(bin2_scores,work_scores);
     bin3_scores = regress_scores(bin3_scores,ages);
-%     bin3_scores = regress_scores(bin3_scores,edu_scores);
-%     bin3_scores = regress_scores(bin3_scores,work_scores);
+    %     bin3_scores = regress_scores(bin3_scores,edu_scores);
+    %     bin3_scores = regress_scores(bin3_scores,work_scores);
     bin4_scores = regress_scores(bin4_scores,ages);
-%     bin4_scores = regress_scores(bin4_scores,edu_scores);
-%     bin4_scores = regress_scores(bin4_scores,work_scores);
+    %     bin4_scores = regress_scores(bin4_scores,edu_scores);
+    %     bin4_scores = regress_scores(bin4_scores,work_scores);
     if use_indivs
         bin1_scores = regress_scores(bin1_scores,CRI_all_vals');
         bin2_scores = regress_scores(bin2_scores,CRI_all_vals');
@@ -156,12 +144,12 @@ end
 %% Bin subjects
 if use_vars
     find_topvars;
-% else
-    %     find_best_bin;
-    % top_scores(:,1) = top1_scores;
-    % top_scores(:,2) = top2_scores;
-    % top_scores(:,3) = top3_scores;
-    % top_scores(:,4) = top4_scores;
+else
+    find_best_bin;
+    top_scores(:,1) = top1_scores;
+    top_scores(:,2) = top2_scores;
+    top_scores(:,3) = top3_scores;
+    top_scores(:,4) = top4_scores;
 end
 
 if use_indivs
@@ -169,46 +157,6 @@ if use_indivs
     top2_scores = bot2_scores;
     top_subs(1:length(bot2_subs),2) = bot2_subs;
 end
-
-% top_subs(:,1) = top1_subs;
-% top_subs(:,2) = top2_subs;
-% top_subs(:,3) = top3_subs;
-% top_subs(:,4) = top4_subs;
-
-% simplify_binning = 0;
-% if simplify_binning
-%     switch one_col
-%         case 1
-%             comp1_scores = top1_scores;
-%         case 2
-%             comp1_scores = top2_scores;
-%         case 3
-%             comp1_scores = top3_scores;
-%     end
-%     
-%     switch two_col
-%         case 2
-%             comp2_scores = top2_scores;
-%         case 3
-%             comp2_scores = top3_scores;
-%         case 4
-%             comp2_scores = top4_scores;
-%     end
-%     
-%     one_count = 0; two_count = 0;
-%     for i = 1:length(sub_nums)
-%         if comp1_scores(i) > comp2_scores(i)
-%             one_count = one_count + 1;
-%             onecol_scores(one_count) = comp1_scores(i);
-%         else
-%             two_count = two_count + 1;
-%             twocol_scores(two_count) = comp2_scores(i);
-%         end
-%     end
-%     
-%     onecol_scores = onecol_scores(onecol_scores~=0);
-%     twocol_scores = twocol_scores(twocol_scores~=0);
-% end
 
 function bin_scores = regress_scores(bin_scores,regress_var)
 x = regress_var;
@@ -239,21 +187,19 @@ stand_count = stand_count + 1;
 stand_bins(:,stand_count) = stand_bin1;
 
 sort_bins = sort(stand_bins(:,stand_count),'descend');
-this_bin = stand_bins(:,stand_count);
+
 test = 0;
 if test
     perc_include = 1;
-randbins = randperm(109);
-sort_bins = sort_bins(randbins(1:58));
+    randbins = randperm(109);
+    this_bin = stand_bins(:,stand_count);
+    sort_bins = this_bin(randbins(1:58));
 end
 
-med_sbin1 = median(stand_bin1);
-
-% perc_include = .5;
 end_mark = round(length(sort_bins)*perc_include);
 med_sbin1 = min(sort_bins(1:end_mark));
 if test
-med_sbin1 = median(sort_bins(1:end_mark));
+    med_sbin1 = median(sort_bins(1:end_mark));
 end
 
 top_indices = stand_bin1>=med_sbin1;
@@ -261,13 +207,13 @@ top_bin1_scores = stand_bin1(top_indices);
 
 sort_bins = sort(stand_bins(:,stand_count));
 if test
-sort_bins = this_bin(randbins(59:end));
+    sort_bins = this_bin(randbins(59:end));
 end
 
 end_mark = round(length(sort_bins)*perc_include);
 med_sbin1 = max(sort_bins(1:end_mark));
 if test
-med_sbin1 = median(sort_bins(1:end_mark));
+    med_sbin1 = median(sort_bins(1:end_mark));
 end
 
 bot_indices = stand_bin1<=med_sbin1;
@@ -287,7 +233,7 @@ bot_scores = analysis_matrix(bot_indices,end-6:end);
 bot_subs = sub_nums(bot_indices);
 end
 
-function [bin_scores] = find_scores(binsub_nums,analysis_matrix,sub_nums,comb_matrix)
+function [bin_scores] = find_scores(binsub_nums,analysis_matrix,sub_nums)
 count = 0;
 for i = 1:length(sub_nums)
     if any(binsub_nums==sub_nums(i))

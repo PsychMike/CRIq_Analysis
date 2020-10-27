@@ -2,7 +2,6 @@
 normalize = 1;
 create_new = 0;
 if create_new == 1
-    % if ~exist('all_comps');run_criq_analysis;end
     
     %% Add stats folder %%
     addpath('StatsFunctions');
