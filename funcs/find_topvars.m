@@ -31,7 +31,7 @@ try clear top_sub_vars; end
 top_count = 0;
 sub_var_scores = sub_var_scores(:,wanted_col);
 sort_var_scores = sort(sub_var_scores,'descend');
-med_var = min(sort_var_scores(1:round(length(sort_var_scores)*perc_include)));
+med_var = min(sort_var_scores(1:floor(length(sort_var_scores)*perc_include)));
 % med_var = median(sort_var_scores);
 % mean(sort_var_scores);
 for j = 1:length(sub_var_scores)

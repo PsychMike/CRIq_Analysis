@@ -61,8 +61,6 @@ for i = 1:size(ft_data,2)
                 m_fts(m_count) = fts(j);
             else
                 m_ft_data(m_count,i) = NaN;
-                m_ft_subs(m_count) = NaN;
-                m_fts(m_count) = fts(j);
             end
             %             keyboard
         end
@@ -99,7 +97,7 @@ for k = 1:size(ft_data,1)
         mft2_count = mft2_count+1;
         mft2_data(mft2_count,:) = ft_data(k,:);
         mft2_subs(mft2_count) = ft_subs(k);
-        mft2s(mft2_count) = fts(k);
+        mft2s(mft2_count) = fts(i);
     end
 end
 m_ft_data = mft2_data;

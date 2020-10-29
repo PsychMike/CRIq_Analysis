@@ -7,7 +7,7 @@ sorted_ft = sort(mean_ft_data);
 med_sft = median(sorted_ft);
 
 %Calculate median of lower & upper half of data
-half_length = round(length(sorted_ft/2));
+half_length = floor(length(sorted_ft/2));
 up = sorted_ft(half_length+1:end);
 low = sorted_ft(1:half_length);
 

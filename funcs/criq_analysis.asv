@@ -15,6 +15,7 @@ if create_new == 1
     %% Load in worksheet & parse columns %%
     [worksheet,txt,raw] = xlsread('CRIq_dataworksheet_m_2.xlsx');
     worksheet = worksheet(:,1:52);
+    
     col_names = txt(1,:);
     sub_nums = worksheet(:,1);
     ages = worksheet(:,2);
@@ -174,14 +175,13 @@ if create_new == 1
     
     %% Fix behavioral scores for analysis
     
-    normalize = 1;
-    
     %SRT
     for i = 1:size(worksheet,1)
         srv1 = raw{i,38}; try srv1 = str2num(srv1); end
         srv2 = raw{i,39}; try srv2 = str2num(srv2); end
         story_recall_vals(i) = srv1 + srv2;
     end
+    normalize 
     if normalize; story_recall_vals = normalize_values(story_recall_vals,normalize); end
     
     %TMT

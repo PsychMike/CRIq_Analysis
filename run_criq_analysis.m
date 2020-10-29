@@ -1,12 +1,16 @@
 %% Runs CRIq analysis %%
-clear all
+clear all; close all
 addpath tables funcs StatsFunctions
 %% Set analysis parameters
 
 global perc_include
 
 %Write subject MRI pathnames to file?
-write2table = 0;
+write2table = 1;
+
+%Run ANOVA or perm_test?
+anova = 1;
+perm = 1;
 
 %Plot results?
 plot_ft = 0;
@@ -15,20 +19,20 @@ plot_ft = 0;
 elim_outliers = 0;
 outlie_indiv = 0;
 elim_subouts = 0;
-elim_indiv = 1;
+elim_indiv = 0;
 
 %Normalize scores? (keep set at 1)
 normalize = 1;
 
 %Include more subs in each group?
 more_subs = 1;
-perc_include = 50;
+perc_include = 50
 
 %Cut sub nums to be equal between comparison groups?
 cut_to_samesize = 1;
 
 %Bin leis act types?
-binning = 1;
+binning = 0;
 
 %Bin leis individually?
 use_indivs = 0;
@@ -51,7 +55,6 @@ fixparameters
 read_studysheet2
 
 %% Run analysis
-save('tables/workspace.mat');
 for c = 1:length(comps1)
     
     %Clean up old files/variables
@@ -85,6 +88,10 @@ for c = 1:length(comps1)
             indiv_ANOVA_T.DART(c) = ANOVA_T.DART;
         end
     end
+end
+
+if ~use_indivs && ~all_comps
+%     sprintf('n = %d/%d',length(best_fts),floor(length(sub_nums)/2))
 end
 
 %% If all_comps, output ANOVA results for every comparison

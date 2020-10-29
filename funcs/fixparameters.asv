@@ -5,7 +5,7 @@ if sum([use_indivs;use_ranks;socog_binning]) > 1
     error(sprintf('use_indivs:%d,use_ranks:%d,socog_binning:%d',use_indivs,use_ranks,socog_binning))
 end
 item_labels = {'newspaper','chores','driving','leisure_acts','new_tech','social','cinema','garden','grandchildren','volunteer','art','concerts','journeys','reading','children','pets','account'};
-if elim_indiv;elim_outliers=1;end
+if elim_indiv;eli
 if use_indivs;indiv_num = 17;else;indiv_num = 1;end
 if binning;use_vars=1;uplow_quart=0;else;use_vars=0;uplow_quart=1;end %if binning, use subjects who vary between compared bins
 if use_indivs;use_vars=0;end

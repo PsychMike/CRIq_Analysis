@@ -225,7 +225,7 @@ count_complete_subs;
 
 [r,p,rlo,rup]=corrcoef(complete_subs);
 
-var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'SRT'},{'TMT'},{'WMSR'},{'Stroop'},{'PRMQ'},{'MoCA'},{'DART'}];
+var_names = [{'Age'},{'Education'},{'Work'},{'Leisure'},{'CRIq'},{'SRT'},{'TMT'},{'WMSR'},{'SCWT'},{'PRMQ'},{'MoCA'},{'DART'}];
 
 var_names = [var_names(1:skip_point) var_names(start_point:end)];
 

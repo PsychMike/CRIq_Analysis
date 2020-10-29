@@ -196,7 +196,7 @@ if test
     sort_bins = this_bin(randbins(1:58));
 end
 
-end_mark = round(length(sort_bins)*perc_include);
+end_mark = floor(length(sort_bins)*perc_include);
 med_sbin1 = min(sort_bins(1:end_mark));
 if test
     med_sbin1 = median(sort_bins(1:end_mark));
@@ -210,7 +210,7 @@ if test
     sort_bins = this_bin(randbins(59:end));
 end
 
-end_mark = round(length(sort_bins)*perc_include);
+end_mark = floor(length(sort_bins)*perc_include);
 med_sbin1 = max(sort_bins(1:end_mark));
 if test
     med_sbin1 = median(sort_bins(1:end_mark));
