@@ -206,7 +206,7 @@ end
 %     med_sbin1 = median(sort_bins(1:end_mark));
 % end
 
-med_sbin1 = median(stand_bins(:,stand_count));
+med_sbin1 = median(stand_
 
 top_indices = stand_bin1>med_sbin1;
 top_bin1_scores = stand_bin1(top_indices);

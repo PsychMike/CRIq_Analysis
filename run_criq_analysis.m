@@ -13,7 +13,7 @@ anova = 1;
 perm = 1;
 
 %Plot results?
-plot_ft = 0;
+plot_ft = 1;
 
 %Eliminate outliers?
 elim_outliers = 0;
@@ -26,13 +26,13 @@ normalize = 1;
 
 %Include more subs in each group?
 more_subs = 1;
-perc_include = 50
+perc_include = 100;
 
 %Cut sub nums to be equal between comparison groups?
 cut_to_samesize = 1;
 
 %Bin leis act types?
-binning = 0;
+binning = 1;
 
 %Bin leis individually?
 use_indivs = 0;
@@ -54,15 +54,21 @@ fixparameters
 %Find available MRI data
 read_studysheet2
 
+%Save workspace
+save('tables/workspace.mat');
+
 %% Run analysis
 for c = 1:length(comps1)
     
     %Clean up old files/variables
-    clearvars variables -except c ANOVA_T
+    clearvars -except c ANOVA_T comps1 comps2 indiv_num indiv_ANOVA_T
+    load('tables/workspace.mat');
     
     if c == 1
         delete('output/*.xls*');
         delete('output/*.mat');
+    else
+        load('tables/indivANOVA.mat');
     end
     
     one_col = comps1(c);
@@ -87,11 +93,12 @@ for c = 1:length(comps1)
             indiv_ANOVA_T.MoCA(c) = ANOVA_T.MoCA;
             indiv_ANOVA_T.DART(c) = ANOVA_T.DART;
         end
+        save('tables/indivANOVA.mat','indiv_ANOVA_T');
     end
 end
 
 if ~use_indivs && ~all_comps
-%     sprintf('n = %d/%d',length(best_fts),floor(length(sub_nums)/2))
+    %     sprintf('n = %d/%d',length(best_fts),floor(length(sub_nums)/2))
 end
 
 %% If all_comps, output ANOVA results for every comparison

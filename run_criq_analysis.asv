@@ -8,11 +8,15 @@ global perc_include
 %Write subject MRI pathnames to file?
 write2table = 0;
 
+%Run ANOVA or perm_test?
+anova = 1;
+perm = 1;
+
 %Plot results?
 plot_ft = 1;
 
 %Eliminate outliers?
-elim_outliers = 1;
+elim_outliers = 0;
 outlie_indiv = 0;
 elim_subouts = 0;
 elim_indiv = 0;
@@ -22,13 +26,13 @@ normalize = 1;
 
 %Include more subs in each group?
 more_subs = 1;
-perc_include = 5
+perc_include = 100;
 
 %Cut sub nums to be equal between comparison groups?
 cut_to_samesize = 1;
 
 %Bin leis act types?
-binning = 0;
+binning = 1;
 
 %Bin leis individually?
 use_indivs = 0;
@@ -40,7 +44,7 @@ use_ranks = 0;
 socog_binning = 0; %formerly all_labels, value flipped
 
 %Run all comparisons?
-all_comps = 1;
+all_comps = 0;
 acomps1 = [1;1;1;2;2;3];
 acomps2 = [2;3;4;3;4;4];
 
@@ -54,7 +58,7 @@ read_studysheet2
 for c = 1:length(comps1)
     
     %Clean up old files/variables
-    clearvars variables -except c ANOVA_T
+    clearvars -except c ANOVA_T comps1 comps2 indiv_num
     
     if c == 1
         delete('output/*.xls*');
@@ -87,7 +91,7 @@ for c = 1:length(comps1)
 end
 
 if ~use_indivs && ~all_comps
-    sprintf('n = %d/%d',length(best_fts),floor(length(sub_nums)/2))
+%     sprintf('n = %d/%d',length(best_fts),floor(length(sub_nums)/2))
 end
 
 %% If all_comps, output ANOVA results for every comparison

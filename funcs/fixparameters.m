@@ -15,8 +15,8 @@ if ~binning || socog_binning || use_indivs || use_ranks; all_comps = 0; end
 if all_comps;binning = 1; use_vars = 1;comps1 = acomps1;comps2 = acomps2;
 else
     if binning
-        comps1 = 2;
-        comps2 = 3;
+        comps1 = 3;
+        comps2 = 4;
     else
         comps1 = 0;
         comps2 = 0;

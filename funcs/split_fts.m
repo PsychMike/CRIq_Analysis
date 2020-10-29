@@ -196,13 +196,13 @@ if uplow_quart && ~binning
     best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
     for i = 1:length(scaled_fts)
         if sum(any(sub_nums(i)==comb_subs))
-            if scaled_fts(i) >= b_med
+            if scaled_fts(i) > b_med
                 best_count = best_count + 1;
                 best_fts(best_count) = scaled_fts(i);
                 best_is(best_count) = i;
                 best_leis_data(best_count,:) = analysis_matrix(best_is(best_count),:);
                 best_leis_subs(best_count) = sub_nums(i);
-            elseif scaled_fts(i) <= w_med
+            elseif scaled_fts(i) < w_med
                 worst_count = worst_count + 1;
                 worst_fts(worst_count) = scaled_fts(i);
                 worst_is(worst_count) = i;
@@ -370,16 +370,22 @@ if anova
 end
 
 if perm
-    mean_plots_b = mean(best_leis_data);
-    mean_plots_w = mean(worst_leis_data);
+    mean_plots_b = median(best_leis_data);
+    mean_plots_w = median(worst_leis_data);
 end
-
+aa=size(best_leis_data,1);
 % Plot best & worst data
 if plot_ft
     figure
     plot(mean_plots_b);
     hold on
     plot(mean_plots_w);
+    
+%     hold on
+%     plot(1:7,best_leis_data(:,1:7),'co');
+%     hold on
+%     plot(1:7,worst_leis_data(:,1:7),'ro');
+    
     xticks(1:size(best_leis_data,2)+1);
     xticklabels(var_names(end-size(best_leis_data,2)+1:end));
     xlim([0 size(best_leis_data,2)+1]);

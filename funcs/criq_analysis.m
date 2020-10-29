@@ -13,7 +13,7 @@ if create_new == 1
     end
     
     %% Load in worksheet & parse columns %%
-    [worksheet,txt,raw] = xlsread('CRIq_dataworksheet_m_2.xlsx');
+    [worksheet,txt,raw] = xlsread('CRIq_dataworksheet_m_108.xlsx');
     worksheet = worksheet(:,1:52);
     col_names = txt(1,:);
     sub_nums = worksheet(:,1);
@@ -342,6 +342,7 @@ else
     load('tables/worksheet_vals.mat');
 end
 criq_scores = extract_scores;
+
 %% Main functions
 
 %Bin subjects
