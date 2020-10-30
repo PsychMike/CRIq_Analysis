@@ -20,11 +20,11 @@ all_bins = item_labels;
 
 if use_indivs
     bin1 = all_bins(indiv)
-    bin2 = all_bins(indiv);
+%     bin2 = all_bins(indiv);
     if indiv == 1
-        bin3 = all_bins(2:end);
+        bin2 = all_bins(2:end);
     else
-        bin3 = all_bins(1:length(all_bins)~=indiv);
+        bin2 = all_bins(1:length(all_bins)~=indiv);
     end
     %     bin2 = all_bins(all_bins~=bin1);
 else
@@ -40,9 +40,9 @@ else
         bin3 = {'art','children','volunteer'};
         bin4 = {'new_tech','leisure_acts'};
     else
-        if ~use_indivs
+%         if ~use_indivs
             bin3 = {'social','volunteer','leisure_acts'};
-        end
+%         end
         bin4 = {'grandchildren','pets'};
     end
 end
@@ -105,10 +105,10 @@ if regr
     bin4_scores = regress_scores(bin4_scores,ages);
     %     bin4_scores = regress_scores(bin4_scores,edu_scores);
     %     bin4_scores = regress_scores(bin4_scores,work_scores);
-    if use_indivs
-        bin1_scores = regress_scores(bin1_scores,CRI_all_vals');
-        bin2_scores = regress_scores(bin2_scores,CRI_all_vals');
-    end
+%     if use_indivs
+%         bin1_scores = regress_scores(bin1_scores,CRI_all_vals');
+%         bin2_scores = regress_scores(bin2_scores,CRI_all_vals');
+%     end
 end
 stand_count = 0;
 
@@ -144,19 +144,24 @@ end
 %% Bin subjects
 if use_vars
     find_topvars;
-else
-    find_best_bin;
-    top_scores(:,1) = top1_scores;
-    top_scores(:,2) = top2_scores;
-    top_scores(:,3) = top3_scores;
-    top_scores(:,4) = top4_scores;
+% else
+%     find_best_bin;
+%     top_scores(:,1) = top1_scores;
+%     top_scores(:,2) = top2_scores;
+%     top_scores(:,3) = top3_scores;
+%     top_scores(:,4) = top4_scores;
 end
 
-if use_indivs
-    top2_subs = bot2_subs;
-    top2_scores = bot2_scores;
-    top_subs(1:length(bot2_subs),2) = bot2_subs;
+% if use_indivs
+%     top2_subs = bot2_subs;
+%     top2_scores = bot2_scores;
+%     top_subs(1:length(bot2_subs),2) = bot2_subs;
+% end
+
+for i = 1:size(num_scores,2)
+    bin_scores(:,i) = regress_scores(num_scores(:,i),ages);
 end
+keyboard
 
 function bin_scores = regress_scores(bin_scores,regress_var)
 x = regress_var;
@@ -206,7 +211,7 @@ end
 %     med_sbin1 = median(sort_bins(1:end_mark));
 % end
 
-med_sbin1 = median(stand_
+med_sbin1 = median(stand_bins(:,stand_count));
 
 top_indices = stand_bin1>med_sbin1;
 top_bin1_scores = stand_bin1(top_indices);

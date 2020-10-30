@@ -6,11 +6,11 @@ for i = 1:size(stand_bins,1)
     stand_mat(i,bin_num) = 1;
 end
 
-top_scores = zeros(110,4); top_subs = zeros(110,4);
+top_scores = zeros(108,4); top_subs = zeros(108,4);
 [top_scores,top_subs] = find_top_bins(stand_bins,stand_mat,1,top_scores,top_subs,sub_nums);
 [top_scores,top_subs] = find_top_bins(stand_bins,stand_mat,2,top_scores,top_subs,sub_nums);
-[top_scores,top_subs] = find_top_bins(stand_bins,stand_mat,3,top_scores,top_subs,sub_nums);
-[top_scores,top_subs] = find_top_bins(stand_bins,stand_mat,4,top_scores,top_subs,sub_nums);
+% [top_scores,top_subs] = find_top_bins(stand_bins,stand_mat,3,top_scores,top_subs,sub_nums);
+% [top_scores,top_subs] = find_top_bins(stand_bins,stand_mat,4,top_scores,top_subs,sub_nums);
 
 for k = 1:size(top_scores,2)
     nonzero_length(k) = sum(top_scores(:,k)~=0);

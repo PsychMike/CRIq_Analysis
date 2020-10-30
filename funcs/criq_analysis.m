@@ -346,7 +346,7 @@ criq_scores = extract_scores;
 %% Main functions
 
 %Bin subjects
-if binning
+if binning && ~use_indivs
     bin_cluster_subs;
 end
 

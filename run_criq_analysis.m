@@ -6,14 +6,14 @@ addpath tables funcs StatsFunctions
 global perc_include
 
 %Write subject MRI pathnames to file?
-write2table = 1;
+write2table = 0;
 
 %Run ANOVA or perm_test?
 anova = 1;
-perm = 1;
+perm = 0;
 
 %Plot results?
-plot_ft = 1;
+plot_ft = 0;
 
 %Eliminate outliers?
 elim_outliers = 0;
@@ -35,7 +35,7 @@ cut_to_samesize = 1;
 binning = 1;
 
 %Bin leis individually?
-use_indivs = 0;
+use_indivs = 1;
 
 %Use cog effort rankings to bin?
 use_ranks = 0;

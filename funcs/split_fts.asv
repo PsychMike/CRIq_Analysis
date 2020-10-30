@@ -6,116 +6,34 @@ analysis_matrix = analysis_matrix(:,7:end);
 edu_scores = analysis_matrix(:,3);
 work_scores = analysis_matrix(:,4);
 
+if use_indivs
+    leis_scores = criq_scores(:,9:end);
+    CRILs = CRI_leis_vals;
+    CRI_leis_vals = leis_scores(:,indiv)';
+end
+
 %% Plot linear regression of age & leisure scores
 regress_age = 1;
 if regress_age
-    x = ages';
-    y = CRI_leis_vals;
-    x = x';
-    y = y';
-    format long
-    b1 = x\y;
-    if plot_ft == 2
-        close all
-        figure
-    end
-    yCalc1 = b1*x;
-    if plot_ft == 2
-        scatter(x,y)
-        hold on
-        plot(x,yCalc1)
-        xlabel('Age')
-        ylabel('Leisure Scores')
-        title('Linear Regression Relation Between Age & Leisure Scores')
-        grid on
-    end
-    X = [ones(length(x),1) x];
-    b = X\y;
-    yCalc2 = X*b;
-    if plot_ft == 2
-        plot(x,yCalc2,'--')
-        legend('Data','Slope','Slope & Intercept','Location','best');
-    end
-    CRI_leis_vals = CRI_leis_vals - yCalc2';
-    mean_ft = mean(CRI_leis_vals);
-    std_ft = std(CRI_leis_vals);
-    stand_fts = (CRI_leis_vals-mean_ft)/std_ft;
-    scaled_fts = stand_fts*15+100;
-    med_ft = median(scaled_fts); % Find best & worst subs and their data
+    CRI_leis_vals = regress_scores(CRI_leis_vals,ages',binning);
+end
+
+%% Regress CRI total scores
+if use_indivs
+    CRI_leis_vals = regress_scores(CRI_leis_vals,CRILs',binning);
 end
 
 %% Plot linear regression of education & leisure scores
 regress_edu = 0;
 if regress_edu
-    x = edu_scores';
-    y = CRI_leis_vals;
-    x = x';
-    y = y';
-    format long
-    b1 = x\y;
-    if plot_ft == 2
-        figure
-    end
-    yCalc1 = b1*x;
-    if plot_ft == 2
-        scatter(x,y)
-        hold on
-        plot(x,yCalc1)
-        xlabel('Age')
-        ylabel('Leisure Scores')
-        title('Linear Regression Relation Between Education & Leisure Scores')
-        grid on
-    end
-    X = [ones(length(x),1) x];
-    b = X\y;
-    yCalc2 = X*b;
-    if plot_ft == 2
-        plot(x,yCalc2,'--')
-        legend('Data','Slope','Slope & Intercept','Location','best');
-    end
-    CRI_leis_vals = CRI_leis_vals - yCalc2';
-    mean_ft = mean(CRI_leis_vals);
-    std_ft = std(CRI_leis_vals);
-    stand_fts = (CRI_leis_vals-mean_ft)/std_ft;
-    scaled_fts = stand_fts*15+100;
-    med_ft = median(scaled_fts); % Find best & worst subs and their data
+    CRI_leis_vals = regress_scores(CRI_leis_vals,edu_scores',binning);
 end
 %% Plot linear regression of work & leisure scores
 regress_work = 0;
 if regress_work
-    x = work_scores';
-    y = CRI_leis_vals;
-    x = x';
-    y = y';
-    format long
-    b1 = x\y;
-    if plot_ft == 2
-        figure
-    end
-    yCalc1 = b1*x;
-    if plot_ft == 2
-        scatter(x,y)
-        hold on
-        plot(x,yCalc1)
-        xlabel('Age')
-        ylabel('Leisure Scores')
-        title('Linear Regression Relation Between Education & Leisure Scores')
-        grid on
-    end
-    X = [ones(length(x),1) x];
-    b = X\y;
-    yCalc2 = X*b;
-    if plot_ft == 2
-        plot(x,yCalc2,'--')
-        legend('Data','Slope','Slope & Intercept','Location','best');
-    end
-    CRI_leis_vals = CRI_leis_vals - yCalc2';
-    mean_ft = mean(CRI_leis_vals);
-    std_ft = std(CRI_leis_vals);
-    stand_fts = (CRI_leis_vals-mean_ft)/std_ft;
-    scaled_fts = stand_fts*15+100;
-    med_ft = median(scaled_fts);% Find best & worst subs and their data
+    [CRI_leis_vals scaled_fts med_ft] = regress_scores(CRI_leis_vals,work_scores',binning);
 end
+
 if ~regress_age && ~regress_edu && ~regress_work
     scaled_fts = CRI_leis_vals;
     med_ft = median(scaled_fts);
@@ -125,7 +43,7 @@ end
 best_count = 0;
 worst_count = 0;
 
-if binning == 0
+if binning == 0 || use_indivs
     for i = 1:length(scaled_fts)
         if ~isnan(scaled_fts(i))
             if scaled_fts(i) > med_ft
@@ -196,13 +114,13 @@ if uplow_quart && ~binning
     best_count = 0; worst_count = 0; b2_count = 0; w2_count = 0;
     for i = 1:length(scaled_fts)
         if sum(any(sub_nums(i)==comb_subs))
-            if scaled_fts(i) >= b_med
+            if scaled_fts(i) > b_med
                 best_count = best_count + 1;
                 best_fts(best_count) = scaled_fts(i);
                 best_is(best_count) = i;
                 best_leis_data(best_count,:) = analysis_matrix(best_is(best_count),:);
                 best_leis_subs(best_count) = sub_nums(i);
-            elseif scaled_fts(i) <= w_med
+            elseif scaled_fts(i) < w_med
                 worst_count = worst_count + 1;
                 worst_fts(worst_count) = scaled_fts(i);
                 worst_is(worst_count) = i;
@@ -381,8 +299,10 @@ if plot_ft
     hold on
     plot(mean_plots_w);
     
-    hold on
-    plot(best_leis_data)
+    %     hold on
+    %     plot(1:7,best_leis_data(:,1:7),'co');
+    %     hold on
+    %     plot(1:7,worst_leis_data(:,1:7),'ro');
     
     xticks(1:size(best_leis_data,2)+1);
     xticklabels(var_names(end-size(best_leis_data,2)+1:end));

@@ -181,3 +181,41 @@ end
 
 % keyboard
 % BWAOV2(anova_matrix)
+
+    x = ages';
+    y = CRI_leis_vals;
+    x = x';
+    y = y';
+    format long
+    b1 = x\y;
+    if plot_ft == 2
+        close all
+        figure
+    end
+    yCalc1 = b1*x;
+    if plot_ft == 2
+        scatter(x,y)
+        hold on
+        plot(x,yCalc1)
+        xlabel('Age')
+        ylabel('Leisure Scores')
+        title('Linear Regression Relation Between Age & Leisure Scores')
+        grid on
+    end
+    X = [ones(length(x),1) x];
+    b = X\y;
+    yCalc2 = X*b;
+    if plot_ft == 2
+        plot(x,yCalc2,'--')
+        legend('Data','Slope','Slope & Intercept','Location','best');
+    end
+    CRI_leis_vals = CRI_leis_vals - yCalc2';
+    mean_ft = mean(CRI_leis_vals);
+    std_ft = std(CRI_leis_vals);
+    stand_fts = (CRI_leis_vals-mean_ft)/std_ft;
+    if ~binning
+        scaled_fts = stand_fts*15+100;
+    else
+        scaled_fts = stand_fts;
+    end
+    med_ft = median(scaled_fts); % Find best & worst subs and their data
