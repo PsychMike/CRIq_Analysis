@@ -42,6 +42,5 @@ new_rank_mat(2,:) = mean_ranks;
 [sort_ranks,index_mat] = sort(mean_ranks,'descend');
 rank_labels2 = rank_labels(index_mat);
 
-end_point = 8;
-best_leis = rank_labels2(1:end_point);
-worst_leis = rank_labels2(end-end_point+1:end);
+best_leis = rank_labels2(1:5);
+worst_leis = rank_labels2(end-4:end);

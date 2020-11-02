@@ -1,7 +1,7 @@
 clearvars score_bin1 score_bin2 score_diffs ps
 test_names = {'SRT','TMT','WMSR','SCWT','PRMQ','MoCA','DART'};
 
-num_perms = 1000;
+num_perms = 100000;
 
 for i = 1:length(test_names)
     ps{1,i} = test_names{i};

@@ -32,7 +32,7 @@ perc_include = 100;
 cut_to_samesize = 1;
 
 %Bin leis act types?
-binning = 1;
+binning = 0;
 
 %Bin leis individually?
 use_indivs = 0;
@@ -44,7 +44,7 @@ use_ranks = 0;
 socog_binning = 0; %formerly all_labels, value flipped
 
 %Run all comparisons?
-all_comps = 0;
+all_comps = 1;
 acomps1 = [1;1;1;2;2;3];
 acomps2 = [2;3;4;3;4;4];
 
@@ -54,15 +54,21 @@ fixparameters
 %Find available MRI data
 read_studysheet2
 
+%Save workspace
+save('tables/workspace.mat');
+
 %% Run analysis
 for c = 1:length(comps1)
     
     %Clean up old files/variables
-    clearvars -except c ANOVA_T comps1 comps2 indiv_num
+    clearvars -except c ANOVA_T comps1 comps2 indiv_num indiv_ANOVA_T
+    load('tables/workspace.mat');
     
     if c == 1
         delete('output/*.xls*');
         delete('output/*.mat');
+    else
+        load('tables/indivANOVA.mat');
     end
     
     one_col = comps1(c);
@@ -91,7 +97,7 @@ for c = 1:length(comps1)
 end
 
 if ~use_indivs && ~all_comps
-%     sprintf('n = %d/%d',length(best_fts),floor(length(sub_nums)/2))
+    %     sprintf('n = %d/%d',length(best_fts),floor(length(sub_nums)/2))
 end
 
 %% If all_comps, output ANOVA results for every comparison

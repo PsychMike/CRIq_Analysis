@@ -47,6 +47,12 @@ else
     end
 end
 
+%% If not binning, find item bins from factor analysis
+if binning && ~use_indivs && ~socog_binning && ~use_ranks
+    bin_by_fa;
+end
+
+
 % Find item indices
 ibin1=zeros(1,length(bin1));ibin2=zeros(1,length(bin2));
 ibin3=zeros(1,length(bin3));ibin4=zeros(1,length(bin4));
@@ -152,10 +158,11 @@ switch two_col
         top_subs(1:length(top4_subs),2) = top4_subs;
 end
 %% Bin subjects
+use_vars = 0
 if use_vars
     find_topvars;
-% else
-    %     find_best_bin;
+%     else
+%             find_best_bin;
     %     top_scores(:,1) = top1_scores;
     %     top_scores(:,2) = top2_scores;
     %     top_scores(:,3) = top3_scores;

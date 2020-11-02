@@ -13,7 +13,7 @@ anova = 1;
 perm = 0;
 
 %Plot results?
-plot_ft = 0;
+plot_ft = 1;
 
 %Eliminate outliers?
 elim_outliers = 0;
@@ -35,7 +35,7 @@ cut_to_samesize = 1;
 binning = 1;
 
 %Bin leis individually?
-use_indivs = 1;
+use_indivs = 0;
 
 %Use cog effort rankings to bin?
 use_ranks = 0;
@@ -83,6 +83,7 @@ for c = 1:length(comps1)
             indiv_ANOVA_T.PRMQ(indiv) = ANOVA_T.PRMQ;
             indiv_ANOVA_T.MoCA(indiv) = ANOVA_T.MoCA;
             indiv_ANOVA_T.DART(indiv) = ANOVA_T.DART;
+            save('tables/indivANOVA.mat','indiv_ANOVA_T');
         end
         if length(comps1) > 1
             indiv_ANOVA_T.SRT(c) = ANOVA_T.SRT;
@@ -92,8 +93,8 @@ for c = 1:length(comps1)
             indiv_ANOVA_T.PRMQ(c) = ANOVA_T.PRMQ;
             indiv_ANOVA_T.MoCA(c) = ANOVA_T.MoCA;
             indiv_ANOVA_T.DART(c) = ANOVA_T.DART;
+            save('tables/indivANOVA.mat','indiv_ANOVA_T');
         end
-        save('tables/indivANOVA.mat','indiv_ANOVA_T');
     end
 end
 
